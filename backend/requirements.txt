@@ -3,6 +3,7 @@ uvicorn[standard]
 httpx
 polars
 pydantic-settings
+pyjwt
 tenacity
 python-dotenv
 pytest

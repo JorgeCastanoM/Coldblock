@@ -6,8 +6,8 @@ const AuthContext = createContext(null)
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem(STORAGE_KEY))
 
-  const login = useCallback(async (password) => {
-    const accessToken = await loginRequest(password)
+  const login = useCallback(async (username, password) => {
+    const accessToken = await loginRequest(username, password)
     localStorage.setItem(STORAGE_KEY, accessToken)
     setToken(accessToken)
   }, [])

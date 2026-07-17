@@ -14,8 +14,8 @@ client.interceptors.request.use((config) => {
   return config
 })
 
-export async function login(password) {
-  const response = await client.post('/auth/login', { password })
+export async function login(username, password) {
+  const response = await client.post('/auth/login', { username, password })
   return response.data.access_token
 }
 

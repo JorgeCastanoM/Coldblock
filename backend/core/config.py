@@ -1,4 +1,10 @@
+from pydantic import BaseModel
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class DashboardUser(BaseModel):
+    username: str
+    password: str
 
 
 class Settings(BaseSettings):
@@ -7,12 +13,17 @@ class Settings(BaseSettings):
     fishbowl_base_url: str = "http://100.x.x.x:2456"
     fishbowl_username: str = ""
     fishbowl_password: str = ""
+    fishbowl_app_name: str = "ColdBlockDashboard"
+    fishbowl_app_id: int = 1
+    fishbowl_app_description: str = "ColdBlock Intelligence Dashboard"
+    fishbowl_app_key: str = "coldblock-dashboard-key"
 
     hubspot_base_url: str = "https://api.hubapi.com"
     hubspot_api_token: str = ""
 
-    dashboard_access_password: str = "changeme"
-    dashboard_access_token: str = "changeme-token"
+    dashboard_users: list[DashboardUser] = []
+    jwt_secret: str = ""
+    jwt_expire_minutes: int = 720
 
     use_mock_data: bool = True
     log_level: str = "INFO"

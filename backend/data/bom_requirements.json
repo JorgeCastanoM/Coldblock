@@ -1,0 +1,3078 @@
+[
+  {
+    "fb_part_number": "C3MNC002",
+    "description": "Odroid N2+ 2GB",
+    "custom_code": "Odroid N2+ 2GB",
+    "vendor_sku": "G200702239826",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC003",
+    "description": "IO board",
+    "custom_code": "IO board",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC006",
+    "description": "WiFi Module",
+    "custom_code": "WiFi Module",
+    "vendor_sku": "G211216111831",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC008",
+    "description": "20 mm standoff",
+    "custom_code": "20 mm standoff",
+    "vendor_sku": "36-25505-ND",
+    "req_per_unit": 8,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC009",
+    "description": "40-pin spacer",
+    "custom_code": "40-pin spacer",
+    "vendor_sku": "SSW-120-22-L-D-ND",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC010",
+    "description": "2.1X5.5MM Barrel Power Connector",
+    "custom_code": "2.1X5.5MM Barrel Power Connector (DC Plug Cable)",
+    "vendor_sku": "G141440511056",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC011",
+    "description": "MicroSD card",
+    "custom_code": "MicroSD card",
+    "vendor_sku": "2648-SC1629-ND",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC012",
+    "description": "Fuse",
+    "custom_code": "Fuse",
+    "vendor_sku": "F3339TR-ND",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC013",
+    "description": "15 A Circuit Breaker",
+    "custom_code": "15 A Circuit Breaker",
+    "vendor_sku": "7462",
+    "req_per_unit": 2,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC014",
+    "description": "Output Socket",
+    "custom_code": "Output Socket",
+    "vendor_sku": "C016 20G003 100 12",
+    "req_per_unit": 2,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC016M",
+    "description": "Aluminum Enclosure",
+    "custom_code": "Aluminum Enclosure",
+    "vendor_sku": "Takachi MSN177-21-23B",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC017",
+    "description": "Aluminum Mounting Plate",
+    "custom_code": "Aluminum Mounting Plate",
+    "vendor_sku": "MSC21-23",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC018M",
+    "description": "Din Rail cut",
+    "custom_code": "Din Rail cut",
+    "vendor_sku": "Cut",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC019",
+    "description": "Push Button",
+    "custom_code": "Push Button",
+    "vendor_sku": "AV1910R724Q04",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC021",
+    "description": "50 W 24 V PSU",
+    "custom_code": "50 W 24 V PSU",
+    "vendor_sku": "DRS-24V50W1NZ",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC022",
+    "description": "Yellow terminal block",
+    "custom_code": "Yellow terminal block",
+    "vendor_sku": "2004-1406",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC023",
+    "description": "Blue terminal block",
+    "custom_code": "Blue terminal block",
+    "vendor_sku": "2004-1404",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC024",
+    "description": "Black terminal block",
+    "custom_code": "Black terminal block",
+    "vendor_sku": "2002-1405",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC025",
+    "description": "Red terminal block",
+    "custom_code": "Red terminal block",
+    "vendor_sku": "2002-1403",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC026",
+    "description": "Terminal block stops",
+    "custom_code": "Terminal block stops",
+    "vendor_sku": "CA702",
+    "req_per_unit": 2,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC027",
+    "description": "Proportional power controllerCarlo Gavadzzi",
+    "custom_code": "Proportional power controller",
+    "vendor_sku": "RGC1P23AA12E",
+    "req_per_unit": 2,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC028",
+    "description": "Contactor",
+    "custom_code": "Contactor finder relay",
+    "vendor_sku": "22.32.0.024.1320",
+    "req_per_unit": 2,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC029",
+    "description": "3 A interrupt switch",
+    "custom_code": "3 A interrupt switch",
+    "vendor_sku": "3130-F120-P7T1-W12QY7-3A",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC030",
+    "description": "Front connector screws",
+    "custom_code": "Front connector screws",
+    "vendor_sku": "91251A192",
+    "req_per_unit": 4,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC031",
+    "description": "Odroid mounting screws",
+    "custom_code": "Odroid mounting screws",
+    "vendor_sku": "92492A718",
+    "req_per_unit": 4,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC020",
+    "description": "Din Rail mounting screws",
+    "custom_code": "91515A790 Screws that mount din rail to mounting plate",
+    "vendor_sku": "91515A790",
+    "req_per_unit": 3,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC032",
+    "description": "35 mm x 160 mm din rail",
+    "custom_code": "35 mm x 160 mm din rail",
+    "vendor_sku": "8961K15",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC033",
+    "description": "10/3 (10G 3-conductor) SJOOW main cable",
+    "custom_code": "10/3 (10G 3-conductor) SJOOW main cable",
+    "vendor_sku": "7422K28",
+    "req_per_unit": 8,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "10G yellow wire",
+    "custom_code": "10G yellow wire",
+    "vendor_sku": "8054T19",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "10G blue wire",
+    "custom_code": "10G blue wire",
+    "vendor_sku": "8054T19",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC034",
+    "description": "12G yellow wire",
+    "custom_code": "12G yellow wire",
+    "vendor_sku": "8054T18",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC035",
+    "description": "12G blue wire",
+    "custom_code": "12G blue wire",
+    "vendor_sku": "8054T18",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC036",
+    "description": "12G green/yellow wire",
+    "custom_code": "12G green/yellow wire",
+    "vendor_sku": "8054T18",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC037",
+    "description": "18G yellow wire",
+    "custom_code": "18G yellow wire",
+    "vendor_sku": "8054T15",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC038",
+    "description": "18G blue wire",
+    "custom_code": "18G blue wire",
+    "vendor_sku": "8054T15",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC039",
+    "description": "18G green/yellow wire",
+    "custom_code": "18G green/yellow wire",
+    "vendor_sku": "8054T15",
+    "req_per_unit": 3,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC040",
+    "description": "18G red wire",
+    "custom_code": "18G red wire",
+    "vendor_sku": "8054T15",
+    "req_per_unit": 3,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC041",
+    "description": "18G black wire",
+    "custom_code": "18G black wire",
+    "vendor_sku": "8054T15",
+    "req_per_unit": 3,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC042",
+    "description": "IWF 10Ga, 0.47\" yellow",
+    "custom_code": "IWF 10 Ga, 0.47\" yellow",
+    "vendor_sku": "7950K34",
+    "req_per_unit": 2,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC043",
+    "description": "IWF 14Ga, 0.31\" blue",
+    "custom_code": "IWF 14Ga, 0.31\" blue",
+    "vendor_sku": "7950K27",
+    "req_per_unit": 26,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC044",
+    "description": "IWF 18Ga, 0.39\" red",
+    "custom_code": "IWF 18Ga, 0.39\" red",
+    "vendor_sku": "7950K73",
+    "req_per_unit": 25,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC045",
+    "description": "Spade Ter 10-12 Ga, #8 Screw yellow",
+    "custom_code": "Spade Ter 10-12 Ga, #8 Screw yellow",
+    "vendor_sku": "7869K28",
+    "req_per_unit": 4,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC046",
+    "description": "Ring Ter 22-18 Ga, #8 Screw red",
+    "custom_code": "Ring Ter 22-18 Ga, #8 Screw red",
+    "vendor_sku": "7113K611",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC047",
+    "description": "Ring Ter 16-14 Ga,  1/4\" Screw blue",
+    "custom_code": "Ring Ter 16-14 Ga,  1/4\" Screw blue",
+    "vendor_sku": "7113K25",
+    "req_per_unit": 11,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC048",
+    "description": "Vinyl Insulation, for 12-10 Wire Gauge and Number 8 Screw Size",
+    "custom_code": "Ring Ter 12-10 Ga, #6 Screw yellow",
+    "vendor_sku": "7113K48",
+    "req_per_unit": 3,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC049",
+    "description": "Plug NEMA L6-30",
+    "custom_code": "Turn-Lock Connector, Three-Blade Straight Plug, Grounded, NEMA L6-30",
+    "vendor_sku": "7162K53",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC050",
+    "description": "IWF 16Ga, 0.39\" black",
+    "custom_code": "IWF 16 Ga, 0.39\" black",
+    "vendor_sku": "7950K24",
+    "req_per_unit": 10,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC051",
+    "description": "Cord Grip - Aluminum",
+    "custom_code": "Cord Grip - Aluminum",
+    "vendor_sku": "8302K181",
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC053",
+    "description": "IWF 12FGa, 0.39\" grey",
+    "custom_code": "IWF 12FGa, 0.39\" grey",
+    "vendor_sku": "7950K31",
+    "req_per_unit": 10,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC054",
+    "description": "Quick Disconnect Terminal Red 22-18",
+    "custom_code": "Insulated Quick Disconnect Terminal Red 22-18- 0.110\"",
+    "vendor_sku": "7243K111",
+    "req_per_unit": 4,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3MNC055",
+    "description": "Quick Disconnect Terminal Red 22-18",
+    "custom_code": "Insulated Quick Disconnect Terminal Red 22-18 - 0.250\"",
+    "vendor_sku": "7243K114",
+    "req_per_unit": 4,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3TAB003",
+    "description": "Tablet Arms",
+    "custom_code": "Tablet Arms",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3TAB008",
+    "description": "Tablet A11+",
+    "custom_code": "Tablet A9+",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3TAB005",
+    "description": "North American Charging Block",
+    "custom_code": "NA Charging Block",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3TAB006",
+    "description": "EU Charging Block",
+    "custom_code": "EU Charging Block",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "INSP Controller",
+    "description": "CSA Inspection for Controller",
+    "custom_code": "CSA Inspection for Controller",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBDC-2CH-G3",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS008C",
+    "description": "Core Side Half",
+    "custom_code": "CBLMS_Core_SideHalf_2R2",
+    "vendor_sku": "TO BE DISCONTINUED",
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS010C",
+    "description": "Core Side half airflow",
+    "custom_code": "CBLMS_Core_SideHalf_AirFlow_5R1",
+    "vendor_sku": null,
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS009C",
+    "description": "Core side half airflow side",
+    "custom_code": "CBLMS_Core_SideHalf_AirFlow_Side_2R1",
+    "vendor_sku": null,
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS011C",
+    "description": "Core Spill Tray",
+    "custom_code": "CBLMS_Core_SpillTray_4R1",
+    "vendor_sku": null,
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS007C",
+    "description": "Lamp Clamp coated",
+    "custom_code": "CBLMS_HS_LampClamp_1R1",
+    "vendor_sku": "TO BE DISCONTINUED",
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS033",
+    "description": "Ceramic Lamp Holder",
+    "custom_code": "CBLMS_HS_LampHolder_3R2",
+    "vendor_sku": null,
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS006C",
+    "description": "Lamp Holders coated",
+    "custom_code": "CBLMS_HS_LampHolder_2R1",
+    "vendor_sku": "TO BE DISCONTINUED",
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS013",
+    "description": "Heater back",
+    "custom_code": "CBLMS_HS_Back_1R1",
+    "vendor_sku": null,
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS014",
+    "description": "Heater bottom",
+    "custom_code": "CBLMS_HS_Bottom_1R3",
+    "vendor_sku": null,
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "Heater cover",
+    "custom_code": "CBLMS_HS_Cover_4R1",
+    "vendor_sku": null,
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS016",
+    "description": "Heater front",
+    "custom_code": "CBLMS_HS_Front_1R1",
+    "vendor_sku": null,
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "Heater side",
+    "custom_code": "CBLMS_HS_Side_2R1",
+    "vendor_sku": null,
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS003",
+    "description": "Insulation Ends",
+    "custom_code": "CBLMS_HS_IN_Back_3R2",
+    "vendor_sku": null,
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS004",
+    "description": "Insulation Bottoms",
+    "custom_code": "CBLMS_HS_IN_Bottom_2R3",
+    "vendor_sku": null,
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS002",
+    "description": "Insulation Sides",
+    "custom_code": "CBLMS_HS_IN_Side_3R2",
+    "vendor_sku": null,
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS005",
+    "description": "Lamp Reflector",
+    "custom_code": "CBLMS_Core_LampReflector_2R1",
+    "vendor_sku": null,
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "INSP Heater",
+    "description": "CSA Inspection of Heater",
+    "custom_code": "CSA Inspection of Heater",
+    "vendor_sku": null,
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS018",
+    "description": "Terminal Block",
+    "custom_code": "5602T32 High-Temperature Short-Resistant Terminal Block, 300V AC/300V DC, Two 20A Circuits, 15/16\" Long",
+    "vendor_sku": "5602T32",
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS019",
+    "description": "Cord Grip",
+    "custom_code": "7489K14 Absorption-Resistant Plastic Submersible Cord Grip for 0.31\"-0.38\" Cord OD, 3/8 Knockout Size",
+    "vendor_sku": "7489K14",
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS020",
+    "description": "Feet Nuts",
+    "custom_code": "92513A230 High-Strength Chemical-Resistant PVDF Hex Nuts, 1/4\"-20 Thread Size",
+    "vendor_sku": "92513A230",
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS021",
+    "description": "PEEK Washer",
+    "custom_code": "93785A600 High-Temperature PEEK Plastic Washer for 1/4\" Screw Size, 0.280\" ID, 0.630\" OD, Beige",
+    "vendor_sku": "93785A600",
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS022",
+    "description": "Plastic Hex Screw",
+    "custom_code": "95841A624 PVC Plastic Hex Head Screw, 3/8\"-16 Thread Size, 1\" Long",
+    "vendor_sku": "95841A624",
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS023",
+    "description": "PEEK Terminal Block screw",
+    "custom_code": "PEEK Plastic Socket Head Screw, 6-32 Thread Size, 3/4\" Long, Beige",
+    "vendor_sku": "98885A111",
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS025",
+    "description": "Push-in bumper",
+    "custom_code": "9544K583 Push-In Bumpers for 17/64\" ID, 15/64\" Stem Height, 5/8\" OD, Silicone",
+    "vendor_sku": "9544K583",
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS027",
+    "description": "Feet Screws",
+    "custom_code": "92196A543 18-8 Stainless Steel Socket Head Screw 1/4\"-20 Thread Size, 1-1/8\" Long",
+    "vendor_sku": "92196A543",
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS028",
+    "description": "PEEK interior Screws",
+    "custom_code": "98885A219 PEEK Plastic Socket Head Screw 3/8\"-16 Thread Size, 1/2\" Long, Beige",
+    "vendor_sku": "98885A219",
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS029",
+    "description": "Feet",
+    "custom_code": "9405K59 Unthreaded Bumpers Plastic, 1-1/8\" OD, 1\" High",
+    "vendor_sku": "9405K59",
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS030",
+    "description": "Power cable",
+    "custom_code": "7422K24 Cable SJOOW, Black Outer Insulation, 14 Gauge, 3 Wires",
+    "vendor_sku": "7422K24",
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS031",
+    "description": "Cable Connector",
+    "custom_code": "C016 20H003 110 12 Standard Circular Connector 4 position",
+    "vendor_sku": "C016 20H003 110 12",
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS034",
+    "description": "Noninsulated quick disconnect terminal",
+    "custom_code": "69525K17 Noninsulated quick disconnect terminal",
+    "vendor_sku": "69525K167",
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS035",
+    "description": "Stud to quick disconnect adapter",
+    "custom_code": "8015K52 Stud to quick disconnect adapter",
+    "vendor_sku": "8015K52",
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS036",
+    "description": "18-8 SS blind rivet",
+    "custom_code": "97525A455 18-8 SS blind rivet",
+    "vendor_sku": "97525A455",
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS037",
+    "description": "High Temp wire 16 Ga",
+    "custom_code": "8209K32 High Temp wire 16 Ga",
+    "vendor_sku": "8209K32",
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS038",
+    "description": "Core cover separator",
+    "custom_code": "96367A975 High Temp PEEK screw",
+    "vendor_sku": "96367A975",
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS041",
+    "description": "IWF for two 16 Ga wires",
+    "custom_code": "Insulated Wire Ferrules for Two 16 Gauge Wires, 0.31\" Pin Length, Black",
+    "vendor_sku": "9703K16",
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS042",
+    "description": "Hex key",
+    "custom_code": "Hex Key",
+    "vendor_sku": null,
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS043",
+    "description": "Mini flathead",
+    "custom_code": "Mini Flathead",
+    "vendor_sku": null,
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS044",
+    "description": "Spiral Sleeving",
+    "custom_code": "Spiral Sleeving",
+    "vendor_sku": "7432K112",
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS045",
+    "description": "Heat-Set Inserts for Plastic, Brass, 10-32 Thread Size, 3/8\" Installed Length",
+    "custom_code": "Heat-Set Inserts for Plastic, Brass, 10-32 Thread Size, 3/8\" Installed Length",
+    "vendor_sku": "94459A360",
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H3LMS046",
+    "description": "Chemical-Resistant High-Temperature PTFE Plastic Screw, Slotted Flat Head, 10-32 Thread Size, 1/2\" Long",
+    "custom_code": "Chemical-Resistant High-Temperature PTFE Plastic Screw, Slotted Flat Head, 10-32 Thread Size, 1/2\" Long",
+    "vendor_sku": "94701A829",
+    "req_per_unit": null,
+    "sheet": "CBLMS Heater",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBL005C",
+    "description": "CBL Cooling Block Sections Coated",
+    "custom_code": "CBL_CB_Section_1R3",
+    "vendor_sku": null,
+    "req_per_unit": 2,
+    "sheet": "CBL Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBL008",
+    "description": "CBL Cooling Block Back",
+    "custom_code": "CBL_CB_Back_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBL Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBL003",
+    "description": "CBL Cooling Block Body",
+    "custom_code": "CBL_CB_Body_4R1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBL Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBL004",
+    "description": "CBL Cooling Block Bottom",
+    "custom_code": "CBL_CB_Bottom_4R3",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBL Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBL007",
+    "description": "CBL Cooling Block Front",
+    "custom_code": "CBL_CB_Front_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBL Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBL009",
+    "description": "CBL Cooling Block Spacers",
+    "custom_code": "CBL_CB_SpacerFrontBack_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 2,
+    "sheet": "CBL Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBL006",
+    "description": "CBL Cooling Block Gasket",
+    "custom_code": "CBL_CB_Gasket_1R3",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBL Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBL010C",
+    "description": "CBL Core Cover Coated",
+    "custom_code": "CBL_Core_Cover_2R1",
+    "vendor_sku": "Discontinued",
+    "req_per_unit": 1,
+    "sheet": "CBL Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG003",
+    "description": "PEEK Screw",
+    "custom_code": "*96367A671 High-Strength High-Temperature PEEK Screw, Pan Head Phillips, 10-32 Thread, 1/2\" Long",
+    "vendor_sku": "96367A671",
+    "req_per_unit": 5,
+    "sheet": "CBL Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG004",
+    "description": "SS Hex Drive Flat Head Screw",
+    "custom_code": "90585A254 316 Stainless Steel Hex Drive Flat Head Screw, 82 Degree Countersink Angle, 10-24 Thread Size, 1-1/2\" Long",
+    "vendor_sku": "90585A254",
+    "req_per_unit": 14,
+    "sheet": "CBL Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG005",
+    "description": "SS Button Head Hex Drive Screw Short",
+    "custom_code": "92949A544 18-8 Stainless Steel Button Head Hex Drive Screw, 1/4\"-20 Thread Size, 1 1/4\" Long",
+    "vendor_sku": "92949A544",
+    "req_per_unit": 2,
+    "sheet": "CBL Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG006",
+    "description": "SS Button Head Hex Drive Screw Long",
+    "custom_code": "92949A550 18-8 Stainless Steel Button Head Hex Drive Screw, 1/4\"-20 Thread Size, 2\" Long",
+    "vendor_sku": "92949A550",
+    "req_per_unit": 2,
+    "sheet": "CBL Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG007",
+    "description": "Hose Clamps",
+    "custom_code": "9579K121 Easy-Install Double Snap-Grip Clamps for Firm Hose and Tube, 23/32\" to 13/16\" Clamp",
+    "vendor_sku": "9579K121",
+    "req_per_unit": 4,
+    "sheet": "CBL Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG008",
+    "description": "Hose Barb",
+    "custom_code": "5346K23 Brass Barbed Hose Fitting for Air and Water, Straight Adapter for 1/2\" Hose ID, 3/8 NPTF Male",
+    "vendor_sku": "5346K23",
+    "req_per_unit": 2,
+    "sheet": "CBL Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "A3HSE002",
+    "description": "Cooling Block Red Hose",
+    "custom_code": "9117T4 Masterkleer Soft PVC Plastic Tubing for Air and Water, 1/2\" ID, 3/4\" OD red",
+    "vendor_sku": "9117T4",
+    "req_per_unit": 1,
+    "sheet": "CBL Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "A3HSE003",
+    "description": "Cooling Block Blue Hose",
+    "custom_code": "9117T4 Masterkleer Soft PVC Plastic Tubing for Air and Water, 1/2\" ID, 3/4\" OD blue",
+    "vendor_sku": "9117T4",
+    "req_per_unit": 1,
+    "sheet": "CBL Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG009",
+    "description": "Nylon Hex Head Screws",
+    "custom_code": "91244A624 Nylon Hex Head Screws 3/8\"-16 Thread Size, 1\" Long, Off-White",
+    "vendor_sku": "91244A624",
+    "req_per_unit": 4,
+    "sheet": "CBL Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "A3HSE005",
+    "description": "Quick Disconnect Male",
+    "custom_code": "HFCD22835 COLDER 1/2HB V IL INSERT",
+    "vendor_sku": "HFCD22835",
+    "req_per_unit": 2,
+    "sheet": "CBL Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "A3HSE004",
+    "description": "Quick Disconnect Female",
+    "custom_code": "HFCD17835 COLDER 1/2HB V IL BODY",
+    "vendor_sku": "HFCD17835",
+    "req_per_unit": 2,
+    "sheet": "CBL Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "A3HSE006",
+    "description": "Worm Clamp",
+    "custom_code": "Worm Clamp",
+    "vendor_sku": "5011T14",
+    "req_per_unit": 2,
+    "sheet": "CBL Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "**92185A997 Super-Corrosion-Resistant 316 Stainless Steel Socket Head Screw 10-32 Thread Size, 2-1/2\" Long, Partially Threaded",
+    "custom_code": "**92185A997 Super-Corrosion-Resistant 316 Stainless Steel Socket Head Screw 10-32 Thread Size, 2-1/2\" Long, Partially Threaded",
+    "vendor_sku": "NOT IN FB",
+    "req_per_unit": 3,
+    "sheet": "CBL Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "**95136A340 PTFE Unthreaded Spacer 1/2\" OD, 2\" Long",
+    "custom_code": "**95136A340 PTFE Unthreaded Spacer 1/2\" OD, 2\" Long",
+    "vendor_sku": "NOT IN FB",
+    "req_per_unit": 3,
+    "sheet": "CBL Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "CBL Cooling Block Section Plastic",
+    "custom_code": "CBL_CB_Section_Plastic_1F2R1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBL Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "CBL Cooling Block Body Plastic",
+    "custom_code": "CBL_CB_Body_Plastic_4F3R1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBL Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "CBL Cooling Block Bottom",
+    "custom_code": "CBL_CB_Bottom_4R3",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBL Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "CBL Cooling Block Spacers",
+    "custom_code": "CBL_CB_SpacerFrontBack_2R1",
+    "vendor_sku": null,
+    "req_per_unit": 2,
+    "sheet": "CBL Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "CBL Cooling Block Gasket Plastic",
+    "custom_code": "CBL_CB_Gasket_Plastic_1R2",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBL Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "CBL Cooling Block Back",
+    "custom_code": "CBL_CB_Back_2R1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBL Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "CBL Cooling Block Front",
+    "custom_code": "CBL_CB_Front_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBL Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "Heat-Set Inserts for Plastic",
+    "custom_code": "Heat-Set Inserts for Plastic, Brass, 1/4\"-20 Thread Size, 1/2\" Installed Length",
+    "vendor_sku": "94459A390",
+    "req_per_unit": 3,
+    "sheet": "CBL Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "Brass Taping Inserts",
+    "custom_code": "Brass Tapping Inserts for Hardwood 1/4-20 thread",
+    "vendor_sku": "90016A029",
+    "req_per_unit": 4,
+    "sheet": "CBL Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "High-Strength High-Temperature PEEK Screw",
+    "custom_code": "High-Strength High-Temperature PEEK Screw 1/4-20",
+    "vendor_sku": "96367A744",
+    "req_per_unit": 3,
+    "sheet": "CBL Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "Stainless Steel Button Head Hex",
+    "custom_code": "316 Stainless Steel Button Head Hex Drive Screw 10-24",
+    "vendor_sku": "98164A457",
+    "req_per_unit": 32,
+    "sheet": "CBL Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "18-8 Stainless Steel Button Head Hex",
+    "custom_code": "18-8 Stainless Steel Button Head Hex Drive Screw, 1/4\"-20 Thread Size, 1\" Long",
+    "vendor_sku": "92949A542",
+    "req_per_unit": 4,
+    "sheet": "CBL Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "Nylon Hex Head Screws",
+    "custom_code": "Nylon Hex Head Screws 3/8\"-16 Thread Size, 1\" Long, Off-White",
+    "vendor_sku": "91244A624",
+    "req_per_unit": 4,
+    "sheet": "CBL Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "Hose Barb",
+    "custom_code": "5346K23 Brass Barbed Hose Fitting for Air and Water, Straight Adapter for 1/2\" Hose ID, 3/8 NPTF Male",
+    "vendor_sku": "5346K23",
+    "req_per_unit": 2,
+    "sheet": "CBL Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBM005C",
+    "description": "CBM Cooling Block Sections Coated",
+    "custom_code": "CBM_CB_Section_2F1R3",
+    "vendor_sku": null,
+    "req_per_unit": 2,
+    "sheet": "CBM Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBM"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBM003",
+    "description": "CBM Cooling Block Back",
+    "custom_code": "CBM_CB_Back_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBM Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBM"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBM008",
+    "description": "CBM Cooling Block Body",
+    "custom_code": "CBM_CB_Body_3R2",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBM Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBM"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBM009",
+    "description": "CBM Cooling Block Bottom",
+    "custom_code": "CBM_CB_Bottom_5F4R3",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBM Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBM"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBM002",
+    "description": "CBM Cooling Block Front",
+    "custom_code": "CBM_CB_Front_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBM Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBM"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBM004",
+    "description": "CBM Cooling Block Spacers",
+    "custom_code": "CBM_CB_SpacerFrontBack_2R1",
+    "vendor_sku": null,
+    "req_per_unit": 2,
+    "sheet": "CBM Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBM"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBM010",
+    "description": "CBM Cooling Block Gasket",
+    "custom_code": "CBM_CB_Gasket_1R2",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBM Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBM"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBM006C",
+    "description": "CBM Core Cover Coated",
+    "custom_code": "CBM_Core_Cover_1R1",
+    "vendor_sku": "Discontinued",
+    "req_per_unit": 1,
+    "sheet": "CBM Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBM"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG003",
+    "description": "PEEK Screw",
+    "custom_code": "*96367A671 High-Strength High-Temperature PEEK Screw, Pan Head Phillips, 10-32 Thread, 1/2\" Long",
+    "vendor_sku": "96367A671",
+    "req_per_unit": 5,
+    "sheet": "CBM Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG004",
+    "description": "SS Hex Drive Flat Head Screw",
+    "custom_code": "90585A254 316 Stainless Steel Hex Drive Flat Head Screw, 82 Degree Countersink Angle, 10-24 Thread Size, 1-1/2\" Long",
+    "vendor_sku": "90585A254",
+    "req_per_unit": 14,
+    "sheet": "CBM Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG005",
+    "description": "SS Button Head Hex Drive Screw Short",
+    "custom_code": "92949A544 18-8 Stainless Steel Button Head Hex Drive Screw, 1/4\"-20 Thread Size, 1 1/4\" Long",
+    "vendor_sku": "92949A544",
+    "req_per_unit": 2,
+    "sheet": "CBM Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG006",
+    "description": "SS Button Head Hex Drive Screw Long",
+    "custom_code": "92949A550 18-8 Stainless Steel Button Head Hex Drive Screw, 1/4\"-20 Thread Size, 2\" Long",
+    "vendor_sku": "92949A550",
+    "req_per_unit": 2,
+    "sheet": "CBM Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG007",
+    "description": "Hose Clamps",
+    "custom_code": "9579K121 Easy-Install Double Snap-Grip Clamps for Firm Hose and Tube, 23/32\" to 13/16\" Clamp",
+    "vendor_sku": "9579K121",
+    "req_per_unit": 4,
+    "sheet": "CBM Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG008",
+    "description": "Hose Barb",
+    "custom_code": "5346K23 Brass Barbed Hose Fitting for Air and Water, Straight Adapter for 1/2\" Hose ID, 3/8 NPTF Male",
+    "vendor_sku": "5346K23",
+    "req_per_unit": 2,
+    "sheet": "CBM Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "A3HSE002",
+    "description": "Cooling Block Red Hose",
+    "custom_code": "9117T4 Masterkleer Soft PVC Plastic Tubing for Air and Water, 1/2\" ID, 3/4\" OD red",
+    "vendor_sku": "9117T4",
+    "req_per_unit": 1,
+    "sheet": "CBM Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "A3HSE003",
+    "description": "Cooling Block Blue Hose",
+    "custom_code": "9117T4 Masterkleer Soft PVC Plastic Tubing for Air and Water, 1/2\" ID, 3/4\" OD blue",
+    "vendor_sku": "9117T4",
+    "req_per_unit": 1,
+    "sheet": "CBM Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG009",
+    "description": "Nylon Hex Head Screws",
+    "custom_code": "91244A624 Nylon Hex Head Screws 3/8\"-16 Thread Size, 1\" Long, Off-White",
+    "vendor_sku": "91244A624",
+    "req_per_unit": 4,
+    "sheet": "CBM Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "A3HSE005",
+    "description": "Quick Disconnect Male",
+    "custom_code": "HFCD22835 COLDER 1/2HB V IL INSERT",
+    "vendor_sku": "HFCD22835",
+    "req_per_unit": 2,
+    "sheet": "CBM Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "A3HSE004",
+    "description": "Quick Disconnect Female",
+    "custom_code": "HFCD17835 COLDER 1/2HB V IL BODY",
+    "vendor_sku": "HFCD17835",
+    "req_per_unit": 2,
+    "sheet": "CBM Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H3HSE006",
+    "description": "Worm Clamp",
+    "custom_code": "Worm Clamp",
+    "vendor_sku": "5011T14",
+    "req_per_unit": 2,
+    "sheet": "CBM Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "CBM Cooling Block Section Plastic",
+    "custom_code": "CBM_CB_Section_Plastic_5F4",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBM Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBM"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "CBM Cooling Block Body Plastic",
+    "custom_code": "CBM_CB_Body_Plastic_2F1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBM Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBM"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "CBM Cooling Block Bottom",
+    "custom_code": "CBM_CB_Bottom_6F5",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBM Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBM"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "CBM Cooling Block Spacers",
+    "custom_code": "CBM_CB_SpacerFrontBack_2R1",
+    "vendor_sku": null,
+    "req_per_unit": 2,
+    "sheet": "CBM Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBM"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "CBM Cooling Block Gasket Plastic",
+    "custom_code": "CBM_CB_Gasket_Plastic_1F1R2",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBM Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBM"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBM003",
+    "description": "CBM Cooling Block Back",
+    "custom_code": "CBM_CB_Back_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBM Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBM"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBM002",
+    "description": "CBM Cooling Block Front",
+    "custom_code": "CBM_CB_Front_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBM Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBM"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG011P",
+    "description": "Press-Fit Threaded Insert",
+    "custom_code": "Press-Fit Threaded Insert for Composites 1/4-20 thread",
+    "vendor_sku": "93907A104",
+    "req_per_unit": 3,
+    "sheet": "CBM Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG012P",
+    "description": "Brass Taping Inserts",
+    "custom_code": "Brass Tapping Inserts for Hardwood 1/4-20 thread",
+    "vendor_sku": "90016A029",
+    "req_per_unit": 4,
+    "sheet": "CBM Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG013P",
+    "description": "High-Strength High-Temperature PEEK Screw",
+    "custom_code": "High-Strength High-Temperature PEEK Screw 1/4-20",
+    "vendor_sku": "96367A744",
+    "req_per_unit": 3,
+    "sheet": "CBM Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG014P",
+    "description": "Stainless Steel Button Head Hex",
+    "custom_code": "316 Stainless Steel Button Head Hex Drive Screw 10-24",
+    "vendor_sku": "98164A457",
+    "req_per_unit": 35,
+    "sheet": "CBM Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG015P",
+    "description": "18-8 Stainless Steel Button Head Hex",
+    "custom_code": "18-8 Stainless Steel Button Head Hex Drive Screw, 1/4\"-20 Thread Size, 1\" Long",
+    "vendor_sku": "92949A542",
+    "req_per_unit": 4,
+    "sheet": "CBM Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "Nylon Hex Head Screws",
+    "custom_code": "Nylon Hex Head Screws 3/8\"-16 Thread Size, 1\" Long, Off-White",
+    "vendor_sku": "91244A624",
+    "req_per_unit": 4,
+    "sheet": "CBM Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "Hose Barb",
+    "custom_code": "5346K23 Brass Barbed Hose Fitting for Air and Water, Straight Adapter for 1/2\" Hose ID, 3/8 NPTF Male",
+    "vendor_sku": "5346K23",
+    "req_per_unit": 2,
+    "sheet": "CBM Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBS003C",
+    "description": "CBS Cooling Block Sections Coated",
+    "custom_code": "CBS_CB_Section_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 2,
+    "sheet": "CBS Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBS006",
+    "description": "CBS Cooling Block Back",
+    "custom_code": "CBS_CB_Back_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBS Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBS004",
+    "description": "CBS Cooling Block Body",
+    "custom_code": "CBS_CB_Body_3F2R2",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBS Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBS007",
+    "description": "CBS Cooling Block Bottom",
+    "custom_code": "CBS_CB_Bottom_4F3R1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBS Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBS005",
+    "description": "CBS Cooling Block Front",
+    "custom_code": "CBS_CB_Front_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBS Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBS008",
+    "description": "CBS Cooling Block Spacers",
+    "custom_code": "CBS_CB_SpacerFrontBack_2R1",
+    "vendor_sku": null,
+    "req_per_unit": 2,
+    "sheet": "CBS Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBS002",
+    "description": "CBS Cooling Block Gasket",
+    "custom_code": "CBS_CB_Gasket_1R2",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBS Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBS009C",
+    "description": "CBS Core Cover Coated",
+    "custom_code": "CBS_Core_Cover_2R1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBS Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG003",
+    "description": "PEEK Screw",
+    "custom_code": "*96367A671 High-Strength High-Temperature PEEK Screw, Pan Head Phillips, 10-32 Thread, 1/2\" Long",
+    "vendor_sku": "96367A671",
+    "req_per_unit": 5,
+    "sheet": "CBS Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG004",
+    "description": "SS Hex Drive Flat Head Screw",
+    "custom_code": "90585A254 316 Stainless Steel Hex Drive Flat Head Screw, 82 Degree Countersink Angle, 10-24 Thread Size, 1-1/2\" Long",
+    "vendor_sku": "90585A254",
+    "req_per_unit": 14,
+    "sheet": "CBS Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG005",
+    "description": "SS Button Head Hex Drive Screw Short",
+    "custom_code": "92949A542 18-8 Stainless Steel Button Head Hex Drive Screw, 1/4\"-20 Thread Size, 1\" Long",
+    "vendor_sku": "92949A542",
+    "req_per_unit": 2,
+    "sheet": "CBS Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG006",
+    "description": "SS Button Head Hex Drive Screw Long",
+    "custom_code": "92949A550 18-8 Stainless Steel Button Head Hex Drive Screw, 1/4\"-20 Thread Size, 2\" Long",
+    "vendor_sku": "92949A550",
+    "req_per_unit": 2,
+    "sheet": "CBS Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG007",
+    "description": "Hose Clamps",
+    "custom_code": "9579K121 Easy-Install Double Snap-Grip Clamps for Firm Hose and Tube, 23/32\" to 13/16\" Clamp",
+    "vendor_sku": "9579K121",
+    "req_per_unit": 4,
+    "sheet": "CBS Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG008",
+    "description": "Hose Barb",
+    "custom_code": "5346K23 Brass Barbed Hose Fitting for Air and Water, Straight Adapter for 1/2\" Hose ID, 3/8 NPTF Male",
+    "vendor_sku": "5346K23",
+    "req_per_unit": 2,
+    "sheet": "CBS Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "A3HSE002",
+    "description": "Cooling Block Red Hose",
+    "custom_code": "9117T4 Masterkleer Soft PVC Plastic Tubing for Air and Water, 1/2\" ID, 3/4\" OD red",
+    "vendor_sku": "9117T4",
+    "req_per_unit": 1,
+    "sheet": "CBS Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "A3HSE003",
+    "description": "Cooling Block Blue Hose",
+    "custom_code": "9117T4 Masterkleer Soft PVC Plastic Tubing for Air and Water, 1/2\" ID, 3/4\" OD blue",
+    "vendor_sku": "9117T4",
+    "req_per_unit": 1,
+    "sheet": "CBS Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG009",
+    "description": "Nylon Hex Head Screws",
+    "custom_code": "91244A624 Nylon Hex Head Screws 3/8\"-16 Thread Size, 1\" Long, Off-White",
+    "vendor_sku": "91244A624",
+    "req_per_unit": 4,
+    "sheet": "CBS Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "A3HSE005",
+    "description": "Quick Disconnect Male",
+    "custom_code": "HFCD22835 COLDER 1/2HB V IL INSERT",
+    "vendor_sku": "HFCD22835",
+    "req_per_unit": 2,
+    "sheet": "CBS Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "A3HSE004",
+    "description": "Quick Disconnect Female",
+    "custom_code": "HFCD17835 COLDER 1/2HB V IL BODY",
+    "vendor_sku": "HFCD17835",
+    "req_per_unit": 2,
+    "sheet": "CBS Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H3HSE006",
+    "description": "Worm Clamp",
+    "custom_code": "Worm Clamp",
+    "vendor_sku": "5011T14",
+    "req_per_unit": 2,
+    "sheet": "CBS Lid",
+    "variant": "coated",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBS011P",
+    "description": "CBS Cooling Block Section Plastic",
+    "custom_code": "CBS_CB_Section_Plastic_3F2",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBS Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L2CBS012P",
+    "description": "CBS Cooling Block Body Plastic",
+    "custom_code": "CBS_CB_Body_Plastic_4F3",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBS Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBS007",
+    "description": "CBS Cooling Block Bottom",
+    "custom_code": "CBS_CB_Bottom_Plastic_1F0",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBS Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBS008",
+    "description": "CBS Cooling Block Spacers",
+    "custom_code": "CBS_CB_SpacerFrontBack_2R1",
+    "vendor_sku": null,
+    "req_per_unit": 2,
+    "sheet": "CBS Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBS013P",
+    "description": "CBS Cooling Block Gasket",
+    "custom_code": "CBS_CB_Gasket_Plastic_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBS Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBS006",
+    "description": "CBS Cooling Block Back",
+    "custom_code": "CBS_CB_Back_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBS Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBS005",
+    "description": "CBS Cooling Block Front",
+    "custom_code": "CBS_CB_Front_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "CBS Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG012P",
+    "description": "Brass Taping Inserts",
+    "custom_code": "Brass Tapping Inserts for Hardwood 1/4-20 thread",
+    "vendor_sku": "90016A029",
+    "req_per_unit": 7,
+    "sheet": "CBS Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG013P",
+    "description": "High-Strength High-Temperature PEEK Screw",
+    "custom_code": "High-Strength High-Temperature PEEK Screw 1/4-20",
+    "vendor_sku": "96367A744",
+    "req_per_unit": 3,
+    "sheet": "CBS Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG014P",
+    "description": "Stainless Steel Button Head Hex",
+    "custom_code": "316 Stainless Steel Button Head Hex Drive Screw 10-24",
+    "vendor_sku": "98164A457",
+    "req_per_unit": 41,
+    "sheet": "CBS Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG015P",
+    "description": "18-8 Stainless Steel Button Head Hex",
+    "custom_code": "18-8 Stainless Steel Button Head Hex Drive Screw, 1/4\"-20 Thread Size, 1\" Long",
+    "vendor_sku": "92949A542",
+    "req_per_unit": 4,
+    "sheet": "CBS Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "Nylon Hex Head Screws",
+    "custom_code": "Nylon Hex Head Screws 3/8\"-16 Thread Size, 1\" Long, Off-White",
+    "vendor_sku": "91244A624",
+    "req_per_unit": 4,
+    "sheet": "CBS Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": null,
+    "description": "Hose Barb",
+    "custom_code": "5346K23 Brass Barbed Hose Fitting for Air and Water, Straight Adapter for 1/2\" Hose ID, 3/8 NPTF Male",
+    "vendor_sku": "5346K23",
+    "req_per_unit": 2,
+    "sheet": "CBS Lid",
+    "variant": "plastic",
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "S3STG001",
+    "description": "Test Tube Stand Centre",
+    "custom_code": "CBLMS_Stand_Center_2R1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "Stands",
+    "variant": null,
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "S3STG002",
+    "description": "Test Tube Stand Side",
+    "custom_code": "CBLMS_Stand_Side_2R1",
+    "vendor_sku": null,
+    "req_per_unit": 2,
+    "sheet": "Stands",
+    "variant": null,
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "S3STL002",
+    "description": "CBL Stand Spacer",
+    "custom_code": "CBL_Stand_Spacer_1R2",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "Stands",
+    "variant": null,
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "S3STM002",
+    "description": "CBM Stand Spacer",
+    "custom_code": "CBM_Stand_Spacer_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "Stands",
+    "variant": null,
+    "sizes": [
+      "CBM"
+    ]
+  },
+  {
+    "fb_part_number": "S3STS002",
+    "description": "CBS Stand Spacer",
+    "custom_code": "CBS_Stand_Spacer_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "Stands",
+    "variant": null,
+    "sizes": [
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "S3STG003",
+    "description": "Stand Socket Head Screw",
+    "custom_code": "99477A610 Polypropylene Plastic Socket Head Screw 1/4\"-20 Thread Size, 5/8\" Long, Off-White",
+    "vendor_sku": "99477A610",
+    "req_per_unit": 6,
+    "sheet": "Stands",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "T3TTL001",
+    "description": "CBL Transfer Tray",
+    "custom_code": "CBL_TransferTray_1R2",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "Extras",
+    "variant": null,
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "T3TTM001",
+    "description": "CBM Transfer Tray",
+    "custom_code": "CBM_TransferTray_1R3",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "Extras",
+    "variant": null,
+    "sizes": [
+      "CBM"
+    ]
+  },
+  {
+    "fb_part_number": "T3TTS001",
+    "description": "CBS Transfer Tray",
+    "custom_code": "CBS_TranferTray_2R1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "Extras",
+    "variant": null,
+    "sizes": [
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBL002",
+    "description": "CBL Light Shield",
+    "custom_code": "CBL_Core_CoverUpper_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "Extras",
+    "variant": null,
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBL011C",
+    "description": "CBL Core Airflow Cover Coated",
+    "custom_code": "CBL_Core_Cover_Airflow_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "Extras",
+    "variant": null,
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBM007C",
+    "description": "CBM Core Airflow Cover Coated",
+    "custom_code": "CBM_Core_Cover_Airflow_2R1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "Extras",
+    "variant": null,
+    "sizes": [
+      "CBM"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBS010C",
+    "description": "CBS Core Airflow Cover Coated",
+    "custom_code": "CBS_Core_Cover_Airflow_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "Extras",
+    "variant": null,
+    "sizes": [
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "L3CBG001",
+    "description": "Core Cover Spacer",
+    "custom_code": null,
+    "vendor_sku": null,
+    "req_per_unit": 4,
+    "sheet": "Extras",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "PLUCON1",
+    "description": "Plugs for Africa",
+    "custom_code": null,
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "Extras",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "PLUCON2",
+    "description": "Plugs for Africa",
+    "custom_code": null,
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "Extras",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "A3HSE001",
+    "description": "Chiller hose",
+    "custom_code": "Chiller Hose",
+    "vendor_sku": null,
+    "req_per_unit": 18,
+    "sheet": "Extras",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "R3PCA001",
+    "description": "Chiller",
+    "custom_code": "120V Chiller",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "Extras",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "R3PCA002",
+    "description": "Chiller",
+    "custom_code": "240V chiller",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "Extras",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "H4LMP001",
+    "description": "CB Pro Lamp",
+    "custom_code": "Lamps",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "Extras",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "U3TBL001",
+    "description": "CBL Test Tubes",
+    "custom_code": "TT_CBS_Boro_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 12,
+    "sheet": "Tubes",
+    "variant": null,
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "U3TBM001",
+    "description": "CBM Test Tubes",
+    "custom_code": "TT_CBM_Boro_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 16,
+    "sheet": "Tubes",
+    "variant": null,
+    "sizes": [
+      "CBM"
+    ]
+  },
+  {
+    "fb_part_number": "U3TBS001",
+    "description": "CBS Test Tubes",
+    "custom_code": "TT_CBL_Boro_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 20,
+    "sheet": "Tubes",
+    "variant": null,
+    "sizes": [
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "U3TBL002",
+    "description": "CBL Graduated Test Tubes",
+    "custom_code": "TT_CBL_Boro_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 12,
+    "sheet": "Tubes",
+    "variant": null,
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "U3TBM002",
+    "description": "CBM Graduated Test Tubes",
+    "custom_code": "TT_CBM_Boro_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 16,
+    "sheet": "Tubes",
+    "variant": null,
+    "sizes": [
+      "CBM"
+    ]
+  },
+  {
+    "fb_part_number": "U3TBS002",
+    "description": "CBM Graduated Test Tubes",
+    "custom_code": "TT_CBS_Boro_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 20,
+    "sheet": "Tubes",
+    "variant": null,
+    "sizes": [
+      "CBM"
+    ]
+  },
+  {
+    "fb_part_number": "U3TQL001",
+    "description": "CBL Quartz Test Tubes",
+    "custom_code": "TT_CBL_Boro_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 12,
+    "sheet": "Tubes",
+    "variant": null,
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "U3TQM001",
+    "description": "CBM Quartz Test Tubes",
+    "custom_code": "TT_CBM_Boro_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 16,
+    "sheet": "Tubes",
+    "variant": null,
+    "sizes": [
+      "CBM"
+    ]
+  },
+  {
+    "fb_part_number": "U3TQS001",
+    "description": "CBS Quartz Test Tubes",
+    "custom_code": "TT_CBS_Boro_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 20,
+    "sheet": "Tubes",
+    "variant": null,
+    "sizes": [
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "U3TQL002",
+    "description": "CBL Graduated Quartz Test Tubes",
+    "custom_code": "TT_CBL_Boro_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 12,
+    "sheet": "Tubes",
+    "variant": null,
+    "sizes": [
+      "CBL"
+    ]
+  },
+  {
+    "fb_part_number": "U3TQM002",
+    "description": "CBM Graduated Quartz Test Tubes",
+    "custom_code": "TT_CBM_Boro_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 16,
+    "sheet": "Tubes",
+    "variant": null,
+    "sizes": [
+      "CBM"
+    ]
+  },
+  {
+    "fb_part_number": "U3TQS002",
+    "description": "CBS Graduated Quartz Test Tubes",
+    "custom_code": "TT_CBS_Boro_1R1",
+    "vendor_sku": null,
+    "req_per_unit": 20,
+    "sheet": "Tubes",
+    "variant": null,
+    "sizes": [
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "U3LNM001",
+    "description": "CBM Test Tub Inserts",
+    "custom_code": null,
+    "vendor_sku": null,
+    "req_per_unit": 16,
+    "sheet": "Tubes",
+    "variant": null,
+    "sizes": [
+      "CBM"
+    ]
+  }
+]

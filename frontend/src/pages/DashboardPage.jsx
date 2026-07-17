@@ -1,15 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../auth/AuthContext.jsx'
-import DataTable from '../components/DataTable.jsx'
+import ProductSection from '../components/ProductSection.jsx'
 import StatCard from '../components/StatCard.jsx'
 import { getDashboardSummary } from '../services/api.js'
-
-const inventoryColumns = [
-  { key: 'sku', label: 'SKU' },
-  { key: 'qty_on_hand', label: 'On Hand' },
-  { key: 'qty_demanded', label: 'Demanded' },
-  { key: 'net_available', label: 'Net Available' },
-]
 
 export default function DashboardPage() {
   const { logout } = useAuth()
@@ -43,7 +36,9 @@ export default function DashboardPage() {
             <StatCard label="Open Manufacture Orders" value={summary.manufacture_orders.length} />
             <StatCard label="Active Deals" value={summary.deals.length} />
           </div>
-          <DataTable columns={inventoryColumns} rows={summary.inventory} />
+          {summary.products.map((product) => (
+            <ProductSection key={product.name} name={product.name} parts={product.parts} />
+          ))}
         </>
       )}
     </div>

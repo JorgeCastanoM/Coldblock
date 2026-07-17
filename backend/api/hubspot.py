@@ -31,6 +31,8 @@ class HubspotClient:
     async def get_deals(self) -> list[dict]:
         if settings.use_mock_data:
             return _MOCK_DEALS
+        if not settings.hubspot_api_token:
+            return []
         async with httpx.AsyncClient(timeout=10) as client:
             data = await self._get(client, "/crm/v3/objects/deals", params={"limit": 100})
             return data.get("results", [])
@@ -38,6 +40,8 @@ class HubspotClient:
     async def get_line_items(self) -> list[dict]:
         if settings.use_mock_data:
             return _MOCK_LINE_ITEMS
+        if not settings.hubspot_api_token:
+            return []
         async with httpx.AsyncClient(timeout=10) as client:
             data = await self._get(client, "/crm/v3/objects/line_items", params={"limit": 100})
             return data.get("results", [])

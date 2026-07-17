@@ -1,6 +1,9 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from api.fishbowl import fishbowl_client
 from auth.routes import router as auth_router
 from core.config import settings
 from core.logging import configure_logging
@@ -8,7 +11,14 @@ from routers.dashboard import router as dashboard_router
 
 configure_logging(settings.log_level)
 
-app = FastAPI(title="ColdBlock Intelligence Dashboard API")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    yield
+    await fishbowl_client.logout()
+
+
+app = FastAPI(title="ColdBlock Intelligence Dashboard API", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
