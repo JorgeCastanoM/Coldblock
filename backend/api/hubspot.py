@@ -193,6 +193,30 @@ class HubspotClient:
                 ]
         return results
 
+    async def _search_all_deals(self, client: httpx.AsyncClient) -> list[dict]:
+        """deals/search caps at 100 results per page. This portal has hundreds of
+        non-archived deals, so a single page silently dropped every deal older
+        than the 100 most-recently-modified — paginate via the `after` cursor
+        to fetch all of them instead."""
+        results: list[dict] = []
+        after: str | None = None
+        while True:
+            search_body = {
+                "filterGroups": [
+                    {"filters": [{"propertyName": "pipeline", "operator": "NEQ", "value": _ARCHIVED_PIPELINE_ID}]}
+                ],
+                "sorts": [{"propertyName": "hs_lastmodifieddate", "direction": "DESCENDING"}],
+                "properties": _DEAL_PROPERTIES,
+                "limit": 100,
+            }
+            if after:
+                search_body["after"] = after
+            data = await self._post(client, "/crm/v3/objects/deals/search", search_body)
+            results.extend(data.get("results", []))
+            after = data.get("paging", {}).get("next", {}).get("after")
+            if not after:
+                return results
+
     async def get_deals(self) -> list[dict]:
         if settings.use_mock_data:
             return _MOCK_DEALS
@@ -202,16 +226,7 @@ class HubspotClient:
         async with httpx.AsyncClient(timeout=30) as client:
             pipelines = await self.get_deal_pipelines(client)
 
-            search_body = {
-                "filterGroups": [
-                    {"filters": [{"propertyName": "pipeline", "operator": "NEQ", "value": _ARCHIVED_PIPELINE_ID}]}
-                ],
-                "sorts": [{"propertyName": "hs_lastmodifieddate", "direction": "DESCENDING"}],
-                "properties": _DEAL_PROPERTIES,
-                "limit": 100,
-            }
-            data = await self._post(client, "/crm/v3/objects/deals/search", search_body)
-            deals_raw = data.get("results", [])
+            deals_raw = await self._search_all_deals(client)
             deal_ids = [deal["id"] for deal in deals_raw]
 
             # These three only depend on deal_ids, not on each other — fetch concurrently.

@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import AppHeader from '../components/AppHeader.jsx'
 import LineChart from '../components/LineChart.jsx'
 import SalesYearChart from '../components/SalesYearChart.jsx'
@@ -15,7 +15,32 @@ import {
   weekKey,
 } from '../lib/format.js'
 
-const WEEKS_OF_TREND = 12
+const DEFAULT_WEEKS_OF_TREND = 12
+const WEEK_OPTIONS = [4, 8, 12, 26, 52]
+
+// Shared by Sales Trajectory, Pipeline Movement, and Lead Generation — they're
+// deliberately kept on the same timeframe (see weekKeys below) so switching it
+// in any one of them moves all three together rather than drifting out of sync.
+function WeeksToggle({ value, onChange }) {
+  return (
+    <div className="inline-flex items-center gap-0.5 rounded-lg border border-surface-border bg-surface p-0.5">
+      {WEEK_OPTIONS.map((weeks) => (
+        <button
+          key={weeks}
+          type="button"
+          onClick={() => onChange(weeks)}
+          className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+            weeks === value
+              ? 'bg-sky-500/15 text-sky-300'
+              : 'text-slate-400 hover:bg-white/[0.04] hover:text-slate-200'
+          }`}
+        >
+          {weeks}W
+        </button>
+      ))}
+    </div>
+  )
+}
 
 // Revenue reporting (Total Won Revenue, Sales per Year, Avg Deal Size, Top
 // Customers) is scoped to deals that have reached one of these stages — every
@@ -117,12 +142,13 @@ export default function SalesOverviewPage() {
       .map(([company, amount]) => ({ company, amount }))
   }, [wonUsd])
 
-  // Shared week buckets for every "past 12 weeks" chart below, so they all line
-  // up on the same weeks even though they're built from different useMemo calls.
-  const weekKeys = useMemo(() => lastNWeekKeys(WEEKS_OF_TREND), [])
+  // Shared week buckets for every trend chart below, so they all line up on
+  // the same weeks even though they're built from different useMemo calls.
+  const [weeksOfTrend, setWeeksOfTrend] = useState(DEFAULT_WEEKS_OF_TREND)
+  const weekKeys = useMemo(() => lastNWeekKeys(weeksOfTrend), [weeksOfTrend])
   const currentWeekKey = weekKeys[weekKeys.length - 1]
 
-  // Idea: 12-week sales trajectory — won revenue (USD) by the week it closed.
+  // Sales trajectory — won revenue (USD) by the week it closed.
   const revenueTrend = useMemo(() => {
     const byWeek = new Map(weekKeys.map((key) => [key, 0]))
     for (const deal of wonUsd) {
@@ -249,9 +275,12 @@ export default function SalesOverviewPage() {
         />
 
         <div className="mb-6 rounded-xl border border-surface-border bg-surface-raised p-5">
-          <div className="mb-4">
-            <h2 className="text-base font-semibold text-slate-100">Sales Trajectory — Past 12 Weeks</h2>
-            <p className="text-xs text-slate-500">Won revenue (USD), by the week each deal closed</p>
+          <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h2 className="text-base font-semibold text-slate-100">Sales Trajectory — Past {weeksOfTrend} Weeks</h2>
+              <p className="text-xs text-slate-500">Won revenue (USD), by the week each deal closed</p>
+            </div>
+            <WeeksToggle value={weeksOfTrend} onChange={setWeeksOfTrend} />
           </div>
           <LineChart data={revenueTrend} formatValue={compactUsd} lineColor="#38bdf8" />
         </div>
@@ -331,9 +360,12 @@ export default function SalesOverviewPage() {
         </div>
 
         <div className="mb-6 rounded-xl border border-surface-border bg-surface-raised p-5">
-          <div className="mb-4">
-            <h2 className="text-base font-semibold text-slate-100">Pipeline Movement</h2>
-            <p className="text-xs text-slate-500">Deals that changed stage, by week (all pipelines)</p>
+          <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h2 className="text-base font-semibold text-slate-100">Pipeline Movement — Past {weeksOfTrend} Weeks</h2>
+              <p className="text-xs text-slate-500">Deals that changed stage, by week (all pipelines)</p>
+            </div>
+            <WeeksToggle value={weeksOfTrend} onChange={setWeeksOfTrend} />
           </div>
           <LineChart data={movementTrend} lineColor="#a78bfa" />
           <div className="mt-5 border-t border-surface-border pt-4">
@@ -354,9 +386,12 @@ export default function SalesOverviewPage() {
         </div>
 
         <div className="mb-6 rounded-xl border border-surface-border bg-surface-raised p-5">
-          <div className="mb-4">
-            <h2 className="text-base font-semibold text-slate-100">Lead Generation</h2>
-            <p className="text-xs text-slate-500">New deals created, by week (all pipelines, all currencies)</p>
+          <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h2 className="text-base font-semibold text-slate-100">Lead Generation — Past {weeksOfTrend} Weeks</h2>
+              <p className="text-xs text-slate-500">New deals created, by week (all pipelines, all currencies)</p>
+            </div>
+            <WeeksToggle value={weeksOfTrend} onChange={setWeeksOfTrend} />
           </div>
           <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <StatCard label="New Leads This Week" value={newLeadsThisWeek} />

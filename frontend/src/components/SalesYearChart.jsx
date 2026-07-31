@@ -1,6 +1,11 @@
 import { useMemo } from 'react'
 import { formatCurrency, parseFishbowlDate } from '../lib/format.js'
 
+// How many prior years get a "same date" year-to-date comparison against the
+// current year. Kept small on purpose — this is a quick sanity check ("are we
+// ahead of where we were last year and the year before"), not a full history.
+const LOOKBACK_YEARS = 2
+
 function formatCompactUsd(value) {
   const amount = Number(value) || 0
   if (amount >= 1_000_000) return `$${(amount / 1_000_000).toFixed(1)}M`
@@ -12,9 +17,8 @@ function dealCloseDate(deal) {
   return parseFishbowlDate(deal.close_date) || parseFishbowlDate(deal.create_date)
 }
 
-/** Won USD revenue in `year` on or before the same month/day as `now`. */
-function buildSameTimeMarker(deals, now = new Date()) {
-  const year = now.getFullYear() - 1
+/** Won USD revenue in `year`, split into "by the same month/day as `now`" vs the full year. */
+function buildYearToDate(deals, year, now) {
   const cutoff = new Date(year, now.getMonth(), now.getDate(), 23, 59, 59, 999)
 
   let ytdCount = 0
@@ -33,7 +37,7 @@ function buildSameTimeMarker(deals, now = new Date()) {
     }
   }
 
-  if (yearCount === 0 || yearTotal <= 0) return null
+  if (yearCount === 0) return null
 
   return {
     year,
@@ -42,12 +46,23 @@ function buildSameTimeMarker(deals, now = new Date()) {
     ytdTotal,
     yearCount,
     yearTotal,
-    pctOfYear: Math.min(100, (ytdTotal / yearTotal) * 100),
+    pctOfYear: yearTotal > 0 ? Math.min(100, (ytdTotal / yearTotal) * 100) : null,
   }
 }
 
+/**
+ * Same-date-of-year comparisons for the current year plus the last
+ * LOOKBACK_YEARS years — always relative to `now`, so next year this
+ * automatically shifts to compare against this year instead of needing to be
+ * hand-updated.
+ */
+function buildYearToDateComparisons(deals, now) {
+  const years = [now.getFullYear(), ...Array.from({ length: LOOKBACK_YEARS }, (_, i) => now.getFullYear() - 1 - i)]
+  return years.map((year) => buildYearToDate(deals, year, now)).filter(Boolean)
+}
+
 function formatMarkerDate(date) {
-  return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+  return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
 }
 
 function yoyDelta(current, previous) {
@@ -70,7 +85,12 @@ export default function SalesYearChart({ yearlyStats = [], deals = [], footer = 
   const detailYears = [...chartYears].reverse()
   const grandTotal = chartYears.reduce((sum, row) => sum + row.total, 0)
   const maxTotal = Math.max(...chartYears.map((row) => row.total), 1)
-  const sameTime = useMemo(() => buildSameTimeMarker(deals), [deals])
+
+  const now = useMemo(() => new Date(), [])
+  const comparisons = useMemo(() => buildYearToDateComparisons(deals, now), [deals, now])
+  const currentYearComparison = comparisons.find((c) => c.year === now.getFullYear())
+  const priorYearMarkers = comparisons.filter((c) => c.year !== now.getFullYear())
+  const markerByYear = useMemo(() => new Map(priorYearMarkers.map((m) => [m.year, m])), [priorYearMarkers])
 
   if (chartYears.length === 0) {
     return (
@@ -87,34 +107,40 @@ export default function SalesYearChart({ yearlyStats = [], deals = [], footer = 
   return (
     <div className="mb-6 overflow-hidden rounded-xl border border-surface-border bg-surface-raised">
       <div className="border-b border-surface-border px-5 py-4 sm:px-6">
-        <div className="flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Won by year</p>
-            <h2 className="mt-1 text-base font-semibold text-slate-100">Sales per Year</h2>
-            <p className="text-xs text-slate-500">Won deals, by close date, in USD</p>
-          </div>
-          {sameTime && (
-            <p className="inline-flex items-center gap-1.5 text-[11px] text-slate-500">
-              <span className="inline-block h-3 w-0.5 rounded-sm bg-rose-400" />
-              This time last year
-            </p>
-          )}
-        </div>
+        <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Won by year</p>
+        <h2 className="mt-1 text-base font-semibold text-slate-100">Sales per Year</h2>
+        <p className="text-xs text-slate-500">Won deals, by close date, in USD</p>
       </div>
 
       <div className="px-5 py-5 sm:px-6">
-        {sameTime && (
-          <div className="mb-5 rounded-lg border border-rose-400/25 bg-rose-400/5 px-3 py-2 text-sm text-slate-300">
-            <span className="font-medium text-rose-300">By {formatMarkerDate(sameTime.cutoff)}</span>
-            <span className="text-slate-500"> · </span>
-            <span className="tabular-nums">
-              {sameTime.ytdCount} {sameTime.ytdCount === 1 ? 'deal' : 'deals'} ·{' '}
-              {formatCurrency(sameTime.ytdTotal, 'USD')}
-            </span>
-            <span className="text-slate-500">
-              {' '}
-              ({sameTime.pctOfYear.toFixed(0)}% of {sameTime.year})
-            </span>
+        {comparisons.length > 0 && (
+          <div className="mb-5 rounded-lg border border-rose-400/25 bg-rose-400/5 px-3.5 py-3">
+            <p className="mb-2 text-[11px] font-medium uppercase tracking-wide text-slate-500">
+              Year-to-date, as of {formatMarkerDate(now)} — always compared against the current year
+            </p>
+            <ul className="space-y-1.5 text-sm">
+              {currentYearComparison && (
+                <li className="flex items-center justify-between gap-3">
+                  <span className="font-medium text-rose-300">{currentYearComparison.year} (current)</span>
+                  <span className="tabular-nums text-slate-200">
+                    {currentYearComparison.ytdCount} {currentYearComparison.ytdCount === 1 ? 'deal' : 'deals'} ·{' '}
+                    {formatCurrency(currentYearComparison.ytdTotal, 'USD')}
+                  </span>
+                </li>
+              )}
+              {priorYearMarkers.map((marker) => (
+                <li key={marker.year} className="flex items-center justify-between gap-3">
+                  <span className="text-slate-400">{marker.year}</span>
+                  <span className="tabular-nums text-slate-400">
+                    {marker.ytdCount} {marker.ytdCount === 1 ? 'deal' : 'deals'} ·{' '}
+                    {formatCurrency(marker.ytdTotal, 'USD')}
+                    {marker.pctOfYear != null && (
+                      <span className="ml-1.5 text-slate-500">({marker.pctOfYear.toFixed(0)}% of full year)</span>
+                    )}
+                  </span>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
 
@@ -123,7 +149,7 @@ export default function SalesYearChart({ yearlyStats = [], deals = [], footer = 
             const height = Math.max(12, Math.round((row.total / maxTotal) * 100))
             const prev = index > 0 ? chartYears[index - 1] : null
             const delta = prev ? yoyDelta(row.total, prev.total) : null
-            const showMarker = sameTime && row.year === sameTime.year
+            const marker = markerByYear.get(row.year)
             const isLatest = index === chartYears.length - 1
 
             return (
@@ -154,11 +180,11 @@ export default function SalesYearChart({ yearlyStats = [], deals = [], footer = 
                     style={{ height: `${height}%` }}
                     title={`${row.year}: ${row.count} deals · ${formatCurrency(row.total, 'USD')}`}
                   >
-                    {showMarker && (
+                    {marker && marker.pctOfYear != null && (
                       <div
                         className="absolute inset-x-0 z-10"
-                        style={{ top: `${100 - sameTime.pctOfYear}%` }}
-                        title={`This time last year: ${formatCurrency(sameTime.ytdTotal, 'USD')}`}
+                        style={{ top: `${100 - marker.pctOfYear}%` }}
+                        title={`Same date in ${marker.year}: ${formatCurrency(marker.ytdTotal, 'USD')}`}
                       >
                         <div className="h-0.5 w-full bg-rose-400 shadow-[0_0_6px_rgba(251,113,133,0.8)]" />
                       </div>
@@ -184,8 +210,8 @@ export default function SalesYearChart({ yearlyStats = [], deals = [], footer = 
             const share = grandTotal > 0 ? (row.total / grandTotal) * 100 : 0
             const older = detailYears[index + 1]
             const delta = older ? yoyDelta(row.total, older.total) : null
-            const showMarker = sameTime && row.year === sameTime.year
-            const markerLeft = showMarker ? share * (sameTime.pctOfYear / 100) : null
+            const marker = markerByYear.get(row.year)
+            const markerLeft = marker && marker.pctOfYear != null ? share * (marker.pctOfYear / 100) : null
 
             return (
               <li key={`detail-${row.year}`}>
@@ -210,21 +236,20 @@ export default function SalesYearChart({ yearlyStats = [], deals = [], footer = 
                     className="h-full rounded-full bg-sky-400/75 transition-[width] duration-300"
                     style={{ width: `${Math.max(share, 3)}%` }}
                   />
-                  {showMarker && markerLeft != null && (
+                  {markerLeft != null && (
                     <div
                       className="pointer-events-none absolute top-1/2 z-10 -translate-x-1/2 -translate-y-1/2"
                       style={{ left: `${Math.max(markerLeft, 1)}%` }}
-                      title={`This time last year: ${sameTime.ytdCount} deals · ${formatCurrency(sameTime.ytdTotal, 'USD')}`}
+                      title={`Same date in ${marker.year}: ${marker.ytdCount} deals · ${formatCurrency(marker.ytdTotal, 'USD')}`}
                     >
                       <div className="h-5 w-0.5 rounded-full bg-rose-400 shadow-[0_0_8px_rgba(251,113,133,0.9)]" />
                     </div>
                   )}
                 </div>
-                {showMarker && (
+                {marker && (
                   <p className="mt-1.5 text-[11px] tabular-nums text-rose-300/90">
-                    ▎ This time last year — {sameTime.ytdCount} deals ·{' '}
-                    {formatCurrency(sameTime.ytdTotal, 'USD')} ({sameTime.pctOfYear.toFixed(0)}% of{' '}
-                    {sameTime.year})
+                    ▎ Same date in {marker.year} — {marker.ytdCount} deals · {formatCurrency(marker.ytdTotal, 'USD')}
+                    {marker.pctOfYear != null && ` (${marker.pctOfYear.toFixed(0)}% of full year)`}
                   </p>
                 )}
               </li>

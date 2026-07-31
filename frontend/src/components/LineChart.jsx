@@ -36,8 +36,10 @@ export default function LineChart({ data, formatValue = (v) => v.toLocaleString(
       ? `${linePath} L ${pointX(data.length - 1)} ${paddingTop + plotHeight} L ${pointX(0)} ${paddingTop + plotHeight} Z`
       : ''
 
-  // 12 weekly points crowd the x-axis if every label is shown — thin them out.
-  const labelStep = data.length > 8 ? 2 : 1
+  // Thin x-axis labels so roughly 8 show regardless of how many points there
+  // are — a fixed step of 2 (fine for 12 points) would still cram ~26 labels
+  // in for a 52-point range, so this scales the step with the data length.
+  const labelStep = Math.max(1, Math.ceil(data.length / 8))
 
   return (
     <div className="relative">
