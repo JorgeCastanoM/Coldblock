@@ -11,6 +11,10 @@ def _load() -> list[dict]:
         return json.load(f)
 
 
+def all_requirements() -> list[dict]:
+    return _load()
+
+
 @lru_cache(maxsize=1)
 def requirements_by_sku() -> dict[str, list[dict]]:
     index: dict[str, list[dict]] = {}

@@ -1,16 +1,43 @@
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AuthProvider, useAuth } from './auth/AuthContext.jsx'
 import LoginPage from './auth/LoginPage.jsx'
-import DashboardPage from './pages/DashboardPage.jsx'
+import { DashboardDataProvider } from './context/DashboardDataContext.jsx'
+import DealsPage from './pages/DealsPage.jsx'
+import SalesOverviewPage from './pages/SalesOverviewPage.jsx'
 
+// Fishbowl-backed pages (Products, Sales Orders, Purchase Orders) are routed
+// away for now — this build is deployed publicly and the backend has no
+// Tailscale route to Fishbowl there (see ENABLE_FISHBOWL in core/config.py).
+// Their routes/components are untouched; only reachability is disabled.
 function Shell() {
   const { isAuthenticated } = useAuth()
-  return isAuthenticated ? <DashboardPage /> : <LoginPage />
+  if (!isAuthenticated) {
+    return <LoginPage />
+  }
+
+  return (
+    <DashboardDataProvider>
+      <Routes>
+        <Route path="/" element={<Navigate to="/sales-overview" replace />} />
+        <Route path="/deals" element={<DealsPage />} />
+        <Route path="/sales-overview" element={<SalesOverviewPage />} />
+        <Route path="*" element={<Navigate to="/sales-overview" replace />} />
+      </Routes>
+    </DashboardDataProvider>
+  )
 }
 
 export default function App() {
   return (
     <AuthProvider>
-      <Shell />
+      <BrowserRouter
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
+        <Shell />
+      </BrowserRouter>
     </AuthProvider>
   )
 }

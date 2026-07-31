@@ -24,4 +24,9 @@ export async function getDashboardSummary() {
   return response.data
 }
 
+export async function getSerialNumbers(sku) {
+  const response = await client.get(`/dashboard/serials/${encodeURIComponent(sku)}`)
+  return response.data
+}
+
 export default client

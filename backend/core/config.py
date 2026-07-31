@@ -25,9 +25,17 @@ class Settings(BaseSettings):
     jwt_secret: str = ""
     jwt_expire_minutes: int = 720
 
+    # Fishbowl is only reachable over the office Tailscale tailnet — a publicly
+    # deployed backend (Vercel, etc.) has no route to it. Off by default there;
+    # local dev on the tailnet should set this true via .env.
+    enable_fishbowl: bool = True
+
     use_mock_data: bool = True
     log_level: str = "INFO"
-    cors_origins: list[str] = ["http://localhost:5173"]
+    cors_origins: list[str] = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ]
 
 
 settings = Settings()

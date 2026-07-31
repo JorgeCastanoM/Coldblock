@@ -281,7 +281,7 @@
   },
   {
     "fb_part_number": "C3MNC027",
-    "description": "Proportional power controllerCarlo Gavadzzi",
+    "description": "Proportional power controller",
     "custom_code": "Proportional power controller",
     "vendor_sku": "RGC1P23AA12E",
     "req_per_unit": 2,
@@ -383,34 +383,6 @@
     "custom_code": "10/3 (10G 3-conductor) SJOOW main cable",
     "vendor_sku": "7422K28",
     "req_per_unit": 8,
-    "sheet": "CBDC-2CH-G3",
-    "variant": null,
-    "sizes": [
-      "CBL",
-      "CBM",
-      "CBS"
-    ]
-  },
-  {
-    "fb_part_number": null,
-    "description": "10G yellow wire",
-    "custom_code": "10G yellow wire",
-    "vendor_sku": "8054T19",
-    "req_per_unit": 1,
-    "sheet": "CBDC-2CH-G3",
-    "variant": null,
-    "sizes": [
-      "CBL",
-      "CBM",
-      "CBS"
-    ]
-  },
-  {
-    "fb_part_number": null,
-    "description": "10G blue wire",
-    "custom_code": "10G blue wire",
-    "vendor_sku": "8054T19",
-    "req_per_unit": 1,
     "sheet": "CBDC-2CH-G3",
     "variant": null,
     "sizes": [
@@ -603,7 +575,7 @@
   },
   {
     "fb_part_number": "C3MNC047",
-    "description": "Ring Ter 16-14 Ga,  1/4\" Screw blue",
+    "description": "Ring Ter 16-14 Ga, 1/4\" Screw blue",
     "custom_code": "Ring Ter 16-14 Ga,  1/4\" Screw blue",
     "vendor_sku": "7113K25",
     "req_per_unit": 11,
@@ -705,76 +677,6 @@
     "custom_code": "Insulated Quick Disconnect Terminal Red 22-18 - 0.250\"",
     "vendor_sku": "7243K114",
     "req_per_unit": 4,
-    "sheet": "CBDC-2CH-G3",
-    "variant": null,
-    "sizes": [
-      "CBL",
-      "CBM",
-      "CBS"
-    ]
-  },
-  {
-    "fb_part_number": "C3TAB003",
-    "description": "Tablet Arms",
-    "custom_code": "Tablet Arms",
-    "vendor_sku": null,
-    "req_per_unit": 1,
-    "sheet": "CBDC-2CH-G3",
-    "variant": null,
-    "sizes": [
-      "CBL",
-      "CBM",
-      "CBS"
-    ]
-  },
-  {
-    "fb_part_number": "C3TAB008",
-    "description": "Tablet A11+",
-    "custom_code": "Tablet A9+",
-    "vendor_sku": null,
-    "req_per_unit": 1,
-    "sheet": "CBDC-2CH-G3",
-    "variant": null,
-    "sizes": [
-      "CBL",
-      "CBM",
-      "CBS"
-    ]
-  },
-  {
-    "fb_part_number": "C3TAB005",
-    "description": "North American Charging Block",
-    "custom_code": "NA Charging Block",
-    "vendor_sku": null,
-    "req_per_unit": 1,
-    "sheet": "CBDC-2CH-G3",
-    "variant": null,
-    "sizes": [
-      "CBL",
-      "CBM",
-      "CBS"
-    ]
-  },
-  {
-    "fb_part_number": "C3TAB006",
-    "description": "EU Charging Block",
-    "custom_code": "EU Charging Block",
-    "vendor_sku": null,
-    "req_per_unit": 1,
-    "sheet": "CBDC-2CH-G3",
-    "variant": null,
-    "sizes": [
-      "CBL",
-      "CBM",
-      "CBS"
-    ]
-  },
-  {
-    "fb_part_number": "INSP Controller",
-    "description": "CSA Inspection for Controller",
-    "custom_code": "CSA Inspection for Controller",
-    "vendor_sku": null,
-    "req_per_unit": 1,
     "sheet": "CBDC-2CH-G3",
     "variant": null,
     "sizes": [
@@ -2636,34 +2538,6 @@
     ]
   },
   {
-    "fb_part_number": null,
-    "description": "Nylon Hex Head Screws",
-    "custom_code": "Nylon Hex Head Screws 3/8\"-16 Thread Size, 1\" Long, Off-White",
-    "vendor_sku": "91244A624",
-    "req_per_unit": 4,
-    "sheet": "CBS Lid",
-    "variant": "plastic",
-    "sizes": [
-      "CBL",
-      "CBM",
-      "CBS"
-    ]
-  },
-  {
-    "fb_part_number": null,
-    "description": "Hose Barb",
-    "custom_code": "5346K23 Brass Barbed Hose Fitting for Air and Water, Straight Adapter for 1/2\" Hose ID, 3/8 NPTF Male",
-    "vendor_sku": "5346K23",
-    "req_per_unit": 2,
-    "sheet": "CBS Lid",
-    "variant": "plastic",
-    "sizes": [
-      "CBL",
-      "CBM",
-      "CBS"
-    ]
-  },
-  {
     "fb_part_number": "S3STG001",
     "description": "Test Tube Stand Centre",
     "custom_code": "CBLMS_Stand_Center_2R1",
@@ -3073,6 +2947,76 @@
     "variant": null,
     "sizes": [
       "CBM"
+    ]
+  },
+  {
+    "fb_part_number": "C3TAB003",
+    "description": "Tablet Arms",
+    "custom_code": "Tablet Arms",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "Extras",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3TAB008",
+    "description": "Tablet A11+",
+    "custom_code": "Tablet A9+",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "Extras",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3TAB005",
+    "description": "North American Charging Block",
+    "custom_code": "NA Charging Block",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "Extras",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "C3TAB006",
+    "description": "EU Charging Block",
+    "custom_code": "EU Charging Block",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "Extras",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
+    ]
+  },
+  {
+    "fb_part_number": "INSP Controller",
+    "description": "CSA Inspection for Controller",
+    "custom_code": "CSA Inspection for Controller",
+    "vendor_sku": null,
+    "req_per_unit": 1,
+    "sheet": "Extras",
+    "variant": null,
+    "sizes": [
+      "CBL",
+      "CBM",
+      "CBS"
     ]
   }
 ]

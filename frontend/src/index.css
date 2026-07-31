@@ -5,3 +5,12 @@
 body {
   @apply bg-surface text-slate-100 antialiased;
 }
+
+/* Larger default tap targets on the shop-floor tablet layout */
+button,
+summary,
+a,
+input,
+select {
+  @apply touch-manipulation;
+}
