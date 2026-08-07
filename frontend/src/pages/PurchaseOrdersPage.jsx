@@ -27,7 +27,7 @@ export default function PurchaseOrdersPage() {
 
       <div className="mx-auto max-w-6xl">
         {error && (
-          <div className="mb-5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-300">
+          <div className="mb-5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-700 dark:text-rose-300">
             {error}
           </div>
         )}

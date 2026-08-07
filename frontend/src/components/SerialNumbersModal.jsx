@@ -52,33 +52,33 @@ export default function SerialNumbersModal({ sku, productName, onClose }) {
       >
         <div className="flex items-start justify-between gap-3 border-b border-surface-border px-5 py-4">
           <div>
-            <h2 id="serials-title" className="text-lg font-semibold text-slate-100">
+            <h2 id="serials-title" className="text-lg font-semibold text-ink">
               Serial numbers
             </h2>
-            <p className="mt-0.5 text-sm text-slate-400">
-              {productName} · <span className="font-mono text-slate-300">{sku}</span>
+            <p className="mt-0.5 text-sm text-ink-muted">
+              {productName} · <span className="font-mono text-ink-muted">{sku}</span>
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg px-3 py-1.5 text-sm text-slate-400 hover:bg-white/[0.04] hover:text-slate-200"
+            className="rounded-lg px-3 py-1.5 text-sm text-ink-muted hover:bg-ink/[0.05] hover:text-ink"
           >
             Close
           </button>
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
-          {loading && <p className="text-sm text-slate-400">Loading serials from Fishbowl…</p>}
+          {loading && <p className="text-sm text-ink-muted">Loading serials from Fishbowl…</p>}
 
           {error && (
-            <div className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-sm text-rose-300">
+            <div className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-sm text-rose-700 dark:text-rose-300">
               {error}
             </div>
           )}
 
           {!loading && !error && serials.length === 0 && (
-            <p className="text-sm text-slate-400">No serial numbers found for this part.</p>
+            <p className="text-sm text-ink-muted">No serial numbers found for this part.</p>
           )}
 
           {!loading && !error && serials.length > 0 && (
@@ -90,23 +90,23 @@ export default function SerialNumbersModal({ sku, productName, onClose }) {
                     key={row.serial_number}
                     className="flex flex-wrap items-center justify-between gap-2 px-3 py-2.5"
                   >
-                    <span className="font-mono text-sm font-medium text-slate-100">{row.serial_number}</span>
+                    <span className="font-mono text-sm font-medium text-ink">{row.serial_number}</span>
                     <div className="flex items-center gap-2 text-xs">
                       <span
                         className={`rounded-full px-2 py-0.5 font-medium ring-1 ring-inset ${
                           inStock
-                            ? 'bg-emerald-500/10 text-emerald-300 ring-emerald-500/20'
-                            : 'bg-slate-500/10 text-slate-400 ring-slate-500/20'
+                            ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 ring-emerald-500/20'
+                            : 'bg-slate-500/10 text-ink-muted ring-slate-500/20'
                         }`}
                       >
                         {inStock ? 'In stock' : 'Not in stock'}
                       </span>
                       {row.committed && (
-                        <span className="rounded-full bg-amber-500/10 px-2 py-0.5 font-medium text-amber-300 ring-1 ring-inset ring-amber-500/20">
+                        <span className="rounded-full bg-amber-500/10 px-2 py-0.5 font-medium text-amber-700 dark:text-amber-300 ring-1 ring-inset ring-amber-500/20">
                           Committed
                         </span>
                       )}
-                      <span className="text-slate-500">{row.location || '—'}</span>
+                      <span className="text-ink-subtle">{row.location || '—'}</span>
                     </div>
                   </li>
                 )
@@ -116,7 +116,7 @@ export default function SerialNumbersModal({ sku, productName, onClose }) {
         </div>
 
         {!loading && !error && (
-          <div className="border-t border-surface-border px-5 py-3 text-xs text-slate-500">
+          <div className="border-t border-surface-border px-5 py-3 text-xs text-ink-subtle">
             {serials.length} serial{serials.length === 1 ? '' : 's'}
             {serials.length > 0 && (
               <>

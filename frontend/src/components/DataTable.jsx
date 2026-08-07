@@ -3,7 +3,7 @@ export default function DataTable({ columns, rows }) {
     <div className="overflow-x-auto">
       <table className="w-full border-collapse text-left text-sm">
         <thead>
-          <tr className="border-b border-surface-border text-xs uppercase tracking-wide text-slate-500">
+          <tr className="border-b border-surface-border text-xs uppercase tracking-wide text-ink-subtle">
             {columns.map((column) => (
               <th
                 key={column.key}
@@ -18,12 +18,12 @@ export default function DataTable({ columns, rows }) {
           {rows.map((row, index) => (
             <tr
               key={row.id ?? row.sku ?? row.so_number ?? index}
-              className="border-b border-surface-border/60 last:border-b-0 hover:bg-white/[0.03]"
+              className="border-b border-surface-border/60 last:border-b-0 hover:bg-ink/[0.04]"
             >
               {columns.map((column) => (
                 <td
                   key={column.key}
-                  className={`px-3 py-3 text-slate-200 ${column.align === 'right' ? 'text-right tabular-nums' : ''} ${column.cellClassName ?? ''}`}
+                  className={`px-3 py-3 text-ink ${column.align === 'right' ? 'text-right tabular-nums' : ''} ${column.cellClassName ?? ''}`}
                 >
                   {column.render ? column.render(row[column.key], row) : row[column.key]}
                 </td>

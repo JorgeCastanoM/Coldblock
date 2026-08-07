@@ -48,10 +48,10 @@ export default function BarChart({ data, formatValue = (v) => v.toLocaleString()
                 x2={width - 8}
                 y1={y}
                 y2={y}
-                stroke="#2a2e37"
+                stroke="var(--chart-grid)"
                 strokeWidth="1"
               />
-              <text x={paddingLeft - 8} y={y} textAnchor="end" dominantBaseline="middle" className="fill-slate-500 text-[10px]">
+              <text x={paddingLeft - 8} y={y} textAnchor="end" dominantBaseline="middle" className="fill-ink-subtle text-[10px]">
                 {formatValue(tick)}
               </text>
             </g>
@@ -64,7 +64,7 @@ export default function BarChart({ data, formatValue = (v) => v.toLocaleString()
           x2={width - 8}
           y1={paddingTop + plotHeight}
           y2={paddingTop + plotHeight}
-          stroke="#3f4451"
+          stroke="var(--chart-axis)"
           strokeWidth="1"
         />
 
@@ -105,7 +105,7 @@ export default function BarChart({ data, formatValue = (v) => v.toLocaleString()
                 x={x + barWidth / 2}
                 y={y - 6}
                 textAnchor="middle"
-                className={`text-[11px] font-medium ${isHovered ? 'fill-slate-100' : 'fill-slate-400'}`}
+                className={`text-[11px] font-medium ${isHovered ? 'fill-ink' : 'fill-ink-muted'}`}
               >
                 {formatValue(d.value)}
               </text>
@@ -114,7 +114,7 @@ export default function BarChart({ data, formatValue = (v) => v.toLocaleString()
                 x={x + barWidth / 2}
                 y={paddingTop + plotHeight + 18}
                 textAnchor="middle"
-                className="fill-slate-400 text-xs"
+                className="fill-ink-muted text-xs"
               >
                 {d.label}
               </text>

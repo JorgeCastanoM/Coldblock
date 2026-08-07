@@ -2,8 +2,134 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-surface text-slate-100 antialiased;
+/*
+  Theme tokens are full CSS colors (not channel triplets). Utilities below
+  reference them directly so light/dark never depends on Tailwind's
+  rgba(var(--channels), alpha) codegen — that path was leaving cards stuck
+  on dark backgrounds while the page shell flipped to light.
+*/
+:root {
+  color-scheme: light;
+  --surface: #f1f5f9;
+  --surface-raised: #ffffff;
+  --surface-border: #cbd5e1;
+  --ink: #0f172a;
+  --ink-muted: #475569;
+  --ink-subtle: #64748b;
+  --chart-grid: #e2e8f0;
+  --chart-axis: #cbd5e1;
+  --chart-tooltip: #ffffff;
+  --panel-shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+html.dark {
+  color-scheme: dark;
+  --surface: #0f1115;
+  --surface-raised: #171a21;
+  --surface-border: #2a2e37;
+  --ink: #f1f5f9;
+  --ink-muted: #94a3b8;
+  --ink-subtle: #64748b;
+  --chart-grid: #2a2e37;
+  --chart-axis: #3f4451;
+  --chart-tooltip: #0f1115;
+  --panel-shadow: none;
+}
+
+@layer base {
+  body {
+    background-color: var(--surface);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/*
+  Explicit theme utilities — same class names the components already use.
+  Defined here (not via tailwind.config colors) so the values always track
+  html.dark / :root and opacity modifiers stay under our control.
+*/
+@layer utilities {
+  .bg-surface {
+    background-color: var(--surface);
+  }
+  .bg-surface\/90 {
+    background-color: color-mix(in srgb, var(--surface) 90%, transparent);
+  }
+  .bg-surface-raised {
+    background-color: var(--surface-raised);
+  }
+  .bg-surface-raised\/50 {
+    background-color: color-mix(in srgb, var(--surface-raised) 50%, transparent);
+  }
+  .bg-surface-raised\/90 {
+    background-color: color-mix(in srgb, var(--surface-raised) 90%, transparent);
+  }
+  .hover\:bg-surface:hover {
+    background-color: var(--surface);
+  }
+
+  .border-surface-border {
+    border-color: var(--surface-border);
+  }
+  .border-surface-border\/60 {
+    border-color: color-mix(in srgb, var(--surface-border) 60%, transparent);
+  }
+  .border-surface-border\/80 {
+    border-color: color-mix(in srgb, var(--surface-border) 80%, transparent);
+  }
+
+  .text-ink {
+    color: var(--ink);
+  }
+  .text-ink-muted {
+    color: var(--ink-muted);
+  }
+  .text-ink-subtle {
+    color: var(--ink-subtle);
+  }
+  .placeholder\:text-ink-subtle::placeholder {
+    color: var(--ink-subtle);
+  }
+  .hover\:text-ink:hover {
+    color: var(--ink);
+  }
+  .hover\:text-ink-muted:hover {
+    color: var(--ink-muted);
+  }
+  .focus\:text-ink:focus {
+    color: var(--ink);
+  }
+
+  .fill-ink {
+    fill: var(--ink);
+  }
+  .fill-ink-muted {
+    fill: var(--ink-muted);
+  }
+  .fill-ink-subtle {
+    fill: var(--ink-subtle);
+  }
+
+  .bg-ink\/\[0\.03\] {
+    background-color: color-mix(in srgb, var(--ink) 3%, transparent);
+  }
+  .bg-ink\/\[0\.04\] {
+    background-color: color-mix(in srgb, var(--ink) 4%, transparent);
+  }
+  .bg-ink\/\[0\.05\] {
+    background-color: color-mix(in srgb, var(--ink) 5%, transparent);
+  }
+  .hover\:bg-ink\/\[0\.03\]:hover {
+    background-color: color-mix(in srgb, var(--ink) 3%, transparent);
+  }
+  .hover\:bg-ink\/\[0\.04\]:hover {
+    background-color: color-mix(in srgb, var(--ink) 4%, transparent);
+  }
+  .hover\:bg-ink\/\[0\.05\]:hover {
+    background-color: color-mix(in srgb, var(--ink) 5%, transparent);
+  }
 }
 
 /* Larger default tap targets on the shop-floor tablet layout */

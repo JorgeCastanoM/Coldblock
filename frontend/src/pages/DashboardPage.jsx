@@ -33,7 +33,7 @@ export default function DashboardPage() {
 
       <div className="mx-auto max-w-6xl">
         {error && (
-          <div className="mb-5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-300">
+          <div className="mb-5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-700 dark:text-rose-300">
             {error}
           </div>
         )}
@@ -58,20 +58,20 @@ export default function DashboardPage() {
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
                   placeholder="Search SKU or description…"
-                  className="w-full rounded-xl border border-surface-border bg-surface-raised py-3 pl-4 pr-10 text-base text-slate-100 placeholder:text-slate-500 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500/40"
+                  className="w-full rounded-xl border border-surface-border bg-surface-raised py-3 pl-4 pr-10 text-base text-ink placeholder:text-ink-subtle focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500/40"
                 />
                 {needle && (
                   <button
                     type="button"
                     onClick={() => setQuery('')}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500 hover:text-slate-300"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-ink-subtle hover:text-ink-muted"
                     aria-label="Clear search"
                   >
                     Clear
                   </button>
                 )}
               </div>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-ink-subtle">
                 {needle
                   ? `${visiblePartCount} match${visiblePartCount === 1 ? '' : 'es'} in ${filteredProducts.length} section${filteredProducts.length === 1 ? '' : 's'}`
                   : `${products.length} product sections`}
@@ -80,11 +80,11 @@ export default function DashboardPage() {
 
             {filteredProducts.length === 0 ? (
               <div className="rounded-xl border border-dashed border-surface-border bg-surface-raised/50 px-6 py-14 text-center">
-                <p className="text-base text-slate-300">No parts match “{needle}”.</p>
+                <p className="text-base text-ink-muted">No parts match “{needle}”.</p>
                 <button
                   type="button"
                   onClick={() => setQuery('')}
-                  className="mt-3 text-sm text-sky-400 hover:text-sky-300"
+                  className="mt-3 text-sm text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300"
                 >
                   Clear search
                 </button>

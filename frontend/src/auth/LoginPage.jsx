@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import ThemeToggle from '../components/ThemeToggle.jsx'
 import { useAuth } from './AuthContext.jsx'
 
 function PersonIcon() {
@@ -39,7 +40,7 @@ function Spinner() {
 }
 
 const inputClass =
-  'w-full rounded-lg border border-surface-border bg-surface py-3 pl-10 pr-4 text-lg text-slate-100 transition focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/20'
+  'w-full rounded-lg border border-surface-border bg-surface py-3 pl-10 pr-4 text-lg text-ink transition focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/20'
 
 export default function LoginPage() {
   const { login } = useAuth()
@@ -67,25 +68,32 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(ellipse_at_top,_rgba(56,189,248,0.10),_transparent_55%)] px-4">
+    <div className="relative flex min-h-screen items-center justify-center bg-[radial-gradient(ellipse_at_top,_rgba(56,189,248,0.10),_transparent_55%)] px-4">
+      <div className="absolute right-4 top-4">
+        <ThemeToggle />
+      </div>
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm overflow-hidden rounded-2xl border border-surface-border bg-surface-raised shadow-2xl shadow-black/40"
+        className="w-full max-w-sm overflow-hidden rounded-2xl border border-surface-border bg-surface-raised shadow-2xl shadow-slate-900/10 dark:shadow-black/40"
       >
         <div className="h-1 bg-gradient-to-r from-sky-500 via-sky-400 to-cyan-300" />
 
         <div className="p-8">
           <div className="mb-8 flex flex-col items-center text-center">
-            <img src="/Coldblock_Logo.webp" alt="ColdBlock Technologies" className="mb-4 h-12 w-auto" />
-            <h1 className="text-lg font-semibold text-slate-100">Intelligence Dashboard</h1>
-            <p className="mt-1 text-sm text-slate-500">Sign in to continue</p>
+            <img
+              src="/Coldblock_Logo.webp"
+              alt="ColdBlock Technologies"
+              className="mb-4 h-12 w-auto rounded-md bg-slate-950 px-2 py-1 dark:bg-transparent dark:px-0 dark:py-0"
+            />
+            <h1 className="text-lg font-semibold text-ink">Intelligence Dashboard</h1>
+            <p className="mt-1 text-sm text-ink-subtle">Sign in to continue</p>
           </div>
 
           <div className="space-y-4">
             <label className="block" htmlFor="username">
-              <span className="mb-1.5 block text-sm font-medium text-slate-400">Username</span>
+              <span className="mb-1.5 block text-sm font-medium text-ink-muted">Username</span>
               <div className="relative">
-                <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-500">
+                <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-ink-subtle">
                   <PersonIcon />
                 </span>
                 <input
@@ -101,9 +109,9 @@ export default function LoginPage() {
             </label>
 
             <label className="block" htmlFor="password">
-              <span className="mb-1.5 block text-sm font-medium text-slate-400">Password</span>
+              <span className="mb-1.5 block text-sm font-medium text-ink-muted">Password</span>
               <div className="relative">
-                <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-500">
+                <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-ink-subtle">
                   <LockIcon />
                 </span>
                 <input
@@ -119,7 +127,7 @@ export default function LoginPage() {
                   onClick={() => setShowPassword((visible) => !visible)}
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                   aria-pressed={showPassword}
-                  className="absolute inset-y-0 right-0 flex items-center px-3.5 text-slate-500 hover:text-slate-100 focus:text-slate-100 focus:outline-none"
+                  className="absolute inset-y-0 right-0 flex items-center px-3.5 text-ink-subtle hover:text-ink focus:text-ink focus:outline-none"
                 >
                   {showPassword ? (
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
@@ -138,7 +146,7 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <div className="mt-4 flex items-start gap-2 rounded-lg border border-red-500/30 bg-red-500/10 px-3.5 py-2.5 text-sm text-red-300">
+            <div className="mt-4 flex items-start gap-2 rounded-lg border border-red-500/30 bg-red-500/10 px-3.5 py-2.5 text-sm text-red-700 dark:text-red-300">
               <AlertIcon />
               <span>{error}</span>
             </div>

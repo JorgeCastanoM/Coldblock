@@ -94,9 +94,9 @@ export default function SalesYearChart({ yearlyStats = [], deals = [], footer = 
 
   if (chartYears.length === 0) {
     return (
-      <div className="mb-6 rounded-xl border border-surface-border bg-surface-raised p-5">
-        <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Won by year</p>
-        <p className="mt-6 py-6 text-center text-sm text-slate-500">
+      <div className="mb-6 rounded-xl border border-surface-border bg-surface-raised p-5 shadow-panel">
+        <p className="text-xs font-medium uppercase tracking-wide text-ink-subtle">Won by year</p>
+        <p className="mt-6 py-6 text-center text-sm text-ink-subtle">
           No won deals with a resolvable date yet.
         </p>
         {footer}
@@ -105,24 +105,24 @@ export default function SalesYearChart({ yearlyStats = [], deals = [], footer = 
   }
 
   return (
-    <div className="mb-6 overflow-hidden rounded-xl border border-surface-border bg-surface-raised">
+    <div className="mb-6 overflow-hidden rounded-xl border border-surface-border bg-surface-raised shadow-panel">
       <div className="border-b border-surface-border px-5 py-4 sm:px-6">
-        <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Won by year</p>
-        <h2 className="mt-1 text-base font-semibold text-slate-100">Sales per Year</h2>
-        <p className="text-xs text-slate-500">Won deals, by close date, in USD</p>
+        <p className="text-xs font-medium uppercase tracking-wide text-ink-subtle">Won by year</p>
+        <h2 className="mt-1 text-base font-semibold text-ink">Sales per Year</h2>
+        <p className="text-xs text-ink-subtle">Won deals, by close date, in USD</p>
       </div>
 
       <div className="px-5 py-5 sm:px-6">
         {comparisons.length > 0 && (
           <div className="mb-5 rounded-lg border border-rose-400/25 bg-rose-400/5 px-3.5 py-3">
-            <p className="mb-2 text-[11px] font-medium uppercase tracking-wide text-slate-500">
+            <p className="mb-2 text-[11px] font-medium uppercase tracking-wide text-ink-subtle">
               Year-to-date, as of {formatMarkerDate(now)} — always compared against the current year
             </p>
             <ul className="space-y-1.5 text-sm">
               {currentYearComparison && (
                 <li className="flex items-center justify-between gap-3">
-                  <span className="font-medium text-rose-300">{currentYearComparison.year} (current)</span>
-                  <span className="tabular-nums text-slate-200">
+                  <span className="font-medium text-rose-700 dark:text-rose-300">{currentYearComparison.year} (current)</span>
+                  <span className="tabular-nums text-ink">
                     {currentYearComparison.ytdCount} {currentYearComparison.ytdCount === 1 ? 'deal' : 'deals'} ·{' '}
                     {formatCurrency(currentYearComparison.ytdTotal, 'USD')}
                   </span>
@@ -130,12 +130,12 @@ export default function SalesYearChart({ yearlyStats = [], deals = [], footer = 
               )}
               {priorYearMarkers.map((marker) => (
                 <li key={marker.year} className="flex items-center justify-between gap-3">
-                  <span className="text-slate-400">{marker.year}</span>
-                  <span className="tabular-nums text-slate-400">
+                  <span className="text-ink-muted">{marker.year}</span>
+                  <span className="tabular-nums text-ink-muted">
                     {marker.ytdCount} {marker.ytdCount === 1 ? 'deal' : 'deals'} ·{' '}
                     {formatCurrency(marker.ytdTotal, 'USD')}
                     {marker.pctOfYear != null && (
-                      <span className="ml-1.5 text-slate-500">({marker.pctOfYear.toFixed(0)}% of full year)</span>
+                      <span className="ml-1.5 text-ink-subtle">({marker.pctOfYear.toFixed(0)}% of full year)</span>
                     )}
                   </span>
                 </li>
@@ -155,14 +155,16 @@ export default function SalesYearChart({ yearlyStats = [], deals = [], footer = 
             return (
               <div key={row.year} className="group flex min-w-0 flex-1 flex-col items-center gap-2">
                 <div className="text-center leading-tight">
-                  <p className="text-xs font-semibold tabular-nums text-sky-300">
+                  <p className="text-xs font-semibold tabular-nums text-sky-700 dark:text-sky-300">
                     {formatCompactUsd(row.total)}
-                    <span className="ml-0.5 font-normal text-slate-500">USD</span>
+                    <span className="ml-0.5 font-normal text-ink-subtle">USD</span>
                   </p>
                   {delta && (
                     <p
                       className={`mt-0.5 text-[10px] font-medium tabular-nums ${
-                        delta.up ? 'text-emerald-400/90' : 'text-rose-400/90'
+                        delta.up
+                          ? 'text-emerald-600 dark:text-emerald-400/90'
+                          : 'text-rose-600 dark:text-rose-400/90'
                       }`}
                     >
                       {delta.label} YoY
@@ -193,10 +195,10 @@ export default function SalesYearChart({ yearlyStats = [], deals = [], footer = 
                 </div>
 
                 <div className="text-center leading-tight">
-                  <p className={`text-sm font-semibold ${isLatest ? 'text-slate-50' : 'text-slate-200'}`}>
+                  <p className={`text-sm font-semibold ${isLatest ? 'text-ink' : 'text-ink'}`}>
                     {row.year}
                   </p>
-                  <p className="text-[11px] tabular-nums text-slate-500">
+                  <p className="text-[11px] tabular-nums text-ink-subtle">
                     {row.count} {row.count === 1 ? 'deal' : 'deals'}
                   </p>
                 </div>
@@ -216,14 +218,16 @@ export default function SalesYearChart({ yearlyStats = [], deals = [], footer = 
             return (
               <li key={`detail-${row.year}`}>
                 <div className="mb-1.5 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 text-sm">
-                  <span className="font-medium text-slate-100">{row.year}</span>
-                  <span className="tabular-nums text-slate-400">
+                  <span className="font-medium text-ink">{row.year}</span>
+                  <span className="tabular-nums text-ink-muted">
                     {row.count} {row.count === 1 ? 'deal' : 'deals'} · {formatCurrency(row.total, 'USD')}
-                    <span className="ml-2 text-slate-500">({share.toFixed(0)}%)</span>
+                    <span className="ml-2 text-ink-subtle">({share.toFixed(0)}%)</span>
                     {delta && (
                       <span
                         className={`ml-2 text-[11px] font-medium ${
-                          delta.up ? 'text-emerald-400/90' : 'text-rose-400/90'
+                          delta.up
+                          ? 'text-emerald-600 dark:text-emerald-400/90'
+                          : 'text-rose-600 dark:text-rose-400/90'
                         }`}
                       >
                         {delta.label}
@@ -247,7 +251,7 @@ export default function SalesYearChart({ yearlyStats = [], deals = [], footer = 
                   )}
                 </div>
                 {marker && (
-                  <p className="mt-1.5 text-[11px] tabular-nums text-rose-300/90">
+                  <p className="mt-1.5 text-[11px] tabular-nums text-rose-700 dark:text-rose-300/90">
                     ▎ Same date in {marker.year} — {marker.ytdCount} deals · {formatCurrency(marker.ytdTotal, 'USD')}
                     {marker.pctOfYear != null && ` (${marker.pctOfYear.toFixed(0)}% of full year)`}
                   </p>

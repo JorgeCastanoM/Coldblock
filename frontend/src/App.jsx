@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AuthProvider, useAuth } from './auth/AuthContext.jsx'
 import LoginPage from './auth/LoginPage.jsx'
 import { DashboardDataProvider } from './context/DashboardDataContext.jsx'
+import { ThemeProvider } from './context/ThemeContext.jsx'
 import DealsPage from './pages/DealsPage.jsx'
 import SalesOverviewPage from './pages/SalesOverviewPage.jsx'
 
@@ -29,15 +30,17 @@ function Shell() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter
-        future={{
-          v7_startTransition: true,
-          v7_relativeSplatPath: true,
-        }}
-      >
-        <Shell />
-      </BrowserRouter>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <BrowserRouter
+          future={{
+            v7_startTransition: true,
+            v7_relativeSplatPath: true,
+          }}
+        >
+          <Shell />
+        </BrowserRouter>
+      </AuthProvider>
+    </ThemeProvider>
   )
 }

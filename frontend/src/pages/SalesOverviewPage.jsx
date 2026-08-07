@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import AppHeader from '../components/AppHeader.jsx'
+import KeyOpportunities from '../components/KeyOpportunities.jsx'
 import LineChart from '../components/LineChart.jsx'
 import SalesYearChart from '../components/SalesYearChart.jsx'
 import StatCard from '../components/StatCard.jsx'
@@ -31,8 +32,8 @@ function WeeksToggle({ value, onChange }) {
           onClick={() => onChange(weeks)}
           className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
             weeks === value
-              ? 'bg-sky-500/15 text-sky-300'
-              : 'text-slate-400 hover:bg-white/[0.04] hover:text-slate-200'
+              ? 'bg-sky-500/15 text-sky-700 dark:text-sky-300'
+              : 'text-ink-muted hover:bg-ink/[0.05] hover:text-ink'
           }`}
         >
           {weeks}W
@@ -74,12 +75,6 @@ function compactUsd(value) {
   return `$${Math.round(value)}`
 }
 
-function formatShortDate(value) {
-  const date = parseFishbowlDate(value)
-  if (!date) return '—'
-  return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
-}
-
 function formatDelta(current, previous) {
   if (previous == null) return null
   const diff = current - previous
@@ -90,7 +85,6 @@ function formatDelta(current, previous) {
 export default function SalesOverviewPage() {
   const { summary, error, loading, refresh } = useDashboardData()
   const deals = summary?.deals ?? []
-  const conferenceContacts = summary?.conference_contacts ?? []
 
   // Win Rate is a pipeline-conversion metric (did the opportunity close won vs
   // lost) — it stays on HubSpot's own is_won/is_closed regardless of fulfillment.
@@ -145,20 +139,48 @@ export default function SalesOverviewPage() {
   // Shared week buckets for every trend chart below, so they all line up on
   // the same weeks even though they're built from different useMemo calls.
   const [weeksOfTrend, setWeeksOfTrend] = useState(DEFAULT_WEEKS_OF_TREND)
+  const [selectedRevenueWeek, setSelectedRevenueWeek] = useState(null)
   const weekKeys = useMemo(() => lastNWeekKeys(weeksOfTrend), [weeksOfTrend])
   const currentWeekKey = weekKeys[weekKeys.length - 1]
 
-  // Sales trajectory — won revenue (USD) by the week it closed.
+  // Sales trajectory — won revenue (USD) by the week it closed. Each point
+  // keeps the contributing deals so a chart click can drill into that week.
   const revenueTrend = useMemo(() => {
-    const byWeek = new Map(weekKeys.map((key) => [key, 0]))
+    const byWeek = new Map(weekKeys.map((key) => [key, { total: 0, deals: [] }]))
     for (const deal of wonUsd) {
       const date = parseFishbowlDate(deal.close_date)
       if (!date) continue
       const key = weekKey(date)
-      if (byWeek.has(key)) byWeek.set(key, byWeek.get(key) + deal.amount)
+      const bucket = byWeek.get(key)
+      if (!bucket) continue
+      bucket.total += deal.amount
+      bucket.deals.push(deal)
     }
-    return weekKeys.map((key) => ({ label: formatWeekLabel(key), value: byWeek.get(key) }))
+    return weekKeys.map((key) => {
+      const bucket = byWeek.get(key)
+      const deals = bucket.deals.slice().sort((a, b) => (Number(b.amount) || 0) - (Number(a.amount) || 0))
+      return {
+        weekKey: key,
+        label: formatWeekLabel(key),
+        value: bucket.total,
+        deals,
+      }
+    })
   }, [wonUsd, weekKeys])
+
+  const selectedRevenuePoint =
+    selectedRevenueWeek == null ? null : revenueTrend.find((point) => point.weekKey === selectedRevenueWeek) ?? null
+  const selectedRevenueIndex =
+    selectedRevenueWeek == null ? null : revenueTrend.findIndex((point) => point.weekKey === selectedRevenueWeek)
+
+  function handleWeeksOfTrendChange(weeks) {
+    setWeeksOfTrend(weeks)
+    setSelectedRevenueWeek(null)
+  }
+
+  function handleRevenuePointClick(point) {
+    setSelectedRevenueWeek((current) => (current === point.weekKey ? null : point.weekKey))
+  }
 
   // Idea: pipeline movement — each deal's stage_history gives a chronological
   // list of stage changes; every consecutive pair is one "moved from A to B"
@@ -230,26 +252,13 @@ export default function SalesOverviewPage() {
       .map(({ deal }) => deal)
   }, [open])
 
-  // Idea: conference / trade-show leads — surfaces contacts already tagged
-  // with a conference source in HubSpot, grouped so a rep can see which events
-  // are actually generating pipeline.
-  const conferenceGroups = useMemo(() => {
-    const byConference = new Map()
-    for (const contact of conferenceContacts) {
-      const key = contact.conference || 'Unspecified'
-      if (!byConference.has(key)) byConference.set(key, [])
-      byConference.get(key).push(contact)
-    }
-    return [...byConference.entries()].sort(([, a], [, b]) => b.length - a.length)
-  }, [conferenceContacts])
-
   return (
     <div className="min-h-screen px-6 pb-10">
       <AppHeader title="Sales Overview" onRefresh={refresh} loading={loading} />
 
       <div className="mx-auto max-w-6xl">
         {error && (
-          <div className="mb-5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-300">
+          <div className="mb-5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-700 dark:text-rose-300">
             {error}
           </div>
         )}
@@ -266,7 +275,7 @@ export default function SalesOverviewPage() {
           deals={wonUsd}
           footer={
             Object.keys(nonUsdByCurrency).length > 0 ? (
-              <p className="mt-4 text-xs text-slate-500">
+              <p className="mt-4 text-xs text-ink-subtle">
                 Also won in other currencies (not included above):{' '}
                 {formatMultiCurrency(nonUsdByCurrency)}
               </p>
@@ -274,110 +283,113 @@ export default function SalesOverviewPage() {
           }
         />
 
-        <div className="mb-6 rounded-xl border border-surface-border bg-surface-raised p-5">
+        <div className="mb-6 rounded-xl border border-surface-border bg-surface-raised p-5 shadow-panel">
           <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
             <div>
-              <h2 className="text-base font-semibold text-slate-100">Sales Trajectory — Past {weeksOfTrend} Weeks</h2>
-              <p className="text-xs text-slate-500">Won revenue (USD), by the week each deal closed</p>
+              <h2 className="text-base font-semibold text-ink">Sales Trajectory — Past {weeksOfTrend} Weeks</h2>
+              <p className="text-xs text-ink-subtle">
+                Won revenue (USD), by the week each deal closed · click a week to see its deals
+              </p>
             </div>
-            <WeeksToggle value={weeksOfTrend} onChange={setWeeksOfTrend} />
+            <WeeksToggle value={weeksOfTrend} onChange={handleWeeksOfTrendChange} />
           </div>
-          <LineChart data={revenueTrend} formatValue={compactUsd} lineColor="#38bdf8" />
+          <LineChart
+            data={revenueTrend}
+            formatValue={compactUsd}
+            lineColor="#38bdf8"
+            onPointClick={handleRevenuePointClick}
+            selectedIndex={selectedRevenueIndex >= 0 ? selectedRevenueIndex : null}
+          />
+          {selectedRevenuePoint && (
+            <div className="mt-5 border-t border-surface-border pt-4">
+              <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
+                <div>
+                  <h3 className="text-sm font-semibold text-ink">
+                    Week of {selectedRevenuePoint.label}
+                  </h3>
+                  <p className="text-xs text-ink-subtle">
+                    {selectedRevenuePoint.deals.length}{' '}
+                    {selectedRevenuePoint.deals.length === 1 ? 'deal' : 'deals'} ·{' '}
+                    {formatCurrency(selectedRevenuePoint.value, 'USD')}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setSelectedRevenueWeek(null)}
+                  className="rounded-lg px-2.5 py-1 text-xs font-medium text-ink-muted transition hover:bg-ink/[0.05] hover:text-ink"
+                >
+                  Clear
+                </button>
+              </div>
+              {selectedRevenuePoint.deals.length === 0 ? (
+                <p className="rounded-lg border border-dashed border-surface-border bg-surface/60 px-4 py-6 text-center text-sm text-ink-subtle">
+                  No won USD deals closed this week.
+                </p>
+              ) : (
+                <ul className="divide-y divide-surface-border rounded-lg border border-surface-border">
+                  {selectedRevenuePoint.deals.map((deal) => (
+                    <li key={deal.deal_id} className="flex items-start justify-between gap-3 px-3.5 py-2.5 text-sm">
+                      <div className="min-w-0">
+                        <p className="truncate font-medium text-ink" title={deal.name || 'Untitled deal'}>
+                          {deal.name || 'Untitled deal'}
+                        </p>
+                        <p className="truncate text-xs text-ink-subtle">
+                          {deal.company || 'No company linked'}
+                          {deal.stage ? ` · ${deal.stage}` : ''}
+                        </p>
+                      </div>
+                      <span className="shrink-0 font-semibold tabular-nums text-ink">
+                        {formatCurrency(deal.amount, deal.currency)}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
         </div>
 
-        <div className="mb-6 rounded-xl border border-surface-border bg-surface-raised p-5">
-          <h2 className="mb-4 text-base font-semibold text-slate-100">Top Customers (Won Revenue, USD)</h2>
+        <div className="mb-6 rounded-xl border border-surface-border bg-surface-raised p-5 shadow-panel">
+          <h2 className="mb-4 text-base font-semibold text-ink">Top Customers (Won Revenue, USD)</h2>
           {topCompanies.length === 0 ? (
-            <p className="text-sm text-slate-500">No won deals with a linked company yet.</p>
+            <p className="text-sm text-ink-subtle">No won deals with a linked company yet.</p>
           ) : (
             <ul className="divide-y divide-surface-border">
               {topCompanies.map((row) => (
                 <li key={row.company} className="flex items-center justify-between py-2.5 text-sm">
-                  <span className="text-slate-200">{row.company}</span>
-                  <span className="font-medium tabular-nums text-slate-100">{formatCurrency(row.amount, 'USD')}</span>
+                  <span className="text-ink">{row.company}</span>
+                  <span className="font-medium tabular-nums text-ink">{formatCurrency(row.amount, 'USD')}</span>
                 </li>
               ))}
             </ul>
           )}
         </div>
 
-        <div className="mb-6 rounded-xl border border-surface-border bg-surface-raised p-5">
-          <div className="mb-4">
-            <h2 className="text-base font-semibold text-slate-100">Key Opportunities</h2>
-            <p className="text-xs text-slate-500">
-              Largest and soonest-closing open deals, from deal data — no meeting or activity feed is connected yet
-            </p>
-          </div>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div>
-              <h3 className="mb-2 text-sm font-medium text-slate-300">Largest Open Deals (USD)</h3>
-              {keyOpportunities.length === 0 ? (
-                <p className="text-sm text-slate-500">No open USD deals yet.</p>
-              ) : (
-                <ul className="divide-y divide-surface-border">
-                  {keyOpportunities.map((deal) => (
-                    <li key={deal.deal_id} className="py-2.5 text-sm">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="truncate text-slate-200">{deal.name || 'Untitled deal'}</span>
-                        <span className="shrink-0 font-medium tabular-nums text-slate-100">
-                          {formatCurrency(deal.amount, deal.currency)}
-                        </span>
-                      </div>
-                      <p className="truncate text-xs text-slate-500">
-                        {deal.company || 'No company linked'} · {deal.stage}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
-              )}
-              {Object.keys(nonUsdOpenByCurrency).length > 0 && (
-                <p className="mt-3 text-xs text-slate-500">
-                  Also open in other currencies: {formatMultiCurrency(nonUsdOpenByCurrency)}
-                </p>
-              )}
-            </div>
-            <div>
-              <h3 className="mb-2 text-sm font-medium text-slate-300">Closing in the Next 30 Days</h3>
-              {closingSoon.length === 0 ? (
-                <p className="text-sm text-slate-500">No deals with an expected close date in the next 30 days.</p>
-              ) : (
-                <ul className="divide-y divide-surface-border">
-                  {closingSoon.map((deal) => (
-                    <li key={deal.deal_id} className="py-2.5 text-sm">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="truncate text-slate-200">{deal.name || 'Untitled deal'}</span>
-                        <span className="shrink-0 text-xs text-slate-400">{formatShortDate(deal.close_date)}</span>
-                      </div>
-                      <p className="truncate text-xs text-slate-500">
-                        {deal.company || 'No company linked'} · {formatCurrency(deal.amount, deal.currency)}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
-        </div>
+        <KeyOpportunities
+          largest={keyOpportunities}
+          closingSoon={closingSoon}
+          nonUsdOpenByCurrency={nonUsdOpenByCurrency}
+        />
 
-        <div className="mb-6 rounded-xl border border-surface-border bg-surface-raised p-5">
+        <div className="mb-6 rounded-xl border border-surface-border bg-surface-raised p-5 shadow-panel">
           <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
             <div>
-              <h2 className="text-base font-semibold text-slate-100">Pipeline Movement — Past {weeksOfTrend} Weeks</h2>
-              <p className="text-xs text-slate-500">Deals that changed stage, by week (all pipelines)</p>
+              <h2 className="text-base font-semibold text-ink">Pipeline Movement — Past {weeksOfTrend} Weeks</h2>
+              <p className="text-xs text-ink-subtle">Deals that changed stage, by week (all pipelines)</p>
             </div>
-            <WeeksToggle value={weeksOfTrend} onChange={setWeeksOfTrend} />
+            <WeeksToggle value={weeksOfTrend} onChange={handleWeeksOfTrendChange} />
           </div>
           <LineChart data={movementTrend} lineColor="#a78bfa" />
           <div className="mt-5 border-t border-surface-border pt-4">
-            <h3 className="mb-2 text-sm font-medium text-slate-300">This Week's Stage Changes</h3>
+            <h3 className="mb-2 text-sm font-medium text-ink-muted">This Week's Stage Changes</h3>
             {thisWeekTransitions.length === 0 ? (
-              <p className="text-sm text-slate-500">No stage changes recorded this week.</p>
+              <p className="text-sm text-ink-subtle">No stage changes recorded this week.</p>
             ) : (
               <ul className="divide-y divide-surface-border">
                 {thisWeekTransitions.map((row) => (
                   <li key={row.transition} className="flex items-center justify-between py-2 text-sm">
-                    <span className="text-slate-300">{row.transition}</span>
-                    <span className="font-medium tabular-nums text-slate-100">{row.count}</span>
+                    <span className="text-ink-muted">{row.transition}</span>
+                    <span className="font-medium tabular-nums text-ink">{row.count}</span>
                   </li>
                 ))}
               </ul>
@@ -385,58 +397,19 @@ export default function SalesOverviewPage() {
           </div>
         </div>
 
-        <div className="mb-6 rounded-xl border border-surface-border bg-surface-raised p-5">
+        <div className="mb-6 rounded-xl border border-surface-border bg-surface-raised p-5 shadow-panel">
           <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
             <div>
-              <h2 className="text-base font-semibold text-slate-100">Lead Generation — Past {weeksOfTrend} Weeks</h2>
-              <p className="text-xs text-slate-500">New deals created, by week (all pipelines, all currencies)</p>
+              <h2 className="text-base font-semibold text-ink">Lead Generation — Past {weeksOfTrend} Weeks</h2>
+              <p className="text-xs text-ink-subtle">New deals created, by week (all pipelines, all currencies)</p>
             </div>
-            <WeeksToggle value={weeksOfTrend} onChange={setWeeksOfTrend} />
+            <WeeksToggle value={weeksOfTrend} onChange={handleWeeksOfTrendChange} />
           </div>
           <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <StatCard label="New Leads This Week" value={newLeadsThisWeek} />
             <StatCard label="vs. Last Week" value={leadDeltaLabel ?? '—'} />
           </div>
           <LineChart data={leadGenTrend} lineColor="#34d399" />
-        </div>
-
-        <div className="rounded-xl border border-surface-border bg-surface-raised p-5">
-          <div className="mb-4 flex items-baseline justify-between">
-            <div>
-              <h2 className="text-base font-semibold text-slate-100">Conference &amp; Trade Show Leads</h2>
-              <p className="text-xs text-slate-500">Contacts tagged with a conference source</p>
-            </div>
-            <span className="text-sm font-medium text-slate-300">{conferenceContacts.length} contacts</span>
-          </div>
-          {conferenceContacts.length === 0 ? (
-            <p className="text-sm text-slate-500">No conference-sourced contacts yet.</p>
-          ) : (
-            <>
-              <div className="mb-4 flex flex-wrap gap-2">
-                {conferenceGroups.map(([conference, contacts]) => (
-                  <span key={conference} className="rounded-full bg-white/[0.04] px-3 py-1 text-xs text-slate-300">
-                    {conference} · {contacts.length}
-                  </span>
-                ))}
-              </div>
-              <ul className="divide-y divide-surface-border">
-                {conferenceContacts.slice(0, 8).map((contact) => (
-                  <li key={contact.contact_id} className="flex items-center justify-between gap-2 py-2.5 text-sm">
-                    <div className="min-w-0">
-                      <p className="truncate text-slate-200">{contact.name || 'Unnamed contact'}</p>
-                      <p className="truncate text-xs text-slate-500">
-                        {contact.company || 'No company'} · {contact.conference || 'Unspecified conference'}
-                      </p>
-                    </div>
-                    <span className="shrink-0 text-xs text-slate-500">{formatShortDate(contact.create_date)}</span>
-                  </li>
-                ))}
-              </ul>
-              {conferenceContacts.length > 8 && (
-                <p className="mt-3 text-xs text-slate-500">+{conferenceContacts.length - 8} more</p>
-              )}
-            </>
-          )}
         </div>
       </div>
     </div>

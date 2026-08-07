@@ -3,9 +3,17 @@ import { useId, useState } from 'react'
 // Single-hue trend line following the same mark specs as BarChart: hairline
 // gridlines rounded to clean steps, direct axis labels, hover tooltip via an
 // oversized per-point hit area. Single series → no legend (title says what's plotted).
-export default function LineChart({ data, formatValue = (v) => v.toLocaleString(), height = 220, lineColor = '#38bdf8' }) {
+export default function LineChart({
+  data,
+  formatValue = (v) => v.toLocaleString(),
+  height = 220,
+  lineColor = '#38bdf8',
+  onPointClick,
+  selectedIndex = null,
+}) {
   const [hovered, setHovered] = useState(null)
   const gradientId = useId()
+  const interactive = typeof onPointClick === 'function'
 
   const width = 640
   const paddingLeft = 56
@@ -41,9 +49,19 @@ export default function LineChart({ data, formatValue = (v) => v.toLocaleString(
   // in for a 52-point range, so this scales the step with the data length.
   const labelStep = Math.max(1, Math.ceil(data.length / 8))
 
+  function activatePoint(index) {
+    if (!interactive) return
+    onPointClick(data[index], index)
+  }
+
   return (
     <div className="relative">
-      <svg viewBox={`0 0 ${width} ${height}`} className="w-full" role="img" aria-label="Line chart">
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        className={`w-full ${interactive ? 'cursor-pointer' : ''}`}
+        role="img"
+        aria-label="Line chart"
+      >
         <defs>
           <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor={lineColor} stopOpacity="0.28" />
@@ -56,8 +74,8 @@ export default function LineChart({ data, formatValue = (v) => v.toLocaleString(
           const y = paddingTop + plotHeight - (tick / axisMax) * plotHeight
           return (
             <g key={tick}>
-              <line x1={paddingLeft} x2={width - paddingRight} y1={y} y2={y} stroke="#2a2e37" strokeWidth="1" />
-              <text x={paddingLeft - 8} y={y} textAnchor="end" dominantBaseline="middle" className="fill-slate-500 text-[10px]">
+              <line x1={paddingLeft} x2={width - paddingRight} y1={y} y2={y} stroke="var(--chart-grid)" strokeWidth="1" />
+              <text x={paddingLeft - 8} y={y} textAnchor="end" dominantBaseline="middle" className="fill-ink-subtle text-[10px]">
                 {formatValue(tick)}
               </text>
             </g>
@@ -70,7 +88,7 @@ export default function LineChart({ data, formatValue = (v) => v.toLocaleString(
           x2={width - paddingRight}
           y1={paddingTop + plotHeight}
           y2={paddingTop + plotHeight}
-          stroke="#3f4451"
+          stroke="var(--chart-axis)"
           strokeWidth="1"
         />
 
@@ -81,6 +99,7 @@ export default function LineChart({ data, formatValue = (v) => v.toLocaleString(
           const x = pointX(index)
           const y = pointY(d.value)
           const isHovered = hovered === index
+          const isSelected = selectedIndex === index
           const tooltipX = clampTooltipX(x)
           const tooltipTop = Math.max(y - 34, 2)
           return (
@@ -96,21 +115,58 @@ export default function LineChart({ data, formatValue = (v) => v.toLocaleString(
                 onMouseLeave={() => setHovered(null)}
                 onFocus={() => setHovered(index)}
                 onBlur={() => setHovered(null)}
+                onClick={() => activatePoint(index)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault()
+                    activatePoint(index)
+                  }
+                }}
                 tabIndex={0}
                 role="button"
-                aria-label={`${d.label}: ${formatValue(d.value)}`}
+                aria-pressed={interactive ? isSelected : undefined}
+                aria-label={
+                  interactive
+                    ? `${d.label}: ${formatValue(d.value)}. Click to view deals.`
+                    : `${d.label}: ${formatValue(d.value)}`
+                }
               />
-              <circle cx={x} cy={y} r={isHovered ? 5 : 3} fill={lineColor} className="transition-all" />
-              {isHovered && (
+              {isSelected && (
+                <line
+                  x1={x}
+                  x2={x}
+                  y1={paddingTop}
+                  y2={paddingTop + plotHeight}
+                  stroke={lineColor}
+                  strokeOpacity="0.35"
+                  strokeWidth="2"
+                  strokeDasharray="4 3"
+                />
+              )}
+              <circle
+                cx={x}
+                cy={y}
+                r={isSelected ? 6 : isHovered ? 5 : 3}
+                fill={lineColor}
+                stroke={isSelected ? 'var(--surface-raised)' : 'none'}
+                strokeWidth={isSelected ? 2 : 0}
+                className="transition-all"
+              />
+              {(isHovered || isSelected) && (
                 <g>
-                  <rect x={tooltipX - 34} y={tooltipTop} width={68} height={22} rx={5} fill="#0f1115" stroke="#3f4451" />
-                  <text x={tooltipX} y={tooltipTop + 15} textAnchor="middle" className="fill-slate-100 text-[11px] font-medium">
+                  <rect x={tooltipX - 34} y={tooltipTop} width={68} height={22} rx={5} fill="var(--chart-tooltip)" stroke="var(--chart-axis)" />
+                  <text x={tooltipX} y={tooltipTop + 15} textAnchor="middle" className="fill-ink text-[11px] font-medium">
                     {formatValue(d.value)}
                   </text>
                 </g>
               )}
               {index % labelStep === 0 && (
-                <text x={x} y={paddingTop + plotHeight + 18} textAnchor="middle" className="fill-slate-400 text-[10px]">
+                <text
+                  x={x}
+                  y={paddingTop + plotHeight + 18}
+                  textAnchor="middle"
+                  className={`text-[10px] ${isSelected ? 'fill-ink font-semibold' : 'fill-ink-muted'}`}
+                >
                   {d.label}
                 </text>
               )}

@@ -64,8 +64,8 @@ export default function SalesOrderYearChart({ orders = [], totalOrders, yearlySt
   if (chartYears.length === 0) {
     return (
       <div className="mb-6 rounded-xl border border-surface-border bg-surface-raised p-6">
-        <p className="text-sm text-slate-400">Total Orders</p>
-        <p className="mt-2 text-3xl font-semibold text-slate-100">{totalOrders}</p>
+        <p className="text-sm text-ink-muted">Total Orders</p>
+        <p className="mt-2 text-3xl font-semibold text-ink">{totalOrders}</p>
       </div>
     )
   }
@@ -74,28 +74,28 @@ export default function SalesOrderYearChart({ orders = [], totalOrders, yearlySt
     <div className="mb-6 overflow-hidden rounded-xl border border-surface-border bg-surface-raised">
       <div className="grid grid-cols-1 divide-y divide-surface-border sm:grid-cols-2 sm:divide-x sm:divide-y-0">
         <div className="p-5 sm:p-6">
-          <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Total Orders</p>
-          <p className="mt-2 text-3xl font-semibold tabular-nums text-slate-100">{totalOrders}</p>
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="text-xs font-medium uppercase tracking-wide text-ink-subtle">Total Orders</p>
+          <p className="mt-2 text-3xl font-semibold tabular-nums text-ink">{totalOrders}</p>
+          <p className="mt-1 text-sm text-ink-subtle">
             across {chartYears.length} {chartYears.length === 1 ? 'year' : 'years'}
           </p>
         </div>
         <div className="p-5 sm:p-6">
-          <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Total Value</p>
-          <p className="mt-2 text-3xl font-semibold tabular-nums text-slate-100">
+          <p className="text-xs font-medium uppercase tracking-wide text-ink-subtle">Total Value</p>
+          <p className="mt-2 text-3xl font-semibold tabular-nums text-ink">
             {formatCurrency(grandTotal, 'CAD')}
           </p>
-          <p className="mt-1 text-sm text-slate-500">sum of order totals</p>
+          <p className="mt-1 text-sm text-ink-subtle">sum of order totals</p>
         </div>
       </div>
 
       <div className="border-t border-surface-border px-5 py-5 sm:px-6">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-          <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+          <p className="text-xs font-medium uppercase tracking-wide text-ink-subtle">
             Revenue by year
           </p>
           {sameTime && (
-            <p className="inline-flex items-center gap-1.5 text-[11px] text-slate-500">
+            <p className="inline-flex items-center gap-1.5 text-[11px] text-ink-subtle">
               <span className="inline-block h-3 w-0.5 rounded-sm bg-rose-400" />
               This time last year
             </p>
@@ -103,14 +103,14 @@ export default function SalesOrderYearChart({ orders = [], totalOrders, yearlySt
         </div>
 
         {sameTime && (
-          <div className="mb-4 rounded-lg border border-rose-400/25 bg-rose-400/5 px-3 py-2 text-sm text-slate-300">
-            <span className="font-medium text-rose-300">By {formatMarkerDate(sameTime.cutoff)}</span>
-            <span className="text-slate-500"> · </span>
+          <div className="mb-4 rounded-lg border border-rose-400/25 bg-rose-400/5 px-3 py-2 text-sm text-ink-muted">
+            <span className="font-medium text-rose-700 dark:text-rose-300">By {formatMarkerDate(sameTime.cutoff)}</span>
+            <span className="text-ink-subtle"> · </span>
             <span className="tabular-nums">
               {sameTime.ytdCount} {sameTime.ytdCount === 1 ? 'order' : 'orders'} ·{' '}
               {formatCurrency(sameTime.ytdTotal, 'CAD')}
             </span>
-            <span className="text-slate-500">
+            <span className="text-ink-subtle">
               {' '}
               ({sameTime.pctOfYear.toFixed(0)}% of {sameTime.year})
             </span>
@@ -123,9 +123,9 @@ export default function SalesOrderYearChart({ orders = [], totalOrders, yearlySt
             const showMarker = sameTime && row.year === sameTime.year
             return (
               <div key={row.year} className="group flex min-w-0 flex-1 flex-col items-center gap-2">
-                <p className="text-xs font-medium tabular-nums text-sky-300/90">
+                <p className="text-xs font-medium tabular-nums text-sky-700 dark:text-sky-300/90">
                   {formatCompactCad(row.total)}
-                  <span className="ml-0.5 text-slate-500">CAD</span>
+                  <span className="ml-0.5 text-ink-subtle">CAD</span>
                 </p>
                 <div className="relative flex h-32 w-full items-end justify-center">
                   <div
@@ -145,8 +145,8 @@ export default function SalesOrderYearChart({ orders = [], totalOrders, yearlySt
                   </div>
                 </div>
                 <div className="text-center leading-tight">
-                  <p className="text-sm font-semibold text-slate-100">{row.year}</p>
-                  <p className="text-[11px] tabular-nums text-slate-500">
+                  <p className="text-sm font-semibold text-ink">{row.year}</p>
+                  <p className="text-[11px] tabular-nums text-ink-subtle">
                     {row.count} {row.count === 1 ? 'order' : 'orders'}
                   </p>
                 </div>
@@ -164,10 +164,10 @@ export default function SalesOrderYearChart({ orders = [], totalOrders, yearlySt
             return (
               <li key={`detail-${row.year}`}>
                 <div className="mb-1.5 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 text-sm">
-                  <span className="font-medium text-slate-100">{row.year}</span>
-                  <span className="tabular-nums text-slate-400">
+                  <span className="font-medium text-ink">{row.year}</span>
+                  <span className="tabular-nums text-ink-muted">
                     {row.count} orders · {formatCurrency(row.total, 'CAD')}
-                    <span className="ml-2 text-slate-500">({share.toFixed(0)}%)</span>
+                    <span className="ml-2 text-ink-subtle">({share.toFixed(0)}%)</span>
                   </span>
                 </div>
                 <div className="relative h-2.5 overflow-visible rounded-full bg-surface">
@@ -186,7 +186,7 @@ export default function SalesOrderYearChart({ orders = [], totalOrders, yearlySt
                   )}
                 </div>
                 {showMarker && (
-                  <p className="mt-1.5 text-[11px] tabular-nums text-rose-300/90">
+                  <p className="mt-1.5 text-[11px] tabular-nums text-rose-700 dark:text-rose-300/90">
                     ▎ This time last year — {sameTime.ytdCount} orders ·{' '}
                     {formatCurrency(sameTime.ytdTotal, 'CAD')} ({sameTime.pctOfYear.toFixed(0)}% of{' '}
                     {sameTime.year})
