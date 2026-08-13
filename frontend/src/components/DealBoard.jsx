@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import BoardScroller from './BoardScroller.jsx'
 import { daysInCurrentStage, stageAgingSeverity } from '../lib/deals.js'
 import { formatMultiCurrency, parseFishbowlDate, sumAmountsByCurrency } from '../lib/format.js'
 
@@ -152,7 +153,10 @@ export default function DealBoard({ deals }) {
     return deals
       .filter((deal) => {
         if (pipelineFilter !== 'all' && deal.pipeline !== pipelineFilter) return false
-        if (!showClosed && deal.is_closed) return false
+        // Won stages (Close to won → Ready to ship → Shipped → Completed) are
+        // closed in HubSpot, but they are still the live fulfillment path —
+        // only hide lost stages unless the user asks for them.
+        if (!showClosed && deal.is_closed && !deal.is_won) return false
         if (!needle) return true
         const haystack = `${deal.name ?? ''} ${deal.company ?? ''}`.toLowerCase()
         return haystack.includes(needle)
@@ -221,7 +225,7 @@ export default function DealBoard({ deals }) {
             onChange={(event) => setShowClosed(event.target.checked)}
             className="h-4 w-4 rounded border-surface-border bg-surface"
           />
-          Show closed stages
+          Show lost stages
         </label>
 
         {hasActiveFilters && (
@@ -248,9 +252,18 @@ export default function DealBoard({ deals }) {
           {deals.length === 0 ? 'No deals found.' : 'No deals match the current filters.'}
         </div>
       ) : (
-        <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4">
-          {stages.map((stage, index) => {
-            const accent = ACCENT_CYCLE[index % ACCENT_CYCLE.length]
+        <BoardScroller
+          items={stages.map((stage, index) => ({
+            key: stage.key,
+            label: stage.key,
+            count: stage.deals.length,
+            accent: ACCENT_CYCLE[index % ACCENT_CYCLE.length],
+            stage,
+          }))}
+          getAccentClass={(item) => ACCENT[item.accent].dot}
+        >
+          {({ item, setColumnRef }) => {
+            const { stage, accent } = item
             const subtotal = formatMultiCurrency(
               sumAmountsByCurrency(
                 stage.deals,
@@ -262,9 +275,10 @@ export default function DealBoard({ deals }) {
             return (
               <div
                 key={stage.key}
-                className="flex min-w-72 flex-1 snap-start flex-col rounded-xl border border-surface-border bg-surface-raised shadow-panel"
+                ref={setColumnRef}
+                className="flex max-h-[min(70vh,40rem)] min-w-72 flex-1 snap-start flex-col overflow-hidden rounded-xl border border-surface-border bg-surface-raised shadow-panel"
               >
-                <div className="border-b border-surface-border px-4 py-3">
+                <div className="shrink-0 border-b border-surface-border px-4 py-3">
                   <div className="mb-1 flex items-center gap-2">
                     <span className={`h-2 w-2 rounded-full ${ACCENT[accent].dot}`} />
                     <span className="text-sm font-semibold text-ink">{stage.key}</span>
@@ -274,7 +288,7 @@ export default function DealBoard({ deals }) {
                   </div>
                   <p className="text-xs text-ink-subtle">{subtotal ?? '$0'} total</p>
                 </div>
-                <div className="flex flex-col gap-3 p-3">
+                <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-3 [scrollbar-width:thin]">
                   {stage.deals.map((deal) => (
                     <DealCard
                       key={deal.deal_id}
@@ -287,8 +301,8 @@ export default function DealBoard({ deals }) {
                 </div>
               </div>
             )
-          })}
-        </div>
+          }}
+        </BoardScroller>
       )}
     </div>
   )
