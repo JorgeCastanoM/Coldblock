@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { daysInCurrentStage, stageAgingSeverity } from '../lib/deals.js'
 import { formatMultiCurrency, parseFishbowlDate, sumAmountsByCurrency } from '../lib/format.js'
 
 // Column accents cycle by position rather than encoding "good/bad" by stage —
@@ -21,6 +22,7 @@ const SORT_OPTIONS = [
   { value: 'amount_desc', label: 'Amount (high → low)' },
   { value: 'amount_asc', label: 'Amount (low → high)' },
   { value: 'name_asc', label: 'Name (A → Z)' },
+  { value: 'days_in_stage_desc', label: 'Longest in stage' },
 ]
 
 const controlClass =
@@ -46,6 +48,8 @@ function compareDeals(a, b, sort) {
       return (Number(a.amount) || 0) - (Number(b.amount) || 0)
     case 'name_asc':
       return String(a.name ?? '').localeCompare(String(b.name ?? ''))
+    case 'days_in_stage_desc':
+      return (daysInCurrentStage(b) ?? -1) - (daysInCurrentStage(a) ?? -1)
     case 'modified_desc':
     default:
       return 0 // already sorted by hs_lastmodifieddate server-side
@@ -56,6 +60,14 @@ function DealCard({ deal, accent, expanded, onToggle }) {
   const amount = formatCurrency(deal.amount, deal.currency)
   const closeDate = formatDate(deal.close_date)
   const items = deal.items ?? []
+  const daysInStage = deal.is_closed ? null : daysInCurrentStage(deal)
+  const agingSeverity = deal.is_closed ? null : stageAgingSeverity(deal)
+  const agingClass =
+    agingSeverity === 'bad'
+      ? 'text-red-600 dark:text-red-400'
+      : agingSeverity === 'warn'
+        ? 'text-amber-600 dark:text-amber-400'
+        : 'text-ink-subtle'
 
   return (
     <div className={`rounded-lg border border-surface-border border-t-2 ${ACCENT[accent].border} bg-surface shadow-sm`}>
@@ -74,6 +86,14 @@ function DealCard({ deal, accent, expanded, onToggle }) {
         <p className="mb-1 truncate text-xs text-ink-muted" title={deal.company ?? ''}>
           {deal.company || 'No company linked'}
         </p>
+        {daysInStage != null && (
+          <p
+            className={`mb-1 text-xs font-medium ${agingClass}`}
+            title={`${daysInStage} ${daysInStage === 1 ? 'day' : 'days'} in ${deal.stage || 'this stage'}`}
+          >
+            {daysInStage}d in stage
+          </p>
+        )}
         <div className="flex items-center justify-between gap-2 text-xs text-ink-subtle">
           {closeDate ? <span>Close {closeDate}</span> : <span />}
           <span>

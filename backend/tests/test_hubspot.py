@@ -115,6 +115,35 @@ def test_normalize_deal_defaults_to_empty_stage_history():
     assert result["stage_history"] == []
 
 
+def test_normalize_deal_resolves_owner():
+    deal = {
+        "id": "131",
+        "properties": {"dealstage": "154790192", "pipeline": "82088336", "hubspot_owner_id": "555"},
+    }
+    owners_by_id = {"555": {"name": "Sierra Quon", "email": "squon@coldblock.ca"}}
+
+    result = _normalize_deal(deal, _PIPELINES, [], [], {}, {}, None, owners_by_id)
+
+    assert result["owner"] == {"id": "555", "name": "Sierra Quon", "email": "squon@coldblock.ca"}
+
+
+def test_normalize_deal_with_no_owner_id_is_unassigned():
+    deal = {"id": "132", "properties": {"dealstage": "154790192", "pipeline": "82088336"}}
+    result = _normalize_deal(deal, _PIPELINES, [], [], {}, {}, None, {"555": {"name": "Sierra Quon"}})
+    assert result["owner"] is None
+
+
+def test_normalize_deal_owner_id_not_resolved_keeps_id():
+    # A departed owner not covered by either the active or archived owners
+    # call must still be distinguishable from a deal with no owner at all.
+    deal = {
+        "id": "133",
+        "properties": {"dealstage": "154790192", "pipeline": "82088336", "hubspot_owner_id": "999"},
+    }
+    result = _normalize_deal(deal, _PIPELINES, [], [], {}, {}, None, {})
+    assert result["owner"] == {"id": "999", "name": None, "email": None}
+
+
 def test_normalize_conference_contact_joins_first_and_last_name():
     row = {
         "id": "c1",

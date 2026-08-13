@@ -51,6 +51,9 @@ export default function AppHeader({ title, onRefresh, loading }) {
             <NavLink to="/deals" className={linkClass}>
               Deals
             </NavLink>
+            <NavLink to="/team-performance" className={linkClass}>
+              Team
+            </NavLink>
           </NavGroup>
         </div>
 

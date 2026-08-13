@@ -19,6 +19,7 @@ _DEAL_PROPERTIES = [
     "closedate",
     "createdate",
     "hs_lastmodifieddate",
+    "hubspot_owner_id",
 ]
 
 # HubSpot's batch/read and batch-associations endpoints cap at 100 inputs per
@@ -62,6 +63,7 @@ _MOCK_DEALS = [
         "currency": "USD",
         "close_date": None,
         "create_date": "2026-07-01",
+        "owner": {"id": "OWNER-1", "name": "Sample Rep", "email": "rep@coldblock.ca"},
         "items": [
             {"sku": "CB-VALVE-100", "name": "Valve 100", "quantity": 10, "price": 500.0},
         ],
@@ -83,6 +85,7 @@ _MOCK_DEALS = [
         "currency": "USD",
         "close_date": "2025-11-15",
         "create_date": "2025-10-01",
+        "owner": {"id": "OWNER-2", "name": "Another Rep", "email": "another@coldblock.ca"},
         "items": [],
         "stage_history": [
             {"stage": "Qualified Opportunity - uncontacted", "stage_order": 0, "changed_at": "2025-10-01T00:00:00Z"},
@@ -138,6 +141,20 @@ class HubspotClient:
                 },
             }
         return pipelines
+
+    async def get_owners(self, client: httpx.AsyncClient) -> dict[str, dict]:
+        """{owner_id: {"name": ..., "email": ...}}. Two calls are required — the
+        owners endpoint defaults to active-only and there's no single query that
+        returns both active and deactivated owners. Skipping the archived call
+        would leave every deal still attributed to a departed rep resolving to
+        a bare, unlabeled id."""
+        owners: dict[str, dict] = {}
+        for params in ({"limit": 100}, {"limit": 100, "archived": "true"}):
+            data = await self._get(client, "/crm/v3/owners/", params=params)
+            for owner in data.get("results", []):
+                name = " ".join(filter(None, [owner.get("firstName"), owner.get("lastName")])).strip() or None
+                owners[str(owner["id"])] = {"name": name, "email": owner.get("email")}
+        return owners
 
     async def _batch_read(
         self, client: httpx.AsyncClient, object_type: str, ids: set[str], properties: list[str]
@@ -224,7 +241,11 @@ class HubspotClient:
             return []
 
         async with httpx.AsyncClient(timeout=30) as client:
-            pipelines = await self.get_deal_pipelines(client)
+            # Neither depends on deal_ids, unlike the batch group below — fetch concurrently.
+            pipelines, owners_by_id = await asyncio.gather(
+                self.get_deal_pipelines(client),
+                self.get_owners(client),
+            )
 
             deals_raw = await self._search_all_deals(client)
             deal_ids = [deal["id"] for deal in deals_raw]
@@ -253,6 +274,7 @@ class HubspotClient:
                     companies_by_id,
                     line_items_by_id,
                     stage_history.get(deal["id"], []),
+                    owners_by_id,
                 )
                 for deal in deals_raw
             ]
@@ -295,6 +317,7 @@ def _normalize_deal(
     companies_by_id: dict[str, dict],
     line_items_by_id: dict[str, dict],
     stage_history_raw: list[dict] | None = None,
+    owners_by_id: dict[str, dict] | None = None,
 ) -> dict:
     props = deal.get("properties", {})
     pipeline_info = pipelines.get(props.get("pipeline"), {})
@@ -315,6 +338,15 @@ def _normalize_deal(
         if company and company.get("name"):
             company_name = company["name"]
             break
+
+    owner_id = props.get("hubspot_owner_id")
+    owner = None
+    if owner_id:
+        resolved = (owners_by_id or {}).get(owner_id) or {}
+        # Preserve the id even if it didn't resolve (e.g. a since-deleted owner
+        # not covered by either the active or archived owners call) so the
+        # frontend can still group it distinctly from a deal with no owner at all.
+        owner = {"id": owner_id, "name": resolved.get("name"), "email": resolved.get("email")}
 
     items = []
     for item_id in line_item_ids:
@@ -349,6 +381,7 @@ def _normalize_deal(
         "currency": props.get("deal_currency_code") or "USD",
         "close_date": props.get("closedate") or None,
         "create_date": props.get("createdate"),
+        "owner": owner,
         "items": items,
         "stage_history": stage_history,
     }

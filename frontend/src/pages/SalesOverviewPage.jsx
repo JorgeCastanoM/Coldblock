@@ -3,8 +3,10 @@ import AppHeader from '../components/AppHeader.jsx'
 import KeyOpportunities from '../components/KeyOpportunities.jsx'
 import LineChart from '../components/LineChart.jsx'
 import SalesYearChart from '../components/SalesYearChart.jsx'
+import StalledDeals from '../components/StalledDeals.jsx'
 import StatCard from '../components/StatCard.jsx'
 import { useDashboardData } from '../context/DashboardDataContext.jsx'
+import { daysInCurrentStage, isRevenueStage, stageAgingSeverity } from '../lib/deals.js'
 import {
   formatCurrency,
   formatMultiCurrency,
@@ -43,26 +45,10 @@ function WeeksToggle({ value, onChange }) {
   )
 }
 
-// Revenue reporting (Total Won Revenue, Sales per Year, Avg Deal Size, Top
-// Customers) is scoped to deals that have reached one of these stages — every
-// kind of sale (including trials/demos) counts once it's confirmed here, per
-// how this business actually recognizes an order. Win Rate is a separate,
-// broader pipeline-conversion metric and is unaffected by this list.
-const REVENUE_STAGES = new Set(
-  [
-    'Ready to ship',
-    'Shipped',
-    'Customer Received',
-    'Installation/Technical Follow up',
-    '2 week follow up',
-    'Monthly Followup',
-    'Completed',
-  ].map((stage) => stage.toLowerCase()),
-)
-
-function isRevenueStage(deal) {
-  return REVENUE_STAGES.has((deal.stage || '').toLowerCase())
-}
+// "Procurement" (as named in stakeholder feedback) maps to the two
+// PO/purchasing-adjacent stages in the pipeline — both reference a PO or
+// close timeframe right in their own label.
+const PROCUREMENT_STAGES = new Set(['confirmed interest - expect po wi 60 days', 'in purchasing - close in 30 days'])
 
 function dealYear(deal) {
   const date = parseFishbowlDate(deal.close_date) || parseFishbowlDate(deal.create_date)
@@ -252,6 +238,45 @@ export default function SalesOverviewPage() {
       .map(({ deal }) => deal)
   }, [open])
 
+  // Idea: stalled-deal visibility — flags open deals sitting longer than
+  // expected in their current stage (see lib/deals.js for the thresholds).
+  // Worst offenders company-wide, plus the two stages singled out in
+  // stakeholder feedback called out on their own.
+  const { worstOffenders, activeDialogueStalled, procurementStalled, stalledCount, severeCount } = useMemo(() => {
+    const now = new Date()
+    const withAging = open
+      .map((deal) => ({ deal, days: daysInCurrentStage(deal, now), severity: stageAgingSeverity(deal, now) }))
+      .filter((entry) => entry.days != null)
+
+    const stalled = withAging.filter((entry) => entry.severity)
+
+    const worst = withAging
+      .slice()
+      .sort((a, b) => b.days - a.days)
+      .slice(0, 8)
+      .map((entry) => entry.deal)
+
+    const activeDialogue = stalled
+      .filter((entry) => (entry.deal.stage || '').toLowerCase() === 'active dialogue')
+      .sort((a, b) => b.days - a.days)
+      .slice(0, 5)
+      .map((entry) => entry.deal)
+
+    const procurement = stalled
+      .filter((entry) => PROCUREMENT_STAGES.has((entry.deal.stage || '').toLowerCase()))
+      .sort((a, b) => b.days - a.days)
+      .slice(0, 5)
+      .map((entry) => entry.deal)
+
+    return {
+      worstOffenders: worst,
+      activeDialogueStalled: activeDialogue,
+      procurementStalled: procurement,
+      stalledCount: stalled.length,
+      severeCount: stalled.filter((entry) => entry.severity === 'bad').length,
+    }
+  }, [open])
+
   return (
     <div className="min-h-screen px-6 pb-10">
       <AppHeader title="Sales Overview" onRefresh={refresh} loading={loading} />
@@ -369,6 +394,14 @@ export default function SalesOverviewPage() {
           largest={keyOpportunities}
           closingSoon={closingSoon}
           nonUsdOpenByCurrency={nonUsdOpenByCurrency}
+        />
+
+        <StalledDeals
+          worstOffenders={worstOffenders}
+          activeDialogue={activeDialogueStalled}
+          procurement={procurementStalled}
+          stalledCount={stalledCount}
+          severeCount={severeCount}
         />
 
         <div className="mb-6 rounded-xl border border-surface-border bg-surface-raised p-5 shadow-panel">
