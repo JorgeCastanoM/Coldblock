@@ -1,4 +1,6 @@
-export default function DataTable({ columns, rows }) {
+export default function DataTable({ columns, rows, onRowClick }) {
+  const interactive = typeof onRowClick === 'function'
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full border-collapse text-left text-sm">
@@ -18,7 +20,22 @@ export default function DataTable({ columns, rows }) {
           {rows.map((row, index) => (
             <tr
               key={row.id ?? row.sku ?? row.so_number ?? index}
-              className="border-b border-surface-border/60 last:border-b-0 hover:bg-ink/[0.04]"
+              className={`border-b border-surface-border/60 last:border-b-0 hover:bg-ink/[0.04] ${
+                interactive ? 'cursor-pointer' : ''
+              }`}
+              onClick={interactive ? () => onRowClick(row) : undefined}
+              onKeyDown={
+                interactive
+                  ? (event) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault()
+                        onRowClick(row)
+                      }
+                    }
+                  : undefined
+              }
+              tabIndex={interactive ? 0 : undefined}
+              role={interactive ? 'button' : undefined}
             >
               {columns.map((column) => (
                 <td

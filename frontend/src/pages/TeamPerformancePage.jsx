@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import AppHeader from '../components/AppHeader.jsx'
 import DataTable from '../components/DataTable.jsx'
+import RepWonDealsModal from '../components/RepWonDealsModal.jsx'
 import StatCard from '../components/StatCard.jsx'
 import { useDashboardData } from '../context/DashboardDataContext.jsx'
 import { isRevenueStage } from '../lib/deals.js'
@@ -35,6 +36,7 @@ export default function TeamPerformancePage() {
   const { summary, error, loading, refresh } = useDashboardData()
   const deals = summary?.deals ?? []
   const [sort, setSort] = useState('won_revenue_desc')
+  const [selectedRep, setSelectedRep] = useState(null)
 
   // Win Rate stays on is_won/is_closed (pipeline conversion); $ revenue stays
   // scoped to REVENUE_STAGES — same separation Sales Overview uses, kept
@@ -105,6 +107,8 @@ export default function TeamPerformancePage() {
         openPipelineLabel: openPipeline.primary,
         openPipelineDetail: openPipeline.detail,
         openPipelineUsd: openByCurrency.USD ?? 0,
+        // Same confirmed-sale set that feeds Won Revenue / Won Deals on this page.
+        revenueDeals: bucket.revenue,
       }
     })
   }, [deals])
@@ -113,7 +117,14 @@ export default function TeamPerformancePage() {
   const repCount = rows.filter((row) => row.id !== 'unassigned').length
 
   const columns = [
-    { key: 'name', label: 'Rep', cellClassName: 'font-medium text-ink' },
+    {
+      key: 'name',
+      label: 'Rep',
+      cellClassName: 'font-medium text-sky-700 dark:text-sky-300',
+      render: (value) => (
+        <span className="underline decoration-sky-500/30 underline-offset-2">{value}</span>
+      ),
+    },
     { key: 'dealCount', label: 'Deals', align: 'right' },
     {
       key: 'wonRevenueLabel',
@@ -169,7 +180,8 @@ export default function TeamPerformancePage() {
           <div>
             <h2 className="text-base font-semibold text-ink">Sales by Rep</h2>
             <p className="text-xs text-ink-subtle">
-              Won revenue is scoped to confirmed-sale stages, same as Sales Overview
+              Won revenue is scoped to confirmed-sale stages, same as Sales Overview · click a
+              rep to see their deals
             </p>
           </div>
           <label className="flex flex-col gap-1.5">
@@ -185,9 +197,11 @@ export default function TeamPerformancePage() {
         </div>
 
         <div className="overflow-hidden rounded-xl border border-surface-border bg-surface-raised shadow-panel">
-          <DataTable columns={columns} rows={sortedRows} />
+          <DataTable columns={columns} rows={sortedRows} onRowClick={setSelectedRep} />
         </div>
       </div>
+
+      {selectedRep && <RepWonDealsModal rep={selectedRep} onClose={() => setSelectedRep(null)} />}
     </div>
   )
 }
