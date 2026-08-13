@@ -13,10 +13,18 @@ import {
   formatWeekLabel,
   lastNWeekKeys,
   parseFishbowlDate,
-  splitPrimaryCurrency,
   sumAmountsByCurrency,
   weekKey,
 } from '../lib/format.js'
+
+function compactAmount(value, currency = 'USD') {
+  if (value == null) return null
+  const amount = Number(value)
+  if (amount >= 1_000_000) return `$${(amount / 1_000_000).toFixed(2)}M ${currency}`
+  if (amount >= 10_000) return `$${Math.round(amount / 1000)}K ${currency}`
+  if (amount >= 1_000) return `$${(amount / 1000).toFixed(1)}K ${currency}`
+  return `$${Math.round(amount).toLocaleString()} ${currency}`
+}
 
 const DEFAULT_WEEKS_OF_TREND = 12
 const WEEK_OPTIONS = [4, 8, 12, 26, 52]
@@ -84,9 +92,18 @@ export default function SalesOverviewPage() {
   // Revenue reporting below uses REVENUE_STAGES instead of is_won.
   const revenueDeals = useMemo(() => deals.filter(isRevenueStage), [deals])
 
-  const totalWon = splitPrimaryCurrency(
-    sumAmountsByCurrency(revenueDeals, (deal) => deal.amount, (deal) => deal.currency, 'USD'),
+  const wonByCurrency = sumAmountsByCurrency(
+    revenueDeals,
+    (deal) => deal.amount,
+    (deal) => deal.currency,
+    'USD',
   )
+  const totalWonPrimary = compactAmount(wonByCurrency.USD, 'USD')
+  const totalWonDetail = Object.entries(wonByCurrency)
+    .filter(([currency]) => currency !== 'USD')
+    .map(([currency, amount]) => compactAmount(amount, currency))
+    .filter(Boolean)
+    .join(' + ')
 
   const wonUsd = revenueDeals.filter((deal) => deal.currency === 'USD' && deal.amount != null)
   const avgDealSize = wonUsd.length > 0 ? wonUsd.reduce((sum, deal) => sum + deal.amount, 0) / wonUsd.length : null
@@ -253,7 +270,6 @@ export default function SalesOverviewPage() {
     const worst = withAging
       .slice()
       .sort((a, b) => b.days - a.days)
-      .slice(0, 8)
       .map((entry) => entry.deal)
 
     const activeDialogue = stalled
@@ -288,11 +304,20 @@ export default function SalesOverviewPage() {
           </div>
         )}
 
-        <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-4">
-          <StatCard label="Total Won Revenue" value={totalWon.primary ?? '—'} detail={totalWon.detail} />
-          <StatCard label="Win Rate" value={winRate != null ? `${winRate}%` : '—'} />
-          <StatCard label="Avg Deal Size (USD)" value={avgDealSize != null ? formatCurrency(avgDealSize, 'USD') : '—'} />
-          <StatCard label="Won Deals" value={revenueDeals.length} />
+        <div className="mb-6 flex flex-wrap gap-3">
+          <StatCard
+            compact
+            label="Won Revenue"
+            value={totalWonPrimary ?? '—'}
+            detail={totalWonDetail ? `+ ${totalWonDetail}` : undefined}
+          />
+          <StatCard compact label="Win Rate" value={winRate != null ? `${winRate}%` : '—'} />
+          <StatCard
+            compact
+            label="Avg Deal (USD)"
+            value={avgDealSize != null ? compactAmount(avgDealSize, 'USD') : '—'}
+          />
+          <StatCard compact label="Won Deals" value={revenueDeals.length} />
         </div>
 
         <SalesYearChart

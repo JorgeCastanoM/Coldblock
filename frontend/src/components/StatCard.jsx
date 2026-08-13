@@ -1,4 +1,4 @@
-export default function StatCard({ label, value, detail, tone = 'default' }) {
+export default function StatCard({ label, value, detail, tone = 'default', compact = false }) {
   const toneClass =
     tone === 'warn'
       ? 'text-amber-600 dark:text-amber-400'
@@ -10,13 +10,23 @@ export default function StatCard({ label, value, detail, tone = 'default' }) {
   // a fixed text-3xl in a quarter-width tile without wrapping onto 2-3 lines
   // and blowing out the card's height relative to its siblings in the row.
   const length = String(value).length
-  const sizeClass = length > 16 ? 'text-xl' : length > 10 ? 'text-2xl' : 'text-3xl'
+  const sizeClass = compact
+    ? 'text-2xl'
+    : length > 16
+      ? 'text-xl'
+      : length > 10
+        ? 'text-2xl'
+        : 'text-3xl'
 
   return (
-    <div className="rounded-xl border border-surface-border bg-surface-raised p-6 shadow-panel transition-colors hover:bg-ink/[0.03]">
-      <p className="text-sm text-ink-muted">{label}</p>
+    <div
+      className={`rounded-xl border border-surface-border bg-surface-raised shadow-panel transition-colors hover:bg-ink/[0.03] ${
+        compact ? 'px-4 py-3' : 'p-6'
+      }`}
+    >
+      <p className={`text-ink-muted ${compact ? 'text-xs' : 'text-sm'}`}>{label}</p>
       <p
-        className={`mt-2 truncate font-semibold leading-snug tabular-nums ${sizeClass} ${toneClass}`}
+        className={`${compact ? 'mt-1' : 'mt-2'} truncate font-semibold leading-snug tabular-nums ${sizeClass} ${toneClass}`}
         title={typeof value === 'string' ? value : undefined}
       >
         {value}

@@ -1,21 +1,20 @@
 import { useMemo, useState } from 'react'
 import AppHeader from '../components/AppHeader.jsx'
-import DataTable from '../components/DataTable.jsx'
 import RepWonDealsModal from '../components/RepWonDealsModal.jsx'
 import StatCard from '../components/StatCard.jsx'
+import TeamRepList from '../components/TeamRepList.jsx'
 import { useDashboardData } from '../context/DashboardDataContext.jsx'
 import { isRevenueStage } from '../lib/deals.js'
-import { formatCurrency, splitPrimaryCurrency, sumAmountsByCurrency } from '../lib/format.js'
+import { sumAmountsByCurrency } from '../lib/format.js'
 
-const TEAM_SORT_OPTIONS = [
-  { value: 'won_revenue_desc', label: 'Won revenue (high → low)' },
-  { value: 'open_pipeline_desc', label: 'Open pipeline (high → low)' },
-  { value: 'win_rate_desc', label: 'Win rate (high → low)' },
-  { value: 'name_asc', label: 'Name (A → Z)' },
-]
-
-const controlClass =
-  'rounded-lg border border-surface-border bg-surface px-3 py-2 text-sm text-ink focus:border-sky-500 focus:outline-none'
+function compactUsd(value) {
+  if (value == null) return null
+  const amount = Number(value)
+  if (amount >= 1_000_000) return `$${(amount / 1_000_000).toFixed(2)}M`
+  if (amount >= 10_000) return `$${Math.round(amount / 1000)}K`
+  if (amount >= 1_000) return `$${(amount / 1000).toFixed(1)}K`
+  return `$${Math.round(amount).toLocaleString()}`
+}
 
 function compareRows(a, b, sort) {
   switch (sort) {
@@ -37,21 +36,6 @@ export default function TeamPerformancePage() {
   const deals = summary?.deals ?? []
   const [sort, setSort] = useState('won_revenue_desc')
   const [selectedRep, setSelectedRep] = useState(null)
-
-  // Win Rate stays on is_won/is_closed (pipeline conversion); $ revenue stays
-  // scoped to REVENUE_STAGES — same separation Sales Overview uses, kept
-  // consistent here so a rep's numbers on this page don't quietly disagree
-  // with the company-wide totals one click away.
-  const won = useMemo(() => deals.filter((deal) => deal.is_won), [deals])
-  const lost = useMemo(() => deals.filter((deal) => deal.is_closed && !deal.is_won), [deals])
-  const open = useMemo(() => deals.filter((deal) => !deal.is_closed), [deals])
-
-  const closedCount = won.length + lost.length
-  const companyWinRate = closedCount > 0 ? Math.round((won.length / closedCount) * 100) : null
-
-  const companyOpenPipeline = splitPrimaryCurrency(
-    sumAmountsByCurrency(open, (deal) => deal.amount, (deal) => deal.currency, 'USD'),
-  )
 
   const unassignedCount = deals.filter((deal) => !deal.owner).length
 
@@ -85,8 +69,6 @@ export default function TeamPerformancePage() {
         'USD',
       )
       const openByCurrency = sumAmountsByCurrency(bucket.open, (deal) => deal.amount, (deal) => deal.currency, 'USD')
-      const wonRevenue = splitPrimaryCurrency(revenueByCurrency)
-      const openPipeline = splitPrimaryCurrency(openByCurrency)
 
       const revenueUsd = bucket.revenue.filter((deal) => deal.currency === 'USD' && deal.amount != null)
       const avgDealSize =
@@ -97,66 +79,32 @@ export default function TeamPerformancePage() {
       return {
         id: bucket.id,
         name: bucket.name,
-        dealCount: bucket.won.length + bucket.lost.length + bucket.open.length,
-        wonRevenueLabel: wonRevenue.primary,
-        wonRevenueDetail: wonRevenue.detail,
-        wonRevenueUsd: revenueByCurrency.USD ?? 0,
+        wonCount: bucket.won.length,
+        lostCount: bucket.lost.length,
+        openCount: bucket.open.length,
+        closedCount: closed,
         wonDealCount: bucket.revenue.length,
         winRate: closed > 0 ? Math.round((bucket.won.length / closed) * 100) : null,
-        avgDealSizeLabel: avgDealSize != null ? formatCurrency(avgDealSize, 'USD') : '—',
-        openPipelineLabel: openPipeline.primary,
-        openPipelineDetail: openPipeline.detail,
+        avgDealSizeLabel: avgDealSize != null ? `${compactUsd(avgDealSize)} USD` : null,
+        revenueByCurrency,
+        openByCurrency,
+        wonRevenueUsd: revenueByCurrency.USD ?? 0,
         openPipelineUsd: openByCurrency.USD ?? 0,
-        // Same confirmed-sale set that feeds Won Revenue / Won Deals on this page.
         revenueDeals: bucket.revenue,
       }
     })
   }, [deals])
 
-  const sortedRows = useMemo(() => rows.slice().sort((a, b) => compareRows(a, b, sort)), [rows, sort])
-  const repCount = rows.filter((row) => row.id !== 'unassigned').length
+  const sortedRows = useMemo(() => {
+    const ranked = rows.slice().sort((a, b) => compareRows(a, b, sort))
+    if (sort === 'name_asc') return ranked
+    const assigned = ranked.filter((row) => row.id !== 'unassigned')
+    const unassigned = ranked.filter((row) => row.id === 'unassigned')
+    return [...assigned, ...unassigned]
+  }, [rows, sort])
 
-  const columns = [
-    {
-      key: 'name',
-      label: 'Rep',
-      cellClassName: 'font-medium text-sky-700 dark:text-sky-300',
-      render: (value) => (
-        <span className="underline decoration-sky-500/30 underline-offset-2">{value}</span>
-      ),
-    },
-    { key: 'dealCount', label: 'Deals', align: 'right' },
-    {
-      key: 'wonRevenueLabel',
-      label: 'Won Revenue',
-      align: 'right',
-      render: (value, row) => (
-        <div>
-          <p className="font-medium text-ink">{value ?? '—'}</p>
-          {row.wonRevenueDetail && <p className="text-xs text-ink-subtle">{row.wonRevenueDetail}</p>}
-        </div>
-      ),
-    },
-    { key: 'wonDealCount', label: 'Won Deals', align: 'right' },
-    {
-      key: 'winRate',
-      label: 'Win Rate',
-      align: 'right',
-      render: (value) => (value != null ? `${value}%` : '—'),
-    },
-    { key: 'avgDealSizeLabel', label: 'Avg Deal (USD)', align: 'right' },
-    {
-      key: 'openPipelineLabel',
-      label: 'Open Pipeline',
-      align: 'right',
-      render: (value, row) => (
-        <div>
-          <p className="font-medium text-ink">{value ?? '—'}</p>
-          {row.openPipelineDetail && <p className="text-xs text-ink-subtle">{row.openPipelineDetail}</p>}
-        </div>
-      ),
-    },
-  ]
+  const repCount = rows.filter((row) => row.id !== 'unassigned').length
+  const maxWonUsd = Math.max(1, ...rows.map((row) => row.wonRevenueUsd))
 
   return (
     <div className="min-h-screen px-6 pb-10">
@@ -169,36 +117,31 @@ export default function TeamPerformancePage() {
           </div>
         )}
 
-        <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-4">
-          <StatCard label="Company Win Rate" value={companyWinRate != null ? `${companyWinRate}%` : '—'} />
-          <StatCard label="Open Pipeline Value" value={companyOpenPipeline.primary ?? '—'} detail={companyOpenPipeline.detail} />
-          <StatCard label="Reps with Deals" value={repCount} />
-          <StatCard label="Unassigned Deals" value={unassignedCount} tone={unassignedCount > 0 ? 'warn' : 'default'} />
+        <div className="mb-6 flex flex-wrap gap-3">
+          <StatCard compact label="Reps with Deals" value={repCount} />
+          <StatCard
+            compact
+            label="Unassigned Deals"
+            value={unassignedCount}
+            tone={unassignedCount > 0 ? 'warn' : 'default'}
+          />
         </div>
 
-        <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <h2 className="text-base font-semibold text-ink">Sales by Rep</h2>
-            <p className="text-xs text-ink-subtle">
-              Won revenue is scoped to confirmed-sale stages, same as Sales Overview · click a
-              rep to see their deals
-            </p>
-          </div>
-          <label className="flex flex-col gap-1.5">
-            <span className="text-xs font-medium uppercase tracking-wide text-ink-subtle">Sort</span>
-            <select value={sort} onChange={(event) => setSort(event.target.value)} className={controlClass}>
-              {TEAM_SORT_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </label>
+        <div className="mb-4">
+          <h2 className="text-base font-semibold text-ink">Sales by Rep</h2>
+          <p className="text-xs text-ink-subtle">
+            Won is confirmed-sale stages only (Ready to ship → Completed). Click a row to see those
+            deals. Sort from the column headers.
+          </p>
         </div>
 
-        <div className="overflow-hidden rounded-xl border border-surface-border bg-surface-raised shadow-panel">
-          <DataTable columns={columns} rows={sortedRows} onRowClick={setSelectedRep} />
-        </div>
+        <TeamRepList
+          rows={sortedRows}
+          sort={sort}
+          onSort={setSort}
+          onSelect={setSelectedRep}
+          maxWonUsd={maxWonUsd}
+        />
       </div>
 
       {selectedRep && <RepWonDealsModal rep={selectedRep} onClose={() => setSelectedRep(null)} />}

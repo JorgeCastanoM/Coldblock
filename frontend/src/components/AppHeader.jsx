@@ -34,7 +34,7 @@ export default function AppHeader({ title, onRefresh, loading }) {
               alt="ColdBlock Technologies"
               className="h-9 w-auto shrink-0 rounded-md bg-slate-950 px-1.5 py-0.5 dark:bg-transparent dark:px-0 dark:py-0"
             />
-            <div className="min-w-0 border-l border-surface-border pl-4">
+            <div className="w-56 shrink-0 border-l border-surface-border pl-4">
               <h1 className="truncate text-xl font-semibold tracking-tight text-ink">{title}</h1>
             </div>
           </div>
