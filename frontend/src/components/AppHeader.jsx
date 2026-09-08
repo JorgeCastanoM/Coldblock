@@ -55,6 +55,12 @@ export default function AppHeader({ title, onRefresh, loading }) {
               Team
             </NavLink>
           </NavGroup>
+
+          <nav className="flex items-center gap-0.5 rounded-lg border border-surface-border bg-surface-raised p-1">
+            <NavLink to="/tasks" className={linkClass}>
+              Tasks
+            </NavLink>
+          </nav>
         </div>
 
         <div className="flex items-center gap-2 pb-1.5">

@@ -5,6 +5,7 @@ from api.fishbowl import fishbowl_client
 from auth.dependencies import verify_token
 from core.config import settings
 from services.data_engine import FINISHED_SKUS, build_dashboard_snapshot
+from services.tasks import build_tasks_report
 
 router = APIRouter(prefix="/dashboard", tags=["dashboard"], dependencies=[Depends(verify_token)])
 
@@ -25,6 +26,23 @@ async def get_summary() -> dict:
         return await build_dashboard_snapshot()
     except httpx.HTTPError as exc:
         raise _fishbowl_error(exc) from exc
+
+
+@router.get("/tasks")
+async def get_tasks(window: str = "actionable") -> dict:
+    """Unified Planner + HubSpot to-do report.
+
+    Deliberately not part of /summary: that payload is fetched once on app mount
+    for every page, and tasks are needed on one tab. Per-source failures are
+    reported in the "sources" field rather than raised, so a Planner outage (or
+    Planner simply being disabled) still returns the HubSpot half.
+    """
+    if window not in ("actionable", "all"):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="window must be 'actionable' or 'all'",
+        )
+    return await build_tasks_report(window)
 
 
 @router.get("/serials/{sku}")

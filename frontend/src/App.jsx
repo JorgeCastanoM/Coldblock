@@ -5,6 +5,7 @@ import { DashboardDataProvider } from './context/DashboardDataContext.jsx'
 import { ThemeProvider } from './context/ThemeContext.jsx'
 import DealsPage from './pages/DealsPage.jsx'
 import SalesOverviewPage from './pages/SalesOverviewPage.jsx'
+import TasksPage from './pages/TasksPage.jsx'
 import TeamPerformancePage from './pages/TeamPerformancePage.jsx'
 
 // Fishbowl-backed pages (Products, Sales Orders, Purchase Orders) are routed
@@ -24,6 +25,7 @@ function Shell() {
         <Route path="/deals" element={<DealsPage />} />
         <Route path="/sales-overview" element={<SalesOverviewPage />} />
         <Route path="/team-performance" element={<TeamPerformancePage />} />
+        <Route path="/tasks" element={<TasksPage />} />
         <Route path="*" element={<Navigate to="/sales-overview" replace />} />
       </Routes>
     </DashboardDataProvider>
