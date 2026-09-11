@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { parseFishbowlDate } from '../lib/format.js'
 import {
   SOURCE_LABELS,
+  SOURCE_STYLES,
   STATUS_LABELS,
   assigneeLabel,
   daysOverdue,
@@ -20,6 +21,19 @@ function EmptyState({ message }) {
     <div className="flex min-h-[7rem] items-center justify-center rounded-lg border border-dashed border-surface-border bg-surface/60 px-4 py-6 text-center text-sm text-ink-subtle">
       {message}
     </div>
+  )
+}
+
+function SourceBadge({ source }) {
+  const style = SOURCE_STYLES[source]
+  if (!style) return null
+  return (
+    <span
+      className={`inline-flex shrink-0 items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ring-1 ring-inset ${style.chip}`}
+    >
+      <span className={`h-1.5 w-1.5 rounded-full ${style.dot}`} aria-hidden="true" />
+      {SOURCE_LABELS[source]}
+    </span>
   )
 }
 
@@ -48,7 +62,6 @@ function TaskRow({ task, showAssignee }) {
 
   const displayDate = task.is_done ? task.completed_date || task.due_date : task.due_date
   const status = STATUS_LABELS[task.status] ?? task.status
-  const source = SOURCE_LABELS[task.source]
   const priority = priorityLabel(task.priority)
   const createdBy = personLabel(task.created_by)
   const related = relatedParts(task)
@@ -87,7 +100,11 @@ function TaskRow({ task, showAssignee }) {
               {related.join(' · ')}
             </p>
           )}
-          {meta && <p className="mt-0.5 truncate text-[11px] text-ink-subtle">{meta}</p>}
+          {/* Source leads the line: it's where someone has to go to update the task. */}
+          <div className="mt-1 flex min-w-0 items-center gap-2">
+            <SourceBadge source={task.source} />
+            {meta && <p className="min-w-0 truncate text-[11px] text-ink-subtle">{meta}</p>}
+          </div>
           {!expanded && task.description && (
             <p className="mt-0.5 truncate text-xs text-ink-muted" title={task.description}>
               {task.description}
@@ -100,7 +117,6 @@ function TaskRow({ task, showAssignee }) {
               ) : (
                 <p className="text-xs text-ink-subtle">No description</p>
               )}
-              {source && <p className="text-[11px] text-ink-subtle">{source}</p>}
             </div>
           )}
         </div>

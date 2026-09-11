@@ -23,16 +23,15 @@ class Settings(BaseSettings):
 
     # Microsoft Planner, read via Graph with app-only (client-credentials) auth.
     # Requires an Azure AD app registration with the APPLICATION permissions
-    # Tasks.Read.All + User.Read.All and tenant admin consent — which only an
-    # admin can grant, so this stays off until IT provisions it. Plan IDs are
-    # named explicitly rather than discovered, which avoids needing
-    # Group.Read.All and keeps us out of unrelated departments' plans.
+    # Tasks.Read.All + User.Read.All and tenant admin consent. Tasks are read
+    # per person across every plan, so there are no plan IDs to configure.
+    # The client secret has a hard expiry date — when it lapses, the Tasks page
+    # says so and carries on with HubSpot alone.
     graph_base_url: str = "https://graph.microsoft.com/v1.0"
     graph_login_url: str = "https://login.microsoftonline.com"
     graph_tenant_id: str = ""
     graph_client_id: str = ""
     graph_client_secret: str = ""
-    planner_plan_ids: list[str] = []
     enable_planner: bool = False
 
     dashboard_users: list[DashboardUser] = []

@@ -1,4 +1,5 @@
 import asyncio
+import unicodedata
 from datetime import datetime, timedelta, timezone
 
 from api.hubspot import hubspot_client
@@ -15,6 +16,10 @@ _LOCAL_UTC_OFFSET = timedelta(hours=-5)
 _OVERDUE_LOOKBACK_DAYS = 90
 _COMPLETED_LOOKBACK_DAYS = 30
 _UPCOMING_DAYS = 7
+
+# Planner runs alongside HubSpot, and normally finishes first. If it stalls,
+# the report goes out without it rather than hanging the page.
+_PLANNER_BUDGET_SECONDS = 15
 
 
 def _local_today(now: datetime) -> datetime:
@@ -63,6 +68,54 @@ def _person_key(person: dict) -> str:
     return email or f"id:{person.get('id')}"
 
 
+def _name_key(name: str | None) -> str | None:
+    """Accent-, case- and spacing-insensitive full name — or None when there's
+    too little to go on, since a lone first name collides too easily."""
+    if not name:
+        return None
+    plain = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode()
+    words = plain.lower().split()
+    return " ".join(words) if len(words) >= 2 else None
+
+
+def _assign_person_keys(tasks: list[dict]) -> None:
+    """Give every assignee a `key` for the human rather than the account.
+
+    Email is the join between HubSpot owners and Azure AD users, but it isn't
+    always the same address in both — verified live: Stephen Varty is
+    svarty@coldblock.ca in Planner and stephen.varty@gmail.com in HubSpot, and
+    Darryl Khan dkhan@coldblock.ca vs darryl@armadawebsolutions.com. Accounts
+    sharing a full display name are folded into one key so each person appears
+    once, with both systems' tasks. People with no resolvable name keep their
+    own key and are never merged.
+    """
+    people = [person for task in tasks for person in task.get("assigned_to") or []]
+
+    keys_by_name: dict[str, set[str]] = {}
+    for person in people:
+        name = _name_key(person.get("name"))
+        if name:
+            keys_by_name.setdefault(name, set()).add(_person_key(person))
+
+    # Tiny union-find: one account can carry two spellings of a name across
+    # systems, which chains groups together. The smallest key wins each merge
+    # so the result is the same on every request.
+    root: dict[str, str] = {}
+
+    def find(key: str) -> str:
+        while root.get(key, key) != key:
+            key = root[key]
+        return key
+
+    for keys in keys_by_name.values():
+        roots = sorted({find(key) for key in keys})
+        for other in roots[1:]:
+            root[other] = roots[0]
+
+    for person in people:
+        person["key"] = find(_person_key(person))
+
+
 def _build_people(tasks: list[dict]) -> list[dict]:
     """Roster for the scope dropdown, derived from the tasks actually present —
     a directory dump would list dozens of people with nothing assigned.
@@ -70,7 +123,7 @@ def _build_people(tasks: list[dict]) -> list[dict]:
     people: dict[str, dict] = {}
     for task in tasks:
         for person in task.get("assigned_to") or []:
-            key = _person_key(person)
+            key = person.get("key") or _person_key(person)
             entry = people.get(key)
             if entry is None:
                 entry = {
@@ -90,15 +143,26 @@ def _build_people(tasks: list[dict]) -> list[dict]:
     return sorted(people.values(), key=lambda p: (-p["task_count"], (p["name"] or p["key"]).lower()))
 
 
-async def _fetch_planner_tasks() -> list[dict]:
-    """Planner is behind a flag until IT provisions the Azure app registration
-    (application permissions need admin consent). Until then this is a no-op
-    and the report runs on HubSpot alone."""
+async def _fetch_planner_tasks(*, next_week: datetime, overdue_since: datetime | None, completed_since: datetime) -> dict:
+    """Planner runs only when ENABLE_PLANNER is set, since it needs the Azure
+    app registration's credentials. Without it the report runs on HubSpot alone."""
     if not settings.enable_planner:
-        return []
+        return {"tasks": [], "overdue_beyond_window": 0}
     from api.graph import graph_client
 
-    return await graph_client.get_planner_tasks()
+    try:
+        return await asyncio.wait_for(
+            graph_client.get_planner_tasks(
+                next_week=next_week, overdue_since=overdue_since, completed_since=completed_since
+            ),
+            timeout=_PLANNER_BUDGET_SECONDS,
+        )
+    except TimeoutError:
+        # A bare TimeoutError stringifies to "", which would reach the page as
+        # an empty reason.
+        raise RuntimeError(
+            f"Planner didn't answer within {_PLANNER_BUDGET_SECONDS}s — showing HubSpot only"
+        ) from None
 
 
 async def build_tasks_report(window: str = "actionable") -> dict:
@@ -118,13 +182,19 @@ async def build_tasks_report(window: str = "actionable") -> dict:
             due_until_ms=ms(next_week),
             completed_since_ms=ms(completed_since),
         ),
-        _fetch_planner_tasks(),
+        _fetch_planner_tasks(next_week=next_week, overdue_since=overdue_since, completed_since=completed_since),
         hubspot_client.count_open_tasks_before(ms(overdue_since)) if overdue_since else _zero(),
         return_exceptions=True,
     )
 
     sources: dict[str, dict] = {}
     tasks: list[dict] = []
+    # Kept per source so the page can quote the right figure when it's
+    # filtered to one system.
+    hidden_overdue = {
+        "hubspot": 0 if isinstance(excluded_result, Exception) or excluded_result is None else int(excluded_result),
+        "planner": 0,
+    }
 
     if isinstance(hubspot_result, Exception):
         sources["hubspot"] = {"ok": False, "reason": str(hubspot_result)}
@@ -135,10 +205,13 @@ async def build_tasks_report(window: str = "actionable") -> dict:
     if not settings.enable_planner:
         sources["planner"] = {"ok": False, "reason": "disabled"}
     elif isinstance(planner_result, Exception):
-        sources["planner"] = {"ok": False, "reason": str(planner_result)}
+        sources["planner"] = {"ok": False, "reason": str(planner_result) or type(planner_result).__name__}
     else:
         sources["planner"] = {"ok": True}
-        tasks.extend(planner_result)
+        tasks.extend(planner_result["tasks"])
+        hidden_overdue["planner"] = planner_result["overdue_beyond_window"]
+
+    _assign_person_keys(tasks)
 
     for task in tasks:
         task["bucket"] = _bucket_for(task, today, next_week)
@@ -151,8 +224,6 @@ async def build_tasks_report(window: str = "actionable") -> dict:
     buckets["due_next_week"].sort(key=lambda t: _parse(t.get("due_date")) or today)
     buckets["done"].sort(key=lambda t: _parse(t.get("completed_date")) or today, reverse=True)
 
-    older_overdue = 0 if isinstance(excluded_result, Exception) or excluded_result is None else int(excluded_result)
-
     return {
         "window": window,
         "generated_at": now.isoformat(),
@@ -162,7 +233,8 @@ async def build_tasks_report(window: str = "actionable") -> dict:
         "people": _build_people(tasks),
         "counts": {key: len(value) for key, value in buckets.items()},
         "excluded": {
-            "overdue_beyond_window": older_overdue,
+            "overdue_beyond_window": sum(hidden_overdue.values()),
+            "overdue_beyond_window_by_source": hidden_overdue,
             "overdue_lookback_days": _OVERDUE_LOOKBACK_DAYS,
             "completed_lookback_days": _COMPLETED_LOOKBACK_DAYS,
         },

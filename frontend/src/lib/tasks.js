@@ -13,6 +13,34 @@ export const SOURCE_LABELS = {
   planner: 'Planner',
 }
 
+export const SOURCE_KEYS = ['hubspot', 'planner']
+
+// One colour per system on every row, card and filter chip, so where a task
+// lives — and so where to go to update it — reads at a glance. Each product's
+// own brand hue: HubSpot orange, Planner green.
+export const SOURCE_STYLES = {
+  hubspot: {
+    dot: 'bg-orange-500',
+    chip: 'bg-orange-500/10 text-orange-700 ring-orange-500/30 dark:text-orange-300',
+  },
+  planner: {
+    dot: 'bg-green-600 dark:bg-green-500',
+    chip: 'bg-green-600/10 text-green-700 ring-green-600/30 dark:text-green-300',
+  },
+}
+
+export function matchesSource(task, source) {
+  return source === 'all' || task.source === source
+}
+
+export function countBySource(tasks) {
+  const counts = { hubspot: 0, planner: 0 }
+  for (const task of tasks) {
+    if (task.source in counts) counts[task.source] += 1
+  }
+  return counts
+}
+
 export const PRIORITY_LABELS = {
   HIGH: 'High',
   MEDIUM: 'Medium',
@@ -106,6 +134,7 @@ function compactDealAmount(amount, currency = 'USD') {
 
 export function relatedParts(task) {
   const parts = []
+  if (task.plan?.name) parts.push(task.plan.name)
   if (task.company?.name) parts.push(task.company.name)
   if (task.contact?.name) parts.push(task.contact.name)
   if (task.deal?.name) {
@@ -127,21 +156,23 @@ export function assigneeLabel(task) {
   return rest.length > 0 ? `${personLabel(first)} +${rest.length}` : personLabel(first)
 }
 
-/** Scope key for the person dropdown — mirrors the backend's email-first join. */
+/**
+ * Scope key for the person dropdown. The backend sets `key` so one person with
+ * different emails in HubSpot and Planner lands on one row; the email/id
+ * fallback only matters for payloads without it.
+ */
+export function personScopeKey(person) {
+  return person.key || (person.email || '').trim().toLowerCase() || `id:${person.id}`
+}
+
 export function taskPersonKeys(task) {
-  return (task.assigned_to ?? []).map((person) =>
-    (person.email || '').trim().toLowerCase() || `id:${person.id}`,
-  )
+  return (task.assigned_to ?? []).map(personScopeKey)
 }
 
 export function matchesScope(task, scope) {
   if (scope === 'all') return true
   if (scope === UNASSIGNED_KEY) return (task.assigned_to ?? []).length === 0
   return taskPersonKeys(task).includes(scope)
-}
-
-export function personScopeKey(person) {
-  return (person.email || '').trim().toLowerCase() || `id:${person.id}`
 }
 
 export function matchesTaskQuery(task, query) {

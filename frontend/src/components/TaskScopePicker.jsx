@@ -13,13 +13,15 @@ function chipClass(active) {
   ].join(' ')
 }
 
-export default function TaskScopePicker({ scope, people, bucket, onChange }) {
+export default function TaskScopePicker({ scope, scopeLabel, people, bucket, onChange }) {
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)
   const rootRef = useRef(null)
 
+  // `people` can be narrowed by the source filter, which may leave out the
+  // chosen person — `scopeLabel` keeps their name on the chip regardless.
   const selected = people.find((row) => row.key === scope)
-  const selectedName = scope === UNASSIGNED_KEY ? 'Unassigned' : selected?.name
+  const selectedName = scopeLabel ?? (scope === UNASSIGNED_KEY ? 'Unassigned' : selected?.name)
 
   const matches = useMemo(() => {
     const needle = query.trim().toLowerCase()
@@ -52,7 +54,9 @@ export default function TaskScopePicker({ scope, people, bucket, onChange }) {
   }
 
   return (
-    <div ref={rootRef} className="flex min-w-0 flex-1 flex-wrap items-end gap-3">
+    // No min-w-0: the picker must keep its content width so the toolbar wraps
+    // the controls beside it instead of letting them overlap the search box.
+    <div ref={rootRef} className="flex flex-1 flex-wrap items-end gap-3">
       <div className="flex min-w-52 flex-col gap-1.5">
         <span className="text-xs font-medium uppercase tracking-wide text-ink-subtle">Who</span>
         <div className="flex flex-wrap items-center gap-2">

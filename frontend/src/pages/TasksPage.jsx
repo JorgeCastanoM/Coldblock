@@ -7,11 +7,16 @@ import {
   AGING_BANDS,
   BUCKET_META,
   BUCKET_TABS,
+  SOURCE_KEYS,
+  SOURCE_LABELS,
+  SOURCE_STYLES,
   TASK_SORT_OPTIONS,
   buildPeopleBoard,
   compareTasks,
   countAging,
+  countBySource,
   matchesScope,
+  matchesSource,
   matchesTaskQuery,
   overdueAgingKey,
   scopeName,
@@ -28,6 +33,22 @@ function toneValueClass(tone) {
   return 'text-ink'
 }
 
+function filterChipClass(active, padding = 'py-1.5') {
+  return `inline-flex items-center gap-1.5 rounded-lg px-3 ${padding} text-xs font-medium ${
+    active
+      ? 'bg-sky-500/15 text-sky-700 ring-1 ring-inset ring-sky-500/30 dark:text-sky-300'
+      : 'border border-surface-border text-ink-muted hover:bg-ink/[0.03]'
+  }`
+}
+
+function SourceDot({ source }) {
+  return <span className={`h-2 w-2 shrink-0 rounded-full ${SOURCE_STYLES[source].dot}`} aria-hidden="true" />
+}
+
+function filterBuckets(bucketMap, keep) {
+  return Object.fromEntries(Object.entries(bucketMap).map(([key, rows]) => [key, rows.filter(keep)]))
+}
+
 function TasksSkeleton() {
   return (
     <div className="animate-pulse space-y-4">
@@ -41,18 +62,19 @@ function TasksSkeleton() {
   )
 }
 
-function emptyCopy(bucket, name, agingFilter = 'all') {
+function emptyCopy(bucket, name, agingFilter = 'all', source = 'all') {
+  const where = source === 'all' ? '' : ` in ${SOURCE_LABELS[source]}`
   if (bucket === 'overdue' && agingFilter !== 'all') {
     const band = AGING_BANDS.find((item) => item.key === agingFilter)
-    return `Nothing overdue in the ${band?.label ?? 'selected'} band for ${name}.`
+    return `Nothing overdue in the ${band?.label ?? 'selected'} band for ${name}${where}.`
   }
   const phrases = {
-    overdue: `Nothing overdue for ${name}.`,
-    due_next_week: `Nothing due in the next 7 days for ${name}.`,
-    done: `Nothing completed recently for ${name}.`,
-    no_due_date: `No open tasks without a due date for ${name}.`,
+    overdue: `Nothing overdue for ${name}${where}.`,
+    due_next_week: `Nothing due in the next 7 days for ${name}${where}.`,
+    done: `Nothing completed recently for ${name}${where}.`,
+    no_due_date: `No open tasks without a due date for ${name}${where}.`,
   }
-  return phrases[bucket] ?? `No tasks for ${name}.`
+  return phrases[bucket] ?? `No tasks for ${name}${where}.`
 }
 
 export default function TasksPage() {
@@ -65,6 +87,7 @@ export default function TasksPage() {
   const [sort, setSort] = useState('due_asc')
   const [query, setQuery] = useState('')
   const [agingFilter, setAgingFilter] = useState('all')
+  const [source, setSource] = useState('all')
   const [plannerDismissed, setPlannerDismissed] = useState(false)
 
   // Page-local fetch rather than DashboardDataContext: that context exists so
@@ -92,25 +115,31 @@ export default function TasksPage() {
   const excluded = report?.excluded ?? {}
   const sources = report?.sources ?? {}
 
-  const scoped = useMemo(() => {
-    const apply = (rows) => rows.filter((task) => matchesScope(task, scope))
-    return {
-      overdue: apply(buckets.overdue ?? []),
-      due_next_week: apply(buckets.due_next_week ?? []),
-      done: apply(buckets.done ?? []),
-      no_due_date: apply(report?.no_due_date ?? []),
-    }
-  }, [buckets, report, scope])
-
-  const peopleBoard = useMemo(() => {
-    const rows = buildPeopleBoard({
+  const allTasks = useMemo(
+    () => ({
       overdue: buckets.overdue ?? [],
       due_next_week: buckets.due_next_week ?? [],
       done: buckets.done ?? [],
       no_due_date: report?.no_due_date ?? [],
-    })
-    return sortPeopleBoard(rows, bucket)
-  }, [buckets, report, bucket])
+    }),
+    [buckets, report],
+  )
+
+  // Person first, then source: the per-source counts on the cards and filter
+  // chips describe the chosen person's tasks before the source cut.
+  const personScoped = useMemo(() => filterBuckets(allTasks, (task) => matchesScope(task, scope)), [allTasks, scope])
+  const scoped = useMemo(
+    () => filterBuckets(personScoped, (task) => matchesSource(task, source)),
+    [personScoped, source],
+  )
+
+  // Unfiltered roster for names only — a chosen person keeps their name even
+  // when the source filter leaves them nothing to show.
+  const roster = useMemo(() => buildPeopleBoard(allTasks), [allTasks])
+  const peopleBoard = useMemo(
+    () => sortPeopleBoard(buildPeopleBoard(filterBuckets(allTasks, (task) => matchesSource(task, source))), bucket),
+    [allTasks, source, bucket],
+  )
 
   const listed = useMemo(() => {
     return (scoped[bucket] ?? [])
@@ -127,10 +156,16 @@ export default function TasksPage() {
   }, [report, bucket])
 
   const plannerOff = sources.planner && sources.planner.ok === false
+  // Source splits and the filter only mean something with both systems in.
+  const plannerConnected = sources.planner?.ok === true
   const hubspotFailed = sources.hubspot && sources.hubspot.ok === false
-  const olderOverdue = excluded.overdue_beyond_window ?? 0
-  const who = scopeName(scope, peopleBoard)
+  const olderOverdue =
+    source === 'all'
+      ? (excluded.overdue_beyond_window ?? 0)
+      : (excluded.overdue_beyond_window_by_source?.[source] ?? 0)
+  const who = scopeName(scope, roster)
   const overall = scope === 'all'
+  const bucketSplit = countBySource(personScoped[bucket] ?? [])
 
   function selectScope(next) {
     setScope(next)
@@ -186,7 +221,7 @@ export default function TasksPage() {
           <div className="mb-4 flex items-start justify-between gap-3 text-xs text-ink-subtle">
             <p>
               {sources.planner.reason === 'disabled'
-                ? 'HubSpot only — Planner is waiting on an Azure app registration and admin consent from IT.'
+                ? "HubSpot only — Planner isn't connected on this server."
                 : `Planner tasks failed to load: ${sources.planner.reason}`}
             </p>
             <button
@@ -204,7 +239,13 @@ export default function TasksPage() {
         ) : (
           <>
             <div className="mb-5 flex flex-wrap items-end gap-3 rounded-xl border border-surface-border bg-surface-raised p-4 shadow-panel">
-              <TaskScopePicker scope={scope} people={peopleBoard} bucket={bucket} onChange={selectScope} />
+              <TaskScopePicker
+                scope={scope}
+                scopeLabel={overall ? null : who}
+                people={peopleBoard}
+                bucket={bucket}
+                onChange={selectScope}
+              />
 
               {!overall && (
                 <label className="flex min-w-48 flex-col gap-1.5">
@@ -232,22 +273,55 @@ export default function TasksPage() {
                 </label>
               )}
 
-              <label className="ml-auto flex min-w-40 flex-col gap-1.5">
-                <span className="text-xs font-medium uppercase tracking-wide text-ink-subtle">Range</span>
-                <select
-                  value={window_}
-                  onChange={(event) => setWindow(event.target.value)}
-                  className={`${controlClass} text-xs`}
-                >
-                  <option value="actionable">Actionable ({excluded.overdue_lookback_days ?? 90}d)</option>
-                  <option value="all">Everything</option>
-                </select>
-              </label>
+              <div className="ml-auto flex flex-wrap items-end gap-3">
+                {plannerConnected && (
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-xs font-medium uppercase tracking-wide text-ink-subtle">Source</span>
+                    <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter tasks by source">
+                      <button
+                        type="button"
+                        aria-pressed={source === 'all'}
+                        onClick={() => setSource('all')}
+                        className={filterChipClass(source === 'all', 'py-2')}
+                      >
+                        All
+                        <span className="tabular-nums text-ink-subtle">{personScoped[bucket]?.length ?? 0}</span>
+                      </button>
+                      {SOURCE_KEYS.map((key) => (
+                        <button
+                          key={key}
+                          type="button"
+                          aria-pressed={source === key}
+                          onClick={() => setSource(key)}
+                          className={filterChipClass(source === key, 'py-2')}
+                        >
+                          <SourceDot source={key} />
+                          {SOURCE_LABELS[key]}
+                          <span className="tabular-nums text-ink-subtle">{bucketSplit[key]}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <label className="flex min-w-40 flex-col gap-1.5">
+                  <span className="text-xs font-medium uppercase tracking-wide text-ink-subtle">Range</span>
+                  <select
+                    value={window_}
+                    onChange={(event) => setWindow(event.target.value)}
+                    className={`${controlClass} text-xs`}
+                  >
+                    <option value="actionable">Actionable ({excluded.overdue_lookback_days ?? 90}d)</option>
+                    <option value="all">Everything</option>
+                  </select>
+                </label>
+              </div>
             </div>
 
             <div className={`mb-5 grid grid-cols-1 gap-3 ${tabs.length > 3 ? 'sm:grid-cols-4' : 'sm:grid-cols-3'}`}>
               {tabs.map((tab) => {
                 const count = scoped[tab.key]?.length ?? 0
+                const split = countBySource(personScoped[tab.key] ?? [])
                 const active = tab.key === bucket
                 return (
                   <button
@@ -265,6 +339,23 @@ export default function TasksPage() {
                     <p className={`mt-1 text-2xl font-semibold tabular-nums ${toneValueClass(tab.tone)}`}>
                       {count}
                     </p>
+                    {plannerConnected &&
+                      (source === 'all' ? (
+                        <p className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-ink-subtle">
+                          {SOURCE_KEYS.map((key) => (
+                            <span key={key} className="inline-flex items-center gap-1.5">
+                              <SourceDot source={key} />
+                              <span className="font-medium tabular-nums text-ink-muted">{split[key]}</span>
+                              {SOURCE_LABELS[key]}
+                            </span>
+                          ))}
+                        </p>
+                      ) : (
+                        <p className="mt-1.5 inline-flex items-center gap-1.5 text-[11px] text-ink-subtle">
+                          <SourceDot source={source} />
+                          {SOURCE_LABELS[source]} only
+                        </p>
+                      ))}
                   </button>
                 )
               })}
@@ -280,6 +371,12 @@ export default function TasksPage() {
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <p className="text-sm text-ink-muted">
                     Showing <span className="font-medium text-ink">{who}</span>
+                    {source !== 'all' && (
+                      <>
+                        {' · '}
+                        <span className="font-medium text-ink">{SOURCE_LABELS[source]}</span> only
+                      </>
+                    )}
                     {' · '}
                     assigned to, not created by
                   </p>
@@ -303,11 +400,7 @@ export default function TasksPage() {
                     <button
                       type="button"
                       onClick={() => setAgingFilter('all')}
-                      className={`rounded-lg px-3 py-1.5 text-xs font-medium ${
-                        agingFilter === 'all'
-                          ? 'bg-sky-500/15 text-sky-700 ring-1 ring-inset ring-sky-500/30 dark:text-sky-300'
-                          : 'border border-surface-border text-ink-muted hover:bg-ink/[0.03]'
-                      }`}
+                      className={filterChipClass(agingFilter === 'all')}
                     >
                       All
                     </button>
@@ -316,11 +409,7 @@ export default function TasksPage() {
                         key={band.key}
                         type="button"
                         onClick={() => setAgingFilter(band.key)}
-                        className={`rounded-lg px-3 py-1.5 text-xs font-medium ${
-                          agingFilter === band.key
-                            ? 'bg-sky-500/15 text-sky-700 ring-1 ring-inset ring-sky-500/30 dark:text-sky-300'
-                            : 'border border-surface-border text-ink-muted hover:bg-ink/[0.03]'
-                        }`}
+                        className={filterChipClass(agingFilter === band.key)}
                       >
                         {band.label} ({agingCounts[band.key]})
                       </button>
@@ -329,11 +418,11 @@ export default function TasksPage() {
                 )}
 
                 <TaskBucketSection
-                  title={`${who} · ${activeMeta.title}`}
+                  title={`${who} · ${activeMeta.title}${source === 'all' ? '' : ` · ${SOURCE_LABELS[source]}`}`}
                   blurb={blurb}
                   tasks={listed}
                   tone={BUCKET_TABS.find((tab) => tab.key === bucket)?.tone ?? 'default'}
-                  empty={emptyCopy(bucket, who, agingFilter)}
+                  empty={emptyCopy(bucket, who, agingFilter, source)}
                   showAssignee={false}
                   footer={
                     olderOverdueNote ? (
