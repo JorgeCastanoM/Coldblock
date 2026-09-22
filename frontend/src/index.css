@@ -54,6 +54,12 @@ html.dark {
   .bg-surface {
     background-color: var(--surface);
   }
+  .bg-surface\/60 {
+    background-color: color-mix(in srgb, var(--surface) 60%, transparent);
+  }
+  .bg-surface\/70 {
+    background-color: color-mix(in srgb, var(--surface) 70%, transparent);
+  }
   .bg-surface\/90 {
     background-color: color-mix(in srgb, var(--surface) 90%, transparent);
   }

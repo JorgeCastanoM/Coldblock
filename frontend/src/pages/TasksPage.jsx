@@ -1,15 +1,17 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import AppHeader from '../components/AppHeader.jsx'
 import TaskBucketSection from '../components/TaskBucketSection.jsx'
 import TaskPeopleBoard from '../components/TaskPeopleBoard.jsx'
 import TaskScopePicker from '../components/TaskScopePicker.jsx'
+import TaskSourceFilter, { SourceDot, filterChipClass } from '../components/TaskSourceFilter.jsx'
+import TasksSubNav from '../components/TasksSubNav.jsx'
+import { useTasksData } from '../context/TasksDataContext.jsx'
 import {
   AGING_BANDS,
   BUCKET_META,
   BUCKET_TABS,
   SOURCE_KEYS,
   SOURCE_LABELS,
-  SOURCE_STYLES,
   TASK_SORT_OPTIONS,
   buildPeopleBoard,
   compareTasks,
@@ -22,7 +24,6 @@ import {
   scopeName,
   sortPeopleBoard,
 } from '../lib/tasks.js'
-import { getTasksReport } from '../services/api.js'
 
 const controlClass =
   'rounded-lg border border-surface-border bg-surface px-3 py-2 text-sm text-ink placeholder:text-ink-subtle focus:border-sky-500 focus:outline-none'
@@ -31,18 +32,6 @@ function toneValueClass(tone) {
   if (tone === 'bad') return 'text-red-600 dark:text-red-400'
   if (tone === 'warn') return 'text-amber-600 dark:text-amber-400'
   return 'text-ink'
-}
-
-function filterChipClass(active, padding = 'py-1.5') {
-  return `inline-flex items-center gap-1.5 rounded-lg px-3 ${padding} text-xs font-medium ${
-    active
-      ? 'bg-sky-500/15 text-sky-700 ring-1 ring-inset ring-sky-500/30 dark:text-sky-300'
-      : 'border border-surface-border text-ink-muted hover:bg-ink/[0.03]'
-  }`
-}
-
-function SourceDot({ source }) {
-  return <span className={`h-2 w-2 shrink-0 rounded-full ${SOURCE_STYLES[source].dot}`} aria-hidden="true" />
 }
 
 function filterBuckets(bucketMap, keep) {
@@ -78,10 +67,8 @@ function emptyCopy(bucket, name, agingFilter = 'all', source = 'all') {
 }
 
 export default function TasksPage() {
-  const [report, setReport] = useState(null)
-  const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [window_, setWindow] = useState('actionable')
+  // Shared with the Report page (TasksDataContext), so switching views doesn't refetch.
+  const { report, error, loading, window_, setWindow, refresh } = useTasksData()
   const [scope, setScope] = useState('all')
   const [bucket, setBucket] = useState('overdue')
   const [sort, setSort] = useState('due_asc')
@@ -89,27 +76,6 @@ export default function TasksPage() {
   const [agingFilter, setAgingFilter] = useState('all')
   const [source, setSource] = useState('all')
   const [plannerDismissed, setPlannerDismissed] = useState(false)
-
-  // Page-local fetch rather than DashboardDataContext: that context exists so
-  // several pages share one Fishbowl login, and this is the only page that
-  // needs tasks. Keeping it separate also means a Planner outage can't slow
-  // down or break the sales pages.
-  const refresh = useCallback(async () => {
-    setLoading(true)
-    setError(null)
-    try {
-      setReport(await getTasksReport(window_))
-    } catch (err) {
-      const detail = err?.response?.data?.detail
-      setError(typeof detail === 'string' ? detail : 'Could not load the task report')
-    } finally {
-      setLoading(false)
-    }
-  }, [window_])
-
-  useEffect(() => {
-    refresh()
-  }, [refresh])
 
   const buckets = report?.buckets ?? { done: [], overdue: [], due_next_week: [] }
   const excluded = report?.excluded ?? {}
@@ -205,6 +171,8 @@ export default function TasksPage() {
       <AppHeader title="Tasks" onRefresh={refresh} loading={loading} />
 
       <div className="mx-auto max-w-6xl">
+        <TasksSubNav />
+
         {error && (
           <div className="mb-5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-700 dark:text-rose-300">
             {error}
@@ -275,33 +243,11 @@ export default function TasksPage() {
 
               <div className="ml-auto flex flex-wrap items-end gap-3">
                 {plannerConnected && (
-                  <div className="flex flex-col gap-1.5">
-                    <span className="text-xs font-medium uppercase tracking-wide text-ink-subtle">Source</span>
-                    <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter tasks by source">
-                      <button
-                        type="button"
-                        aria-pressed={source === 'all'}
-                        onClick={() => setSource('all')}
-                        className={filterChipClass(source === 'all', 'py-2')}
-                      >
-                        All
-                        <span className="tabular-nums text-ink-subtle">{personScoped[bucket]?.length ?? 0}</span>
-                      </button>
-                      {SOURCE_KEYS.map((key) => (
-                        <button
-                          key={key}
-                          type="button"
-                          aria-pressed={source === key}
-                          onClick={() => setSource(key)}
-                          className={filterChipClass(source === key, 'py-2')}
-                        >
-                          <SourceDot source={key} />
-                          {SOURCE_LABELS[key]}
-                          <span className="tabular-nums text-ink-subtle">{bucketSplit[key]}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+                  <TaskSourceFilter
+                    value={source}
+                    onChange={setSource}
+                    counts={{ all: personScoped[bucket]?.length ?? 0, ...bucketSplit }}
+                  />
                 )}
 
                 <label className="flex min-w-40 flex-col gap-1.5">

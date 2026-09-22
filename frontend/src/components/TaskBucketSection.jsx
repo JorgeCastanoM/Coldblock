@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react'
-import { parseFishbowlDate } from '../lib/format.js'
+import { importanceOf } from '../lib/taskImportance.js'
 import {
-  SOURCE_LABELS,
-  SOURCE_STYLES,
   STATUS_LABELS,
   assigneeLabel,
-  daysOverdue,
+  creatorLabel,
+  dueNote,
+  formatTaskDate,
   overdueSeverity,
-  personLabel,
-  priorityLabel,
   relatedParts,
 } from '../lib/tasks.js'
+import ImportanceIcon from './ImportanceIcon.jsx'
+import TaskSourceBadge from './TaskSourceBadge.jsx'
 
 // Buckets can run to several hundred rows; render a slice and let the user ask
 // for more rather than mounting the lot.
@@ -24,29 +24,9 @@ function EmptyState({ message }) {
   )
 }
 
-function SourceBadge({ source }) {
-  const style = SOURCE_STYLES[source]
-  if (!style) return null
-  return (
-    <span
-      className={`inline-flex shrink-0 items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ring-1 ring-inset ${style.chip}`}
-    >
-      <span className={`h-1.5 w-1.5 rounded-full ${style.dot}`} aria-hidden="true" />
-      {SOURCE_LABELS[source]}
-    </span>
-  )
-}
-
-function formatDate(value) {
-  const date = parseFishbowlDate(value)
-  if (!date) return '—'
-  return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
-}
-
 function TaskRow({ task, showAssignee }) {
   const [expanded, setExpanded] = useState(false)
   const severity = overdueSeverity(task)
-  const days = daysOverdue(task)
   const chipClass =
     severity === 'bad'
       ? 'bg-red-500/10 text-red-700 ring-red-500/25 dark:text-red-400'
@@ -54,18 +34,14 @@ function TaskRow({ task, showAssignee }) {
         ? 'bg-amber-500/10 text-amber-700 ring-amber-500/25 dark:text-amber-400'
         : 'bg-ink/[0.05] text-ink-subtle ring-surface-border'
 
-  let chipText = '—'
-  if (task.is_done) chipText = 'Done'
-  else if (days != null && days > 0) chipText = `${days}d late`
-  else if (days != null && days === 0) chipText = 'Today'
-  else if (days != null) chipText = `in ${Math.abs(days)}d`
+  const chipText = task.is_done ? 'Done' : (dueNote(task) ?? '—')
 
   const displayDate = task.is_done ? task.completed_date || task.due_date : task.due_date
   const status = STATUS_LABELS[task.status] ?? task.status
-  const priority = priorityLabel(task.priority)
-  const createdBy = personLabel(task.created_by)
+  const importance = importanceOf(task)
+  const createdBy = creatorLabel(task)
   const related = relatedParts(task)
-  const meta = [status, priority, showAssignee ? assigneeLabel(task) : null, createdBy ? `Created by ${createdBy}` : null]
+  const meta = [status, showAssignee ? assigneeLabel(task) : null, createdBy ? `Created by ${createdBy}` : null]
     .filter(Boolean)
     .join(' · ')
 
@@ -92,7 +68,7 @@ function TaskRow({ task, showAssignee }) {
             </p>
             <div className="shrink-0 text-right">
               <p className="text-[11px] text-ink-subtle">{task.is_done ? 'Completed' : 'Due'}</p>
-              <p className="text-xs font-medium tabular-nums text-ink">{formatDate(displayDate)}</p>
+              <p className="text-xs font-medium tabular-nums text-ink">{formatTaskDate(displayDate)}</p>
             </div>
           </div>
           {related.length > 0 && (
@@ -102,7 +78,8 @@ function TaskRow({ task, showAssignee }) {
           )}
           {/* Source leads the line: it's where someone has to go to update the task. */}
           <div className="mt-1 flex min-w-0 items-center gap-2">
-            <SourceBadge source={task.source} />
+            <TaskSourceBadge source={task.source} />
+            {importance && <ImportanceIcon level={importance} size={14} />}
             {meta && <p className="min-w-0 truncate text-[11px] text-ink-subtle">{meta}</p>}
           </div>
           {!expanded && task.description && (

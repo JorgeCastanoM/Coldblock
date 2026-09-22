@@ -41,24 +41,6 @@ export function countBySource(tasks) {
   return counts
 }
 
-export const PRIORITY_LABELS = {
-  HIGH: 'High',
-  MEDIUM: 'Medium',
-  LOW: 'Low',
-  NONE: null,
-  urgent: 'Urgent',
-  important: 'Important',
-  medium: 'Medium',
-  low: 'Low',
-}
-
-export function priorityLabel(priority) {
-  if (!priority) return null
-  const mapped = PRIORITY_LABELS[priority] ?? PRIORITY_LABELS[String(priority).toUpperCase()]
-  if (mapped === null) return null
-  return mapped ?? String(priority)
-}
-
 export const UNASSIGNED_KEY = 'unassigned'
 
 export const BUCKET_META = {
@@ -146,7 +128,54 @@ export function relatedParts(task) {
 
 export function personLabel(person) {
   if (!person) return null
-  return person.name || person.email || `Unknown user (${person.id})`
+  // Some directory names carry doubled spaces ("Stacey  Levine").
+  const name = (person.name || '').replace(/\s+/g, ' ').trim()
+  return name || person.email || `Unknown user (${person.id})`
+}
+
+/** HubSpot workflow reminders — hidden from the CEO report unless asked for. */
+export function isAutomated(task) {
+  return task.automation?.kind === 'workflow'
+}
+
+const AUTOMATION_LABELS = { workflow: 'Workflow', recurring: 'Recurring task', integration: 'Integration' }
+
+/**
+ * Who (or what) made the task: `{label, detail, kind}`, or null when nothing is
+ * known. Most HubSpot tasks come from workflows and have no creator id, so the
+ * workflow's name stands in — far more useful than a blank.
+ */
+export function creatorOf(task) {
+  if (task.created_by) {
+    return { label: personLabel(task.created_by), detail: null, kind: 'person' }
+  }
+  const automation = task.automation
+  if (automation?.kind && AUTOMATION_LABELS[automation.kind]) {
+    return { label: AUTOMATION_LABELS[automation.kind], detail: automation.name ?? null, kind: automation.kind }
+  }
+  return null
+}
+
+/** One-line creator text, e.g. "Workflow · Qualified Opportunity : Task Reminders". */
+export function creatorLabel(task) {
+  const creator = creatorOf(task)
+  if (!creator) return null
+  return creator.detail ? `${creator.label} · ${creator.detail}` : creator.label
+}
+
+export function formatTaskDate(value) {
+  const date = parseFishbowlDate(value)
+  if (!date) return '—'
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+}
+
+/** "25d late", "Today", "in 3d" — or null for tasks with no due date. */
+export function dueNote(task, now = new Date()) {
+  const days = daysOverdue(task, now)
+  if (days == null) return null
+  if (days > 0) return `${days}d late`
+  if (days === 0) return 'Today'
+  return `in ${Math.abs(days)}d`
 }
 
 export function assigneeLabel(task) {

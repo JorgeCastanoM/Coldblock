@@ -25,7 +25,9 @@ export default function AppHeader({ title, onRefresh, loading }) {
   const { logout } = useAuth()
 
   return (
-    <header className="sticky top-0 z-20 -mx-6 mb-8 border-b border-surface-border/80 bg-surface-raised/90 px-6 py-4 shadow-panel backdrop-blur-md">
+    // Sticky from sm up only: on a phone the header wraps to three rows and
+    // would pin a quarter of the screen.
+    <header className="relative z-20 -mx-6 mb-8 border-b border-surface-border/80 bg-surface-raised/90 px-6 py-4 shadow-panel backdrop-blur-md sm:sticky sm:top-0">
       <div className="mx-auto flex max-w-6xl flex-wrap items-end justify-between gap-4">
         <div className="flex min-w-0 flex-wrap items-end gap-5">
           <div className="flex min-w-0 items-center gap-4 pb-1.5">
@@ -34,7 +36,9 @@ export default function AppHeader({ title, onRefresh, loading }) {
               alt="ColdBlock Technologies"
               className="h-9 w-auto shrink-0 rounded-md bg-slate-950 px-1.5 py-0.5 dark:bg-transparent dark:px-0 dark:py-0"
             />
-            <div className="w-56 shrink-0 border-l border-surface-border pl-4">
+            {/* Fixed width from sm up keeps the nav from shifting between pages;
+                on phones it shrinks and truncates instead of pushing the page wide. */}
+            <div className="min-w-0 border-l border-surface-border pl-4 sm:w-56 sm:shrink-0">
               <h1 className="truncate text-xl font-semibold tracking-tight text-ink">{title}</h1>
             </div>
           </div>

@@ -15,7 +15,7 @@ from api.graph import (
     _window_tasks,
     graph_client,
 )
-from api.hubspot import _normalize_task, _strip_html, _task_related
+from api.hubspot import _normalize_task, _strip_html, _task_automation, _task_related
 from core.config import settings
 from services import tasks as tasks_service
 from services.tasks import (
@@ -118,6 +118,35 @@ def test_normalize_task_with_no_assignee_is_empty_list():
     assert result["created_by"] is None
 
 
+def test_normalize_task_marks_workflow_tasks_with_the_workflow_name():
+    # Verified live: ~83% of open tasks come from workflows and have no creator
+    # id — the workflow's name is the only "who made this" there is.
+    result = _normalize_task(
+        _task(
+            hs_task_subject="Lets turn this into active dialogue",
+            hs_object_source="AUTOMATION_PLATFORM",
+            hs_object_source_detail_1="Qualified Opportunity : Task Reminders",
+        ),
+        {},
+        {},
+    )
+    assert result["created_by"] is None
+    assert result["automation"] == {"kind": "workflow", "name": "Qualified Opportunity : Task Reminders"}
+
+
+@pytest.mark.parametrize(
+    "source,expected",
+    [
+        ("TASK", {"kind": "recurring", "name": None}),
+        ("INTEGRATION", {"kind": "integration", "name": None}),
+        ("CRM_UI", None),
+        (None, None),
+    ],
+)
+def test_task_automation_kinds(source, expected):
+    assert _task_automation({"hs_object_source": source, "hs_object_source_detail_1": "ignored"}) == expected
+
+
 def test_strip_html_flattens_markup_and_entities():
     assert _strip_html("<p>Ring &amp; email</p><p>Then log it</p>") == "Ring & email Then log it"
     assert _strip_html("") is None
@@ -148,6 +177,7 @@ def test_normalize_planner_task_reads_assignments_dict():
     assert result["description"] == "Crate it"
     assert [p["name"] for p in result["assigned_to"]] == ["Ana", "Bo"]
     assert result["plan"] == {"id": "P1", "name": "ColdBlock Team TO DO"}
+    assert result["automation"] is None
 
 
 def test_normalize_planner_task_plan_name_may_be_unknown():

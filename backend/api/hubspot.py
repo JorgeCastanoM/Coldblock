@@ -50,7 +50,21 @@ _TASK_PROPERTIES = [
     "hs_task_completion_date",
     "hubspot_owner_id",
     "hs_created_by_user_id",
+    # Where the task came from. Verified live: ~83% of open tasks are created
+    # by workflows, which leave hs_created_by_user_id empty — these two are the
+    # only record of which workflow made them.
+    "hs_object_source",
+    "hs_object_source_detail_1",
 ]
+
+# hs_object_source values that mean no person typed the task in. Recurring
+# tasks (TASK, from RecurringTaskEvaluatorWorker) are still a person's plan,
+# so only WORKFLOW is treated as an automated reminder downstream.
+_TASK_AUTOMATION_KINDS = {
+    "AUTOMATION_PLATFORM": "workflow",
+    "TASK": "recurring",
+    "INTEGRATION": "integration",
+}
 
 # HubSpot's own status vocabulary. DEFERRED is deliberately NOT treated as done —
 # it's a task someone pushed out, so it still belongs in overdue/upcoming.
@@ -77,8 +91,28 @@ _MOCK_TASKS = [
         "created_by": {"id": "USER-1", "name": "Sample Rep", "email": "rep@coldblock.ca"},
         "assigned_to": [{"id": "OWNER-1", "name": "Sample Rep", "email": "rep@coldblock.ca"}],
         "priority": "HIGH",
+        "automation": None,
         "company": {"id": "C1", "name": "Acme Corp"},
         "contact": {"id": "P1", "name": "Giel Eussen"},
+        "deal": {"id": "D1", "name": "Acme Corp Q3 Order", "amount": 15000.0, "currency": "USD"},
+    },
+    {
+        # Workflow-created reminder: no creator id at all, only the workflow's
+        # name — the shape of most open tasks in this portal.
+        "task_id": "hubspot:TASK-4",
+        "source": "hubspot",
+        "name": "Lets turn this into active dialogue",
+        "description": "Lets turn this into active dialogue! Deal Name: Acme Corp Q3 Order",
+        "status": "not_started",
+        "is_done": False,
+        "due_date": "2026-07-18T13:00:00Z",
+        "completed_date": None,
+        "created_by": None,
+        "assigned_to": [{"id": "OWNER-1", "name": "Sample Rep", "email": "rep@coldblock.ca"}],
+        "priority": "NONE",
+        "automation": {"kind": "workflow", "name": "Qualified Opportunity : Task Reminders"},
+        "company": {"id": "C1", "name": "Acme Corp"},
+        "contact": None,
         "deal": {"id": "D1", "name": "Acme Corp Q3 Order", "amount": 15000.0, "currency": "USD"},
     },
     {
@@ -95,6 +129,7 @@ _MOCK_TASKS = [
         "created_by": {"id": "45578187", "name": None, "email": None},
         "assigned_to": [{"id": "OWNER-2", "name": "Another Rep", "email": "another@coldblock.ca"}],
         "priority": "NONE",
+        "automation": None,
         "company": {"id": "C2", "name": "North Lab"},
         "contact": None,
         "deal": None,
@@ -113,6 +148,7 @@ _MOCK_TASKS = [
         "created_by": None,
         "assigned_to": [],
         "priority": "LOW",
+        "automation": None,
         "company": None,
         "contact": None,
         "deal": None,
@@ -634,10 +670,23 @@ def _normalize_task(
         "created_by": _person(props.get("hs_created_by_user_id"), owners_by_user_id),
         "assigned_to": [p for p in [_person(props.get("hubspot_owner_id"), owners_by_id)] if p],
         "priority": props.get("hs_task_priority") or None,
+        "automation": _task_automation(props),
         "company": related.get("company"),
         "contact": related.get("contact"),
         "deal": related.get("deal"),
     }
+
+
+def _task_automation(props: dict) -> dict | None:
+    """What made the task when no person did, or None for a hand-made task.
+    Workflow tasks carry the workflow's name in hs_object_source_detail_1
+    (e.g. "Qualified Opportunity : Task Reminders"), which is the closest thing
+    to a creator they have."""
+    kind = _TASK_AUTOMATION_KINDS.get((props.get("hs_object_source") or "").upper())
+    if kind is None:
+        return None
+    name = (props.get("hs_object_source_detail_1") or "").strip() or None
+    return {"kind": kind, "name": name if kind == "workflow" else None}
 
 
 def _normalize_conference_contact(row: dict) -> dict:

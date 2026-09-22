@@ -49,6 +49,7 @@ _MOCK_PLANNER_TASKS = [
             {"id": "aad-2", "name": "Second Assignee", "email": "second@coldblock.ca"},
         ],
         "priority": "important",
+        "automation": None,
         "plan": {"id": "PLAN-1", "name": "ColdBlock Team TO DO"},
         "company": None,
         "contact": None,
@@ -389,6 +390,8 @@ def _normalize_planner_task(
         # assignments is a DICT keyed by user GUID, not a list.
         "assigned_to": [p for p in (_person(uid, users) for uid in (task.get("assignments") or {})) if p],
         "priority": _priority_label(task.get("priority")),
+        # Verified live: no Planner task in this tenant was created by an app.
+        "automation": None,
         "plan": {"id": plan_id, "name": plans.get(plan_id)} if plan_id else None,
         "company": None,
         "contact": None,
