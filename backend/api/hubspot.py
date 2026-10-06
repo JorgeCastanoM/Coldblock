@@ -22,7 +22,21 @@ _DEAL_PROPERTIES = [
     "createdate",
     "hs_lastmodifieddate",
     "hubspot_owner_id",
+    "hs_next_step",
+    # Custom properties backing the Quarterly review sheet's columns (Country,
+    # Application, Transaction, Channel, Unit).
+    "deal_country",
+    "sector",
+    "deal_purchase_type",
+    "dealtype",
+    "expected_product_s_",
 ]
+
+# Enumeration properties whose stored values differ from the labels the CRM
+# shows (verified live: dealtype "Distrib Agent - Sale" is labeled "Agent
+# Purchase", sector "Petrochem" is "Petrochemical"), so they're translated
+# through the property definitions rather than shown raw.
+_DEAL_ENUM_PROPERTIES = ["sector", "deal_purchase_type", "dealtype", "expected_product_s_"]
 
 # HubSpot's batch/read and batch-associations endpoints cap at 100 inputs per
 # request; 100 deals can easily reference more than 100 unique line items.
@@ -190,7 +204,7 @@ _MOCK_DEALS = [
         "is_won": False,
         "amount": 15000.0,
         "currency": "USD",
-        "close_date": None,
+        "close_date": "2026-11-20T17:00:00Z",
         "create_date": "2026-07-01",
         "owner": {"id": "OWNER-1", "name": "Sample Rep", "email": "rep@coldblock.ca"},
         "items": [
@@ -200,6 +214,12 @@ _MOCK_DEALS = [
             {"stage": "Qualified Opportunity - uncontacted", "stage_order": 0, "changed_at": "2026-06-20T00:00:00Z"},
             {"stage": "Confirmed Interest - expect PO wi 60 days", "stage_order": 5, "changed_at": "2026-07-01T00:00:00Z"},
         ],
+        "next_step": "Samples done, meeting booked next week",
+        "country": "Australia",
+        "sectors": ["Mining", "Metals"],
+        "purchase_type": "Purchase",
+        "deal_type": "Direct Purchase",
+        "expected_products": ["CBM"],
     },
     {
         "deal_id": "DEAL-2",
@@ -220,6 +240,12 @@ _MOCK_DEALS = [
             {"stage": "Qualified Opportunity - uncontacted", "stage_order": 0, "changed_at": "2025-10-01T00:00:00Z"},
             {"stage": "Closed Won - sale, trial, subscription", "stage_order": 7, "changed_at": "2025-11-15T00:00:00Z"},
         ],
+        "next_step": None,
+        "country": "Canada",
+        "sectors": ["Environmental"],
+        "purchase_type": "90 Day Trial",
+        "deal_type": "Agent Purchase",
+        "expected_products": ["2xCBL"],
     },
 ]
 
@@ -270,6 +296,18 @@ class HubspotClient:
                 },
             }
         return pipelines
+
+    async def get_deal_property_labels(self, client: httpx.AsyncClient) -> dict[str, dict[str, str]]:
+        """{property_name: {stored_value: label}} for the enumeration deal properties."""
+        data = await self._post(
+            client,
+            "/crm/v3/properties/deals/batch/read",
+            {"inputs": [{"name": name} for name in _DEAL_ENUM_PROPERTIES]},
+        )
+        return {
+            prop["name"]: {option["value"]: option["label"] for option in prop.get("options", [])}
+            for prop in data.get("results", [])
+        }
 
     async def get_owner_indexes(self, client: httpx.AsyncClient) -> dict[str, dict[str, dict]]:
         """Owners indexed two ways: {"by_id": ..., "by_user_id": ...}.
@@ -386,10 +424,11 @@ class HubspotClient:
             return []
 
         async with httpx.AsyncClient(timeout=30) as client:
-            # Neither depends on deal_ids, unlike the batch group below — fetch concurrently.
-            pipelines, owners_by_id = await asyncio.gather(
+            # None depend on deal_ids, unlike the batch group below — fetch concurrently.
+            pipelines, owners_by_id, property_labels = await asyncio.gather(
                 self.get_deal_pipelines(client),
                 self.get_owners(client),
+                self.get_deal_property_labels(client),
             )
 
             deals_raw = await self._search_all_deals(client)
@@ -420,6 +459,7 @@ class HubspotClient:
                     line_items_by_id,
                     stage_history.get(deal["id"], []),
                     owners_by_id,
+                    property_labels,
                 )
                 for deal in deals_raw
             ]
@@ -711,8 +751,10 @@ def _normalize_deal(
     line_items_by_id: dict[str, dict],
     stage_history_raw: list[dict] | None = None,
     owners_by_id: dict[str, dict] | None = None,
+    property_labels: dict[str, dict[str, str]] | None = None,
 ) -> dict:
     props = deal.get("properties", {})
+    labels = property_labels or {}
     pipeline_info = pipelines.get(props.get("pipeline"), {})
     stage_info = pipeline_info.get("stages", {}).get(props.get("dealstage"), {})
 
@@ -777,7 +819,23 @@ def _normalize_deal(
         "owner": owner,
         "items": items,
         "stage_history": stage_history,
+        "next_step": (props.get("hs_next_step") or "").strip() or None,
+        "country": (props.get("deal_country") or "").strip() or None,
+        "sectors": _enum_labels(props.get("sector"), labels.get("sector")),
+        "purchase_type": next(iter(_enum_labels(props.get("deal_purchase_type"), labels.get("deal_purchase_type"))), None),
+        "deal_type": next(iter(_enum_labels(props.get("dealtype"), labels.get("dealtype"))), None),
+        "expected_products": _enum_labels(props.get("expected_product_s_"), labels.get("expected_product_s_")),
     }
+
+
+def _enum_labels(raw: str | None, value_labels: dict[str, str] | None) -> list[str]:
+    """Stored enum value(s) → CRM labels. Checkbox properties pack several
+    values into one ";"-joined string. A value with no matching option (e.g.
+    one since removed from the property) keeps its raw form rather than vanishing."""
+    if not raw:
+        return []
+    value_labels = value_labels or {}
+    return [value_labels.get(value, value) for value in (part.strip() for part in raw.split(";")) if value]
 
 
 hubspot_client = HubspotClient()

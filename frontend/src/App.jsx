@@ -5,6 +5,7 @@ import { DashboardDataProvider } from './context/DashboardDataContext.jsx'
 import { TasksDataProvider } from './context/TasksDataContext.jsx'
 import { ThemeProvider } from './context/ThemeContext.jsx'
 import DealsPage from './pages/DealsPage.jsx'
+import QuarterlyReviewPage from './pages/QuarterlyReviewPage.jsx'
 import SalesOverviewPage from './pages/SalesOverviewPage.jsx'
 import TaskReportPage from './pages/TaskReportPage.jsx'
 import TasksPage from './pages/TasksPage.jsx'
@@ -36,6 +37,7 @@ function Shell() {
         <Route path="/deals" element={<DealsPage />} />
         <Route path="/sales-overview" element={<SalesOverviewPage />} />
         <Route path="/team-performance" element={<TeamPerformancePage />} />
+        <Route path="/quarterly" element={<QuarterlyReviewPage />} />
         <Route element={<TasksSection />}>
           <Route path="/tasks" element={<TasksPage />} />
           <Route path="/tasks/report" element={<TaskReportPage />} />

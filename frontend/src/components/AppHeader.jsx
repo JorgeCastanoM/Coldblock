@@ -58,6 +58,9 @@ export default function AppHeader({ title, onRefresh, loading }) {
             <NavLink to="/team-performance" className={linkClass}>
               Team
             </NavLink>
+            <NavLink to="/quarterly" className={linkClass}>
+              Quarterly
+            </NavLink>
           </NavGroup>
 
           <nav className="flex items-center gap-0.5 rounded-lg border border-surface-border bg-surface-raised p-1">

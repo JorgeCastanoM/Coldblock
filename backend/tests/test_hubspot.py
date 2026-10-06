@@ -144,6 +144,55 @@ def test_normalize_deal_owner_id_not_resolved_keeps_id():
     assert result["owner"] == {"id": "999", "name": None, "email": None}
 
 
+_PROPERTY_LABELS = {
+    "sector": {"Mining": "Mining", "Petrochem": "Petrochemical"},
+    "deal_purchase_type": {"90 Day Trial": "90 Day Trial"},
+    "dealtype": {"Distrib Agent - Sale": "Agent Purchase"},
+    "expected_product_s_": {"CBM": "CBM", "Chiller": "Chiller 120V"},
+}
+
+
+def test_normalize_deal_translates_enum_values_to_labels():
+    deal = {
+        "id": "140",
+        "properties": {
+            "dealstage": "154790192",
+            "pipeline": "82088336",
+            "sector": "Mining;Petrochem",
+            "deal_purchase_type": "90 Day Trial",
+            "dealtype": "Distrib Agent - Sale",
+            "expected_product_s_": "CBM;Chiller",
+            "deal_country": " Peru ",
+            "hs_next_step": "Waiting for contract award\n",
+        },
+    }
+    result = _normalize_deal(deal, _PIPELINES, [], [], {}, {}, None, None, _PROPERTY_LABELS)
+    assert result["sectors"] == ["Mining", "Petrochemical"]
+    assert result["purchase_type"] == "90 Day Trial"
+    assert result["deal_type"] == "Agent Purchase"
+    assert result["expected_products"] == ["CBM", "Chiller 120V"]
+    assert result["country"] == "Peru"
+    assert result["next_step"] == "Waiting for contract award"
+
+
+def test_normalize_deal_keeps_unknown_enum_value_raw():
+    # An option since removed from the property still has a value on old deals.
+    deal = {"id": "141", "properties": {"dealstage": "154790192", "pipeline": "82088336", "dealtype": "Legacy Type"}}
+    result = _normalize_deal(deal, _PIPELINES, [], [], {}, {}, None, None, _PROPERTY_LABELS)
+    assert result["deal_type"] == "Legacy Type"
+
+
+def test_normalize_deal_review_fields_empty_when_unset():
+    deal = {"id": "142", "properties": {"dealstage": "154790192", "pipeline": "82088336", "hs_next_step": "  "}}
+    result = _normalize_deal(deal, _PIPELINES, [], [], {}, {})
+    assert result["sectors"] == []
+    assert result["expected_products"] == []
+    assert result["purchase_type"] is None
+    assert result["deal_type"] is None
+    assert result["country"] is None
+    assert result["next_step"] is None
+
+
 def test_normalize_conference_contact_joins_first_and_last_name():
     row = {
         "id": "c1",
