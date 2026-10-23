@@ -146,3 +146,60 @@ input,
 select {
   @apply touch-manipulation;
 }
+
+/* Worksheet chrome stays aligned with the data at every sheet zoom level. */
+.pipeline-sheet { isolation: isolate; }
+.pipeline-sheet th, .pipeline-sheet .sheet-cell { border-right: 1px solid var(--surface-border); border-bottom: 1px solid var(--surface-border); }
+.pipeline-sheet .sheet-cell { background: var(--surface-raised); }
+.pipeline-sheet tbody tr:hover .sheet-cell { background: color-mix(in srgb, var(--surface-raised) 94%, #10b981); }
+.pipeline-sheet .sheet-cell:focus-within { outline: 2px solid #10b981; outline-offset: -2px; }
+.sheet-letters th { position: sticky; top: 0; z-index: 30; height: 26px; text-align: center; font-size: 11px; font-weight: 500; color: var(--ink-muted); background: var(--surface); }
+.sheet-headings th { position: sticky; top: 26px; z-index: 30; height: 34px; background: var(--surface-raised); }
+.pipeline-sheet .sheet-row-number { position: sticky; left: 0; z-index: 20; width: 44px; text-align: center; vertical-align: middle; font-size: 11px; font-weight: 400; color: var(--ink-subtle); background: var(--surface); }
+.pipeline-sheet .sheet-account { position: sticky; left: 44px; z-index: 10; }
+.pipeline-sheet .sheet-headings .sheet-account { z-index: 40; }
+.pipeline-sheet .sheet-headings .sheet-row-number, .pipeline-sheet .sheet-corner { left: 0; z-index: 50; }
+
+/* Light, compact worksheet for screen sharing; independent of the app theme. */
+.meeting-sheet {
+  color-scheme: light;
+  --surface: #f3f3f3;
+  --surface-raised: #fff;
+  --surface-border: #c6c6c6;
+  --ink: #111;
+  --ink-muted: #333;
+  --ink-subtle: #555;
+}
+.meeting-sheet [data-stage="active_dialogue"] { --meeting-row: #f1e8fa; --meeting-accent: #7c3eac; }
+.meeting-sheet [data-stage="confirmed_interest"] { --meeting-row: #e0f2fe; --meeting-accent: #0369a1; }
+.meeting-sheet [data-stage="in_purchasing"] { --meeting-row: #fff3cc; --meeting-accent: #925a00; }
+.meeting-sheet [data-stage="closed_won"] { --meeting-row: #e2f4e8; --meeting-accent: #216e3e; }
+.meeting-sheet .pipeline-sheet { font-family: Aptos, Calibri, Arial, sans-serif; }
+.meeting-sheet .pipeline-sheet .sheet-cell { padding: 2px 5px; background: var(--meeting-row, #fff); font-size: 12px; vertical-align: middle; border-color: #d0d7de; }
+.meeting-sheet .pipeline-sheet tbody tr:hover .sheet-cell { background: color-mix(in srgb, var(--meeting-row, #fff) 85%, #fff); }
+.meeting-sheet .sheet-cell * { color: #111; }
+.meeting-sheet .sheet-cell .absolute { display: none; }
+.meeting-sheet .sheet-cell p { margin-top: 0; }
+.meeting-sheet .sheet-account p:first-of-type { font-weight: 500; }
+.meeting-sheet .sheet-account p + p { display: none; }
+.meeting-sheet .sheet-cell .rounded-full { border-radius: 0; padding: 0; background: transparent; box-shadow: none; font-weight: 400; }
+.meeting-sheet .sheet-cell textarea { min-height: 22px; padding: 1px 3px; background: #ffffff40; border-radius: 0; font-family: inherit; font-size: 12px; }
+.meeting-sheet .sheet-cell textarea::placeholder { color: #444; }
+.meeting-sheet .sheet-cell textarea:focus { background: white; }
+.meeting-sheet .sheet-headings th { background: #111; color: white; height: 27px; }
+.meeting-sheet .sheet-headings button { color: white; }
+.meeting-sheet .sheet-headings button:hover { color: #a7f3d0; }
+.meeting-sheet .sheet-letters th { height: 22px; }
+.meeting-sheet .sheet-headings th { top: 22px; }
+.meeting-sheet .sheet-row-number { color: #333; }
+.meeting-sheet .sheet-cell .meeting-stage-label {
+  color: var(--meeting-accent, #1e293b) !important;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.meeting-sheet .sheet-account { box-shadow: inset 3px 0 var(--meeting-accent, transparent); }
+.meeting-sheet .meeting-legend { background: #fff; color: #334155; gap: 8px; padding: 8px 12px; }
+.meeting-legend-title { color: #475569; font-size: 10px; font-weight: 700; letter-spacing: .08em; margin-right: 4px; }
+.meeting-legend-item { display: inline-flex; align-items: center; gap: 7px; padding: 5px 9px; border: 1px solid #d0d7de; border-radius: 6px; background: var(--meeting-row, #fff); color: #1e293b; font-size: 12px; font-weight: 600; }
+.meeting-swatch { width: 10px; height: 10px; flex-shrink: 0; border-radius: 3px; background: var(--meeting-accent, #475569); }
+.meeting-legend-count { min-width: 23px; padding: 1px 5px; border-radius: 4px; background: #ffffffb3; color: #334155; text-align: center; font-size: 11px; font-variant-numeric: tabular-nums; }

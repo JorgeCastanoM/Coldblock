@@ -1,4 +1,5 @@
 import { parseFishbowlDate } from './format.js'
+import { daysInCurrentStage } from './deals.js'
 
 // The Quarterly review mirrors the commercial manager's Q3/Q4 spreadsheet:
 // open Active Sales Pipeline deals in the three late stages, optionally plus
@@ -136,6 +137,7 @@ export function buildReviewCsv(rows, notes) {
     'Country',
     'Application',
     'Stage',
+    'Days in stage',
     'Owner',
     'HubSpot next step',
     'Notes',
@@ -155,6 +157,7 @@ export function buildReviewCsv(rows, notes) {
       deal.country,
       (deal.sectors ?? []).join(', '),
       deal.stage,
+      daysInCurrentStage(deal) ?? '',
       deal.owner?.name ?? deal.owner?.email ?? '',
       deal.next_step,
       notes[deal.deal_id]?.text ?? '',

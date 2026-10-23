@@ -7,9 +7,7 @@ import {
   DEFAULT_STAGE_KEYS,
   QUARTERS,
   REVIEW_STAGES,
-  STAGE_BY_KEY,
   STAGE_TONES,
-  buildReviewCsv,
   closeDateOf,
   loadNotes,
   quarterOf,
@@ -18,7 +16,7 @@ import {
 } from '../lib/quarterlyReview.js'
 
 const controlClass =
-  'rounded-lg border border-surface-border bg-surface px-3 py-2 text-sm text-ink placeholder:text-ink-subtle focus:border-sky-500 focus:outline-none'
+  'rounded-lg border border-surface-border bg-surface px-2 py-1.5 text-xs text-ink placeholder:text-ink-subtle focus:border-sky-500 focus:outline-none'
 
 function ownerLabel(deal) {
   return deal.owner?.name ?? deal.owner?.email ?? (deal.owner ? `Owner ${deal.owner.id}` : 'Unassigned')
@@ -64,7 +62,7 @@ function StageMixBar({ rows }) {
     total += amount
   }
   return (
-    <div className="mt-3 flex h-1.5 overflow-hidden rounded-full bg-ink/[0.05]">
+    <div className="mt-1.5 flex h-1 overflow-hidden rounded-full bg-ink/[0.05]">
       {total > 0 &&
         REVIEW_STAGES.filter((stage) => byStage.get(stage.key)).map((stage) => (
           <div
@@ -100,7 +98,7 @@ function QuarterCard({ label, sublabel, rows, active, current, pending, onClick 
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`rounded-xl border px-4 py-3 text-left shadow-panel transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 ${
+      className={`rounded-lg border px-3 py-2 text-left shadow-panel transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 ${
         active
           ? 'border-sky-500 bg-sky-500/[0.06] ring-1 ring-sky-500'
           : 'border-surface-border bg-surface-raised hover:bg-ink/[0.03]'
@@ -116,7 +114,7 @@ function QuarterCard({ label, sublabel, rows, active, current, pending, onClick 
           </span>
         )}
       </div>
-      <p className="mt-1 truncate text-xl font-semibold tabular-nums text-ink">{total.primary}</p>
+      <p className="mt-0.5 truncate text-lg font-semibold tabular-nums text-ink">{total.primary}</p>
       <p className="truncate text-xs text-ink-subtle" title={total.detail ?? undefined}>
         {pending ? 'Loading…' : `${rows.length} ${rows.length === 1 ? 'deal' : 'deals'}`}
         {total.detail && ` · ${total.detail}`}
@@ -133,7 +131,7 @@ function StageChip({ stage, count, active, onToggle }) {
       type="button"
       onClick={onToggle}
       aria-pressed={active}
-      className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 ${
+      className={`inline-flex items-center gap-2 rounded-full border px-2 py-1 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 ${
         active
           ? 'border-surface-border bg-surface-raised text-ink shadow-panel'
           : `${stage.optional ? 'border-dashed' : ''} border-surface-border text-ink-subtle hover:text-ink`
@@ -146,15 +144,6 @@ function StageChip({ stage, count, active, onToggle }) {
   )
 }
 
-function downloadCsv(filename, text) {
-  const url = URL.createObjectURL(new Blob([text], { type: 'text/csv;charset=utf-8' }))
-  const link = document.createElement('a')
-  link.href = url
-  link.download = filename
-  link.click()
-  URL.revokeObjectURL(url)
-}
-
 export default function QuarterlyReviewPage() {
   const { summary, error, loading, refresh } = useDashboardData()
   const deals = summary?.deals ?? []
@@ -165,12 +154,15 @@ export default function QuarterlyReviewPage() {
 
   const [year, setYear] = useState(currentYear)
   // null = whole year; 1-4 = one quarter; 'past_due' = carried-over deals only.
-  const [quarter, setQuarter] = useState(null)
+  const [quarter, setQuarter] = useState(currentQuarter)
   const [stageKeys, setStageKeys] = useState(() => new Set(DEFAULT_STAGE_KEYS))
   const [owner, setOwner] = useState('all')
   const [query, setQuery] = useState('')
+  const [showSummary, setShowSummary] = useState(false)
   const [sort, setSort] = useState({ key: 'close', dir: 'asc' })
   const [notes, setNotes] = useState(loadNotes)
+  const [exporting, setExporting] = useState(false)
+  const [exportError, setExportError] = useState(null)
 
   const handleSaveNote = useCallback((dealId, text) => {
     const result = saveNote(dealId, text)
@@ -280,10 +272,19 @@ export default function QuarterlyReviewPage() {
     setSort((prev) => (prev.key === key ? { key, dir: prev.dir === 'asc' ? 'desc' : 'asc' } : { key, dir: 'asc' }))
   }
 
-  const handleExport = () => {
-    const rows = groups.flatMap((group) => group.rows.map((row) => ({ ...row, group: group.title })))
-    const scope = quarter === null ? 'full-year' : quarter === 'past_due' ? 'past-due' : `q${quarter}`
-    downloadCsv(`quarterly-pipeline-${year}-${scope}.csv`, buildReviewCsv(rows, notes))
+  const handleExport = async () => {
+    setExporting(true)
+    setExportError(null)
+    try {
+      const { downloadReviewExcel } = await import('../lib/quarterlyReviewExcel.js')
+      const scope = quarter === null ? 'full-year' : quarter === 'past_due' ? 'past-due' : `q${quarter}`
+      await downloadReviewExcel(groups, notes, year, scope)
+    } catch (error) {
+      console.error('Excel export failed', error)
+      setExportError('Could not export the workbook. Please try again.')
+    } finally {
+      setExporting(false)
+    }
   }
 
   const changeYear = (value) => {
@@ -294,23 +295,25 @@ export default function QuarterlyReviewPage() {
   const showInitialLoad = loading && !summary
 
   return (
-    <div className="min-h-screen px-6 pb-10">
-      <AppHeader title="Quarterly" onRefresh={refresh} loading={loading} />
+    <div className="flex h-dvh flex-col overflow-auto px-2 pb-2">
+      <AppHeader compact title="Quarterly" onRefresh={refresh} loading={loading} />
 
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto flex min-h-0 w-full flex-1 flex-col">
         {error && (
           <div className="mb-5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-700 dark:text-rose-300">
             {error}
           </div>
         )}
 
-        <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+        <div className="mb-2 flex flex-wrap items-end justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold text-ink">Pipeline by quarter</h2>
-            <p className="text-sm text-ink-muted">
-              Active Sales Pipeline deals by HubSpot close date. Tap a quarter to focus on it.
-            </p>
+
           </div>
+          <div className="flex items-center gap-2">
+          <button type="button" onClick={() => setShowSummary((value) => !value)} aria-expanded={showSummary} aria-controls="pipeline-summary" className="rounded border border-surface-border px-3 py-1.5 text-xs text-ink-muted hover:text-ink">
+            {showSummary ? 'Hide summary' : 'Show summary'}
+          </button>
           <div className="flex items-center gap-1 rounded-lg border border-surface-border bg-surface-raised p-1">
             <button
               type="button"
@@ -345,7 +348,10 @@ export default function QuarterlyReviewPage() {
           </div>
         </div>
 
-        <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+        </div>
+
+        <div id="pipeline-summary" hidden={!showSummary} className="shrink-0">
+        <div className="mb-2 grid shrink-0 grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
           <QuarterCard
             label="Full year"
             sublabel={year}
@@ -368,12 +374,14 @@ export default function QuarterlyReviewPage() {
           ))}
         </div>
 
+        </div>
+
         {pastDueRows.length > 0 && (
           <button
             type="button"
             onClick={() => setQuarter((prev) => (prev === 'past_due' ? null : 'past_due'))}
             aria-pressed={quarter === 'past_due'}
-            className={`mb-4 flex w-full flex-wrap items-center justify-between gap-2 rounded-lg border px-4 py-2.5 text-left text-sm transition-colors ${
+            className={`mb-2 flex w-full shrink-0 flex-wrap items-center justify-between gap-2 rounded-lg border px-3 py-1.5 text-left text-xs transition-colors ${
               quarter === 'past_due'
                 ? 'border-amber-500 bg-amber-500/15'
                 : 'border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/15'
@@ -383,8 +391,8 @@ export default function QuarterlyReviewPage() {
               <span className="font-semibold">
                 {pastDueRows.length} open {pastDueRows.length === 1 ? 'deal' : 'deals'}
               </span>{' '}
-              still {pastDueRows.length === 1 ? 'has' : 'have'} a close date before {year} (
-              {compactTotal(usdTotal(pastDueRows))}). They’re listed at the top as Past due.
+              closing before {year} (
+              {compactTotal(usdTotal(pastDueRows))}).
             </span>
             <span className="text-xs font-medium text-amber-800 underline dark:text-amber-300">
               {quarter === 'past_due' ? 'Show full year' : 'Show only these'}
@@ -392,7 +400,7 @@ export default function QuarterlyReviewPage() {
           </button>
         )}
 
-        <div className="mb-3 flex flex-wrap items-center gap-2">
+        <div className="mb-2 flex shrink-0 flex-wrap items-center gap-2">
           {REVIEW_STAGES.map((stage) => (
             <StageChip
               key={stage.key}
@@ -404,7 +412,12 @@ export default function QuarterlyReviewPage() {
           ))}
         </div>
 
-        <div className="mb-3 flex flex-wrap items-center gap-2">
+        <div className="mb-2 flex shrink-0 flex-wrap items-center gap-2">
+          <select aria-label="Quarter" value={quarter ?? 'all'} onChange={(event) => setQuarter(event.target.value === 'all' ? null : event.target.value === 'past_due' ? 'past_due' : Number(event.target.value))} className={controlClass}>
+            <option value="all">Full year</option>
+            {QUARTERS.map((q) => <option key={q.key} value={q.key}>{q.label} · {q.months}</option>)}
+            {pastDueRows.length > 0 && <option value="past_due">Past due</option>}
+          </select>
           <input
             type="search"
             value={query}
@@ -429,17 +442,17 @@ export default function QuarterlyReviewPage() {
           <button
             type="button"
             onClick={handleExport}
-            disabled={groups.every((group) => group.rows.length === 0)}
-            className="rounded-lg border border-surface-border bg-surface-raised px-4 py-2 text-sm font-medium text-ink transition hover:bg-ink/[0.05] disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={exporting || groups.every((group) => group.rows.length === 0)}
+            className="rounded-lg border border-surface-border bg-surface-raised px-3 py-1.5 text-xs font-medium text-ink transition hover:bg-ink/[0.05] disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Export CSV
+            {exporting ? 'Exporting…' : 'Export Excel'}
           </button>
         </div>
 
-        <p className="mb-3 text-xs text-ink-subtle">
+        {exportError && <p role="alert" className="mb-2 text-xs text-rose-600 dark:text-rose-400">{exportError}</p>}
+        <p className="mb-2 text-[11px] text-ink-subtle">
           Notes are saved in this browser only
-          {noteCount > 0 && ` (${noteCount} ${noteCount === 1 ? 'note' : 'notes'})`} — other people and devices
-          won’t see them. Export CSV includes them.
+          {noteCount > 0 && ` (${noteCount} ${noteCount === 1 ? 'note' : 'notes'})`} · Included in Excel exports.
         </p>
 
         {showInitialLoad ? (
@@ -461,15 +474,7 @@ export default function QuarterlyReviewPage() {
           />
         )}
 
-        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-ink-subtle">
-          {REVIEW_STAGES.map((stage) => (
-            <span key={stage.key} className="inline-flex items-center gap-1.5">
-              <span className={`h-2 w-2 rounded-full ${STAGE_TONES[stage.tone].bar}`} />
-              {STAGE_BY_KEY.get(stage.key).label}
-              {stage.key === 'closed_won' && ' (incl. Ready to ship, Shipped, …)'}
-            </span>
-          ))}
-        </div>
+
       </div>
     </div>
   )

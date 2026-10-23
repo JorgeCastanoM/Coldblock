@@ -1,11 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { STAGE_BY_KEY, STAGE_TONES, closeDateOf, isPastDue } from '../lib/quarterlyReview.js'
 import { sumAmountsByCurrency } from '../lib/format.js'
-
-// Sticky cells need an opaque background (the rows behind would show through
-// a translucent one), so the hover tint is mixed into the surface color.
-const STICKY_BG =
-  'bg-surface-raised group-hover:bg-[color-mix(in_srgb,var(--ink)_3%,var(--surface-raised))]'
+import { daysInCurrentStage } from '../lib/deals.js'
 
 const STAGE_ORDER = new Map([...STAGE_BY_KEY.keys()].map((key, index) => [key, index]))
 
@@ -30,6 +26,7 @@ const COLUMNS = [
     sortValue: ({ deal }) => deal.sectors?.join(', ').toLowerCase() || null,
   },
   { key: 'stage', label: 'Stage', sortValue: ({ stageKey }) => STAGE_ORDER.get(stageKey) ?? null },
+  { key: 'days_in_stage', label: 'Days in stage', align: 'right', sortValue: ({ deal }) => daysInCurrentStage(deal) },
   {
     key: 'owner',
     label: 'Owner',
@@ -47,7 +44,21 @@ const COLUMNS = [
   },
 ]
 
-const WRAPPING_COLUMNS = new Set(['account', 'application', 'next_step', 'notes'])
+// Each field has its own worksheet column.
+const VISIBLE_COLUMNS = COLUMNS.map((column) => ({
+  ...column,
+  width: ({ account: 280, unit: 180, close: 110, transaction: 130, amount: 130,
+    channel: 150, country: 130, application: 160, stage: 230, days_in_stage: 130, owner: 170,
+    next_step: 260, notes: 300 })[column.key],
+}))
+const SHEET_WIDTH = 44 + VISIBLE_COLUMNS.reduce((total, column) => total + column.width, 0)
+const ZOOM_KEY = 'coldblock-quarterly-sheet-zoom'
+function initialZoom() {
+  try {
+    const value = Number(localStorage.getItem(ZOOM_KEY))
+    return value >= 50 && value <= 150 ? value : 100
+  } catch { return 100 }
+}
 
 // Blanks always sink to the bottom, whichever way the column is sorted.
 export function sortRows(rows, sort) {
@@ -93,7 +104,7 @@ function StagePill({ stageKey, label }) {
   const tone = STAGE_TONES[STAGE_BY_KEY.get(stageKey)?.tone]
   return (
     <span
-      className={`inline-flex max-w-[11rem] truncate rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${tone?.pill ?? ''}`}
+      className={`meeting-stage-label inline-flex max-w-full whitespace-normal rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${tone?.pill ?? ''}`}
       title={label}
     >
       {label}
@@ -148,7 +159,7 @@ function NoteCell({ dealId, note, onSave }) {
     const el = textareaRef.current
     if (!el) return
     el.style.height = 'auto'
-    el.style.height = `${el.scrollHeight}px`
+    el.style.height = `${Math.min(el.scrollHeight, 72)}px`
   }, [draft])
 
   const flush = () => {
@@ -182,9 +193,9 @@ function NoteCell({ dealId, note, onSave }) {
         rows={1}
         placeholder="Add a note…"
         aria-label="Note"
-        className="block min-h-[2.25rem] w-full resize-none overflow-hidden rounded-md border border-transparent bg-ink/[0.03] px-2 py-1.5 text-sm text-ink placeholder:text-ink-subtle hover:border-surface-border focus:border-sky-500 focus:bg-surface-raised focus:outline-none"
+        className="block min-h-[1.75rem] w-full resize-y overflow-auto rounded border border-transparent bg-ink/[0.03] px-1.5 py-1 text-xs text-ink placeholder:text-ink-subtle hover:border-surface-border focus:border-sky-500 focus:bg-surface-raised focus:outline-none"
       />
-      <p className="mt-0.5 h-4 px-2 text-[11px] text-ink-subtle">
+      <p className="empty:hidden mt-0.5 px-1.5 text-[10px] text-ink-subtle">
         {status === 'saving' && 'Saving…'}
         {status === 'error' && <span className="text-rose-600 dark:text-rose-400">Couldn’t save on this device</span>}
         {(status === 'saved' || status == null) &&
@@ -224,10 +235,10 @@ function GroupHeader({ group }) {
   return (
     <tr>
       <td
-        colSpan={COLUMNS.length}
+        colSpan={VISIBLE_COLUMNS.length + 1}
         className={`border-b border-surface-border p-0 ${warn ? 'bg-amber-500/[0.08]' : 'bg-surface'}`}
       >
-        <div className="sticky left-0 flex w-max flex-wrap items-baseline gap-x-3 gap-y-0.5 px-3 py-2.5">
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5 px-2 py-1">
           <span className={`text-sm font-semibold ${warn ? 'text-amber-800 dark:text-amber-300' : 'text-ink'}`}>
             {group.title}
           </span>
@@ -247,8 +258,9 @@ function GroupHeader({ group }) {
   )
 }
 
-function DealRow({ row, year, note, onSaveNote }) {
+function DealRow({ row, year, note, onSaveNote, rowNumber }) {
   const { deal, stageKey } = row
+  const daysInStage = daysInCurrentStage(deal)
   const bar = STAGE_TONES[STAGE_BY_KEY.get(stageKey)?.tone]?.bar ?? ''
   const cells = {
     account: (
@@ -267,12 +279,13 @@ function DealRow({ row, year, note, onSaveNote }) {
     ),
     unit: <ProductChips products={deal.expected_products} />,
     close: <CloseDateCell deal={deal} year={year} />,
-    transaction: deal.purchase_type ?? <span className="text-ink-subtle">—</span>,
+    transaction: deal.purchase_type ?? '—',
     amount: <span className="font-medium">{wholeDollars(deal.amount, deal.currency)}</span>,
     channel: deal.deal_type ?? <span className="text-ink-subtle">—</span>,
     country: deal.country ?? <span className="text-ink-subtle">—</span>,
     application: deal.sectors?.length ? deal.sectors.join(', ') : <span className="text-ink-subtle">—</span>,
     stage: <StagePill stageKey={stageKey} label={deal.stage} />,
+    days_in_stage: <span title={daysInStage == null ? 'Stage entry date unavailable' : 'Full days since the latest stage change; creation date used when there is no stage history'}>{daysInStage == null ? '—' : daysInStage.toLocaleString()}</span>,
     owner: deal.owner?.name ?? deal.owner?.email ?? <span className="text-ink-subtle">Unassigned</span>,
     next_step: deal.next_step ? (
       <p className="line-clamp-3 whitespace-pre-line text-xs text-ink-muted" title={deal.next_step}>
@@ -285,15 +298,12 @@ function DealRow({ row, year, note, onSaveNote }) {
   }
 
   return (
-    <tr className="group align-top">
-      {COLUMNS.map((column) => (
+    <tr className="group align-top" data-stage={stageKey}>
+      <th scope="row" className="sheet-row-number">{rowNumber}</th>
+      {VISIBLE_COLUMNS.map((column) => (
         <td
           key={column.key}
-          className={`border-b border-surface-border/60 px-3 py-2.5 text-sm text-ink ${
-            column.sticky ? STICKY_BG : 'group-hover:bg-ink/[0.03]'
-          } ${column.align === 'right' ? 'text-right tabular-nums' : ''} ${
-            WRAPPING_COLUMNS.has(column.key) ? '' : 'whitespace-nowrap'
-          } ${column.className ?? ''}`}
+          className={`sheet-cell relative break-words px-2 py-1.5 text-xs text-ink ${column.key === 'account' ? 'sheet-account' : ''} ${column.align === 'right' ? 'text-right tabular-nums' : ''}`}
         >
           {cells[column.key]}
         </td>
@@ -303,52 +313,132 @@ function DealRow({ row, year, note, onSaveNote }) {
 }
 
 export default function QuarterlyReviewTable({ groups, year, sort, onSort, notes, onSaveNote }) {
+  const [zoom, setZoom] = useState(initialZoom)
+  const [maximized, setMaximized] = useState(false)
+  const [meetingView, setMeetingView] = useState(() => {
+    try { return localStorage.getItem('coldblock-quarterly-meeting-view') === 'true' } catch { return false }
+  })
+  const toggleMeetingView = () => {
+    const next = !meetingView
+    setMeetingView(next)
+    try { localStorage.setItem('coldblock-quarterly-meeting-view', String(next)) } catch { /* Optional preference. */ }
+  }
+  useEffect(() => {
+    if (!maximized) return
+    const handleKey = (event) => {
+      if (event.key === 'Escape') setMaximized(false)
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [maximized])
+  const viewportRef = useRef(null)
+  const rowCount = groups.reduce((total, group) => total + group.rows.length, 0)
+  const updateZoom = (value) => {
+    const next = Math.max(50, Math.min(150, Math.round(value)))
+    setZoom(next)
+    try { localStorage.setItem(ZOOM_KEY, String(next)) } catch { /* Storage may be unavailable. */ }
+  }
+  useEffect(() => {
+    const viewport = viewportRef.current
+    const handleWheel = (event) => {
+      if (!event.ctrlKey && !event.metaKey) return
+      event.preventDefault()
+      setZoom((current) => {
+        const next = Math.max(50, Math.min(150, current + (event.deltaY < 0 ? 10 : -10)))
+        try { localStorage.setItem(ZOOM_KEY, String(next)) } catch { /* Optional preference. */ }
+        return next
+      })
+    }
+    viewport.addEventListener('wheel', handleWheel, { passive: false })
+    return () => viewport.removeEventListener('wheel', handleWheel)
+  }, [])
+  let rowOffset = 0
   return (
-    <div className="max-h-[calc(100vh-12rem)] min-h-[16rem] overflow-auto rounded-xl border border-surface-border bg-surface-raised shadow-panel">
-      <table className="w-full border-separate border-spacing-0 text-left">
-        <thead>
-          <tr className="text-xs uppercase tracking-wide text-ink-subtle">
-            {COLUMNS.map((column) => (
-              <th
-                key={column.key}
-                scope="col"
-                aria-sort={
-                  sort.key === column.key ? (sort.dir === 'asc' ? 'ascending' : 'descending') : undefined
-                }
-                className={`sticky top-0 z-20 whitespace-nowrap border-b border-surface-border bg-surface-raised px-3 py-2.5 font-medium ${
-                  column.align === 'right' ? 'text-right' : ''
-                } ${column.headClassName ?? ''}`}
-              >
-                <SortHeader column={column} sort={sort} onSort={onSort} />
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {groups.map((group) => (
-            <GroupRows key={group.key} group={group} year={year} notes={notes} onSaveNote={onSaveNote} />
-          ))}
-        </tbody>
-      </table>
+    <div className={`${meetingView ? 'meeting-sheet' : ''} ${maximized ? 'fixed inset-0 z-50' : 'relative min-h-[12rem] min-w-0 flex-1 rounded-lg'} flex flex-col overflow-hidden border border-surface-border bg-surface-raised shadow-panel`}>
+      <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-surface-border bg-surface px-3 py-1.5 text-xs text-ink-muted">
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="font-semibold text-ink">{meetingView ? 'Meeting view' : 'Pipeline worksheet'}</span>
+          {meetingView && <span>Row colors follow the current HubSpot stage</span>}
+        </div>
+        <button type="button" aria-pressed={meetingView} onClick={toggleMeetingView} className="rounded border border-surface-border px-3 py-1 font-medium hover:bg-ink/[0.05]">
+          {meetingView ? 'Standard view' : 'Meeting view'}
+        </button>
+      </div>
+      <div ref={viewportRef} className="min-h-0 flex-1 overflow-auto" aria-label="Pipeline worksheet" tabIndex={0}>
+        <table className="pipeline-sheet table-fixed border-separate border-spacing-0 text-left" style={{ width: SHEET_WIDTH, zoom: zoom / 100 }}>
+          <caption className="sr-only">Quarterly pipeline. Use the zoom controls below to resize the worksheet. Notes are editable.</caption>
+          <colgroup><col style={{ width: 44 }} />{VISIBLE_COLUMNS.map((column) => <col key={column.key} style={{ width: column.width }} />)}</colgroup>
+          <thead>
+            <tr className="sheet-letters" aria-hidden="true">
+              <th className="sheet-corner">▦</th>
+              {VISIBLE_COLUMNS.map((column, index) => <th key={column.key}>{String.fromCharCode(65 + index)}</th>)}
+            </tr>
+            <tr className="sheet-headings text-ink-muted">
+              <th className="sheet-row-number" aria-label="Row number">#</th>
+              {VISIBLE_COLUMNS.map((column) => (
+                <th key={column.key} scope="col" aria-sort={sort.key === column.key ? (sort.dir === 'asc' ? 'ascending' : 'descending') : undefined}
+                  className={`px-2 text-[11px] font-semibold ${column.key === 'account' ? 'sheet-account' : ''} ${column.align === 'right' ? 'text-right' : ''}`}>
+                  <SortHeader column={column} sort={sort} onSort={onSort} />
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {groups.map((group) => {
+              const startRow = rowOffset + 1
+              rowOffset += group.rows.length
+              return <GroupRows key={group.key} group={group} year={year} notes={notes} onSaveNote={onSaveNote} startRow={startRow} />
+            })}
+          </tbody>
+        </table>
+      </div>
+      {meetingView && (
+        <div className="meeting-legend flex shrink-0 flex-wrap items-center gap-3 border-t border-surface-border px-3 py-1.5 text-[11px]" aria-label="Stage color legend">
+          <span className="meeting-legend-title">STAGE KEY</span>
+          {[...STAGE_BY_KEY.values()].map((stage) => {
+            const count = groups.reduce((total, group) => total + group.rows.filter((row) => row.stageKey === stage.key).length, 0)
+            return (
+              <span key={stage.key} className="meeting-legend-item" data-stage={stage.key}>
+                <span aria-hidden="true" className="meeting-swatch" />
+                <span>{stage.label}</span>
+                <span className="meeting-legend-count" aria-label={`${count} visible deals`}>{count}</span>
+              </span>
+            )
+          })}
+        </div>
+      )}
+      <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-t border-surface-border bg-surface px-3 py-2 text-xs text-ink-muted">
+        <div className="flex items-center gap-4"><span className="border-b-2 border-emerald-500 px-2 py-1 font-semibold text-ink">Pipeline {year}</span><span>{rowCount} deals</span></div>
+        <div className="flex items-center gap-2">
+          <button type="button" aria-pressed={maximized} onClick={() => setMaximized((value) => !value)} className="rounded border border-surface-border px-2 py-1 hover:bg-ink/[0.05]" title="Press Escape to restore">{maximized ? 'Restore view' : 'Maximize sheet'}</button>
+          <button type="button" className="rounded border border-surface-border px-2 py-1 hover:bg-ink/[0.05]" onClick={() => updateZoom((viewportRef.current.clientWidth / SHEET_WIDTH) * 100)}>Fit columns</button>
+          <button type="button" onClick={() => updateZoom(100)} className="px-2 py-1" title="Reset zoom to 100%">Reset</button>
+          <button type="button" aria-label="Zoom out" disabled={zoom <= 50} onClick={() => updateZoom(zoom - 10)} className="px-2 py-1 disabled:opacity-30">−</button>
+          <input aria-label="Worksheet zoom" type="range" min="50" max="150" step="5" value={zoom} onChange={(event) => updateZoom(Number(event.target.value))} className="w-28 accent-emerald-500" />
+          <button type="button" aria-label="Zoom in" disabled={zoom >= 150} onClick={() => updateZoom(zoom + 10)} className="px-2 py-1 disabled:opacity-30">+</button>
+          <output className="w-10 text-right tabular-nums" aria-live="polite">{zoom}%</output>
+        </div>
+      </div>
     </div>
   )
 }
 
-function GroupRows({ group, year, notes, onSaveNote }) {
+function GroupRows({ group, year, notes, onSaveNote, startRow }) {
   return (
     <>
       <GroupHeader group={group} />
       {group.rows.length === 0 ? (
         <tr>
-          <td colSpan={COLUMNS.length} className="border-b border-surface-border/60 p-0">
+          <td colSpan={VISIBLE_COLUMNS.length + 1} className="border-b border-surface-border/60 p-0">
             <p className="sticky left-0 w-max px-3 py-3 text-sm text-ink-subtle">No deals here with these filters.</p>
           </td>
         </tr>
       ) : (
-        group.rows.map((row) => (
+        group.rows.map((row, index) => (
           <DealRow
             key={row.deal.deal_id}
             row={row}
+            rowNumber={startRow + index}
             year={year}
             note={notes[row.deal.deal_id]}
             onSaveNote={onSaveNote}

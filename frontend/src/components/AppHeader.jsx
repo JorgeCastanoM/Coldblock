@@ -21,14 +21,14 @@ function NavGroup({ label, children }) {
   )
 }
 
-export default function AppHeader({ title, onRefresh, loading }) {
+export default function AppHeader({ title, onRefresh, loading, compact = false }) {
   const { logout } = useAuth()
 
   return (
     // Sticky from sm up only: on a phone the header wraps to three rows and
     // would pin a quarter of the screen.
-    <header className="relative z-20 -mx-6 mb-8 border-b border-surface-border/80 bg-surface-raised/90 px-6 py-4 shadow-panel backdrop-blur-md sm:sticky sm:top-0">
-      <div className="mx-auto flex max-w-6xl flex-wrap items-end justify-between gap-4">
+    <header className={`relative z-20 -mx-6 shrink-0 border-b border-surface-border/80 bg-surface-raised/90 px-6 shadow-panel backdrop-blur-md sm:sticky sm:top-0 ${compact ? 'mb-3 py-2' : 'mb-8 py-4'}`}>
+      <div className={`mx-auto flex flex-wrap items-end justify-between gap-4 ${compact ? 'w-full' : 'max-w-6xl'}`}>
         <div className="flex min-w-0 flex-wrap items-end gap-5">
           <div className="flex min-w-0 items-center gap-4 pb-1.5">
             <img
