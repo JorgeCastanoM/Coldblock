@@ -2,8 +2,9 @@ import { parseFishbowlDate } from './format.js'
 import { daysInCurrentStage } from './deals.js'
 
 // The Quarterly review mirrors the commercial manager's Q3/Q4 spreadsheet:
-// open Active Sales Pipeline deals in the three late stages, optionally plus
-// what has already closed won. All four live in that one pipeline (verified
+// open Active Sales Pipeline deals in the three late stages, plus what has
+// already closed won. Closed / Won starts selected and can be turned off.
+// All four live in that one pipeline (verified
 // live — every 2026 deal in these stages is there), so the other pipelines'
 // look-alike stages (e.g. Lab Activity's "Closed Won" for samples) stay out.
 export const REVIEW_PIPELINE = 'Active Sales Pipeline'
@@ -22,7 +23,9 @@ export const REVIEW_STAGES = [
   { key: 'closed_won', label: 'Closed / Won', optional: true, tone: 'emerald' },
 ]
 
-export const DEFAULT_STAGE_KEYS = REVIEW_STAGES.filter((stage) => !stage.optional).map((stage) => stage.key)
+export const DEFAULT_STAGE_KEYS = REVIEW_STAGES.filter((stage) => !stage.optional || stage.key === 'closed_won').map(
+  (stage) => stage.key,
+)
 
 export const STAGE_TONES = {
   violet: {

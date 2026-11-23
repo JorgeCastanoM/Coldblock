@@ -1,5 +1,5 @@
-import { createContext, useCallback, useContext, useState } from 'react'
-import { STORAGE_KEY, login as loginRequest } from '../services/api.js'
+import { createContext, useCallback, useContext, useEffect, useState } from 'react'
+import { STORAGE_KEY, login as loginRequest, setUnauthorizedHandler } from '../services/api.js'
 
 const AuthContext = createContext(null)
 
@@ -16,6 +16,11 @@ export function AuthProvider({ children }) {
     localStorage.removeItem(STORAGE_KEY)
     setToken(null)
   }, [])
+
+  useEffect(() => {
+    setUnauthorizedHandler(logout)
+    return () => setUnauthorizedHandler(() => {})
+  }, [logout])
 
   return (
     <AuthContext.Provider value={{ token, isAuthenticated: Boolean(token), login, logout }}>

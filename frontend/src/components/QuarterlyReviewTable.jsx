@@ -366,7 +366,7 @@ export default function QuarterlyReviewTable({ groups, year, sort, onSort, notes
       </div>
       <div ref={viewportRef} className="min-h-0 flex-1 overflow-auto" aria-label="Pipeline worksheet" tabIndex={0}>
         <table className="pipeline-sheet table-fixed border-separate border-spacing-0 text-left" style={{ width: SHEET_WIDTH, zoom: zoom / 100 }}>
-          <caption className="sr-only">Quarterly pipeline. Use the zoom controls below to resize the worksheet. Notes are editable.</caption>
+          <caption className="sr-only">Sales pipeline. Use the zoom controls below to resize the worksheet. Notes are editable.</caption>
           <colgroup><col style={{ width: 44 }} />{VISIBLE_COLUMNS.map((column) => <col key={column.key} style={{ width: column.width }} />)}</colgroup>
           <thead>
             <tr className="sheet-letters" aria-hidden="true">

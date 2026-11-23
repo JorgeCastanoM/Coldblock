@@ -59,7 +59,7 @@ export default function AppHeader({ title, onRefresh, loading, compact = false }
               Team
             </NavLink>
             <NavLink to="/quarterly" className={linkClass}>
-              Quarterly
+              Sales Pipeline
             </NavLink>
           </NavGroup>
 

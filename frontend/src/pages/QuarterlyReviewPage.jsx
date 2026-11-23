@@ -296,7 +296,7 @@ export default function QuarterlyReviewPage() {
 
   return (
     <div className="flex h-dvh flex-col overflow-auto px-2 pb-2">
-      <AppHeader compact title="Quarterly" onRefresh={refresh} loading={loading} />
+      <AppHeader compact title="Sales Pipeline" onRefresh={refresh} loading={loading} />
 
       <div className="mx-auto flex min-h-0 w-full flex-1 flex-col">
         {error && (

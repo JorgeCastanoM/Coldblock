@@ -14,6 +14,26 @@ client.interceptors.request.use((config) => {
   return config
 })
 
+// AuthContext registers this. A 401 on a signed-in request means the token is
+// invalid or expired, so the session ends instead of leaving the error on screen.
+let onUnauthorized = () => {}
+
+export function setUnauthorizedHandler(handler) {
+  onUnauthorized = handler
+}
+
+client.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const url = error?.config?.url ?? ''
+    const isLogin = url.includes('/auth/login')
+    if (error?.response?.status === 401 && !isLogin) {
+      onUnauthorized()
+    }
+    return Promise.reject(error)
+  },
+)
+
 export async function login(username, password) {
   const response = await client.post('/auth/login', { username, password })
   return response.data.access_token

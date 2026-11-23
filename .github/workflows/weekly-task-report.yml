@@ -1,0 +1,61 @@
+name: Weekly task report
+
+# Monday 13:00 UTC is 08:00 America/New_York in standard time and 09:00 in
+# daylight time. Actions has no timezone. A scheduled run never sends mail:
+# send is on only when someone dispatches the workflow and checks send.
+on:
+  schedule:
+    - cron: "0 13 * * 1"
+  workflow_dispatch:
+    inputs:
+      only:
+        description: Limit to this email. Leave empty for the full recipient list.
+        required: false
+        default: ""
+      send:
+        description: Send the PDFs. Leave false until a real send is approved.
+        type: boolean
+        default: false
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    env:
+      TZ: America/New_York
+      HUBSPOT_API_TOKEN: ${{ secrets.HUBSPOT_API_TOKEN }}
+      GRAPH_TENANT_ID: ${{ secrets.GRAPH_TENANT_ID }}
+      GRAPH_CLIENT_ID: ${{ secrets.GRAPH_CLIENT_ID }}
+      GRAPH_CLIENT_SECRET: ${{ secrets.GRAPH_CLIENT_SECRET }}
+      ENABLE_PLANNER: "true"
+      USE_MOCK_DATA: "false"
+      ENABLE_FISHBOWL: "false"
+      MAIL_FROM: ${{ vars.MAIL_FROM }}
+      WEEKLY_REPORT_ONLY: ${{ inputs.only }}
+      WEEKLY_REPORT_SEND: ${{ inputs.send }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+      - name: Install backend
+        run: pip install -r backend/requirements.txt
+      - name: Install frontend
+        working-directory: frontend
+        run: pnpm install --frozen-lockfile
+      - name: Build PDFs
+        working-directory: backend
+        run: python scripts/weekly_task_report.py --out "${{ runner.temp }}/reports"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: task-reports
+          path: ${{ runner.temp }}/reports
+          if-no-files-found: ignore

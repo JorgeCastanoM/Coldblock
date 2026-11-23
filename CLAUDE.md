@@ -18,7 +18,10 @@ and serves it to a React frontend optimized for shop-floor tablets.
   stateless system. Every dashboard load re-fetches from Fishbowl and HubSpot
   directly — nothing is cached or stored between requests.
 - **No scheduled jobs.** Ingest and processing are triggered on-demand by the
-  dashboard load, not by cron/Celery/APScheduler.
+  dashboard load, not by cron/Celery/APScheduler. The Monday task-report email
+  is the exception, and it does not run inside the API: GitHub Actions
+  (`.github/workflows/weekly-task-report.yml`) builds the PDFs. Mail stays off
+  unless that workflow is dispatched with send enabled.
 - **No forecasting.** MLForecast/LightGBM and any predictive/forecasting logic
   are explicitly out of scope for now. Don't add forecasting dependencies or
   code unless asked.

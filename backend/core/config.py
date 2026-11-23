@@ -34,6 +34,11 @@ class Settings(BaseSettings):
     graph_client_secret: str = ""
     enable_planner: bool = False
 
+    # Mailbox the Monday task-report script sends from, and only when that
+    # script is run with --send. Requires Graph application permission
+    # Mail.Send, restricted to this one mailbox with an application access policy.
+    mail_from: str = ""
+
     dashboard_users: list[DashboardUser] = []
     jwt_secret: str = ""
     jwt_expire_minutes: int = 720

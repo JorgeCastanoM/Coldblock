@@ -1,4 +1,5 @@
 import asyncio
+import base64
 import logging
 import time
 from datetime import datetime
@@ -354,6 +355,36 @@ class GraphClient:
             ],
             "overdue_beyond_window": overdue_beyond,
         }
+
+    async def send_pdf(
+        self, *, sender: str, to: str, subject: str, body: str, filename: str, pdf: bytes
+    ) -> None:
+        """Send one PDF from `sender`. Graph's sendMail answers 202 with an empty
+        body, so this does not go through `_request`, which always parses JSON."""
+        payload = {
+            "message": {
+                "subject": subject,
+                "body": {"contentType": "Text", "content": body},
+                "toRecipients": [{"emailAddress": {"address": to}}],
+                "attachments": [
+                    {
+                        "@odata.type": "#microsoft.graph.fileAttachment",
+                        "name": filename,
+                        "contentType": "application/pdf",
+                        "contentBytes": base64.b64encode(pdf).decode("ascii"),
+                    }
+                ],
+            },
+            "saveToSentItems": True,
+        }
+        async with httpx.AsyncClient(timeout=60) as client:
+            token = await self._access_token(client)
+            response = await client.post(
+                f"{settings.graph_base_url}/users/{sender}/sendMail",
+                headers={"Authorization": f"Bearer {token}"},
+                json=payload,
+            )
+            response.raise_for_status()
 
 
 def _person(user_id: str | None, users: dict[str, dict]) -> dict | None:
