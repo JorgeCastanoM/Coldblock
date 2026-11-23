@@ -1,3 +1,4 @@
+import jwt
 from fastapi.testclient import TestClient
 
 from core.config import settings
@@ -22,6 +23,8 @@ def test_login_issues_token_and_dashboard_requires_it():
     response = client.post("/auth/login", json={"username": user.username, "password": user.password})
     assert response.status_code == 200
     token = response.json()["access_token"]
+    claims = jwt.decode(token, settings.jwt_secret, algorithms=["HS256"])
+    assert claims["sections"] == user.sections
 
     unauthorized = client.get("/dashboard/summary")
     assert unauthorized.status_code in (401, 403)

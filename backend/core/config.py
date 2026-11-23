@@ -5,6 +5,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class DashboardUser(BaseModel):
     username: str
     password: str
+    # Nav sections this person may open. Missing the field means every section,
+    # so an older entry keeps working.
+    sections: list[str] = ["overview", "deals", "team", "pipeline", "tasks"]
 
 
 class Settings(BaseSettings):

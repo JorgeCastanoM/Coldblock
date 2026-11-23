@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext.jsx'
+import { SECTIONS } from '../auth/sections.js'
 import ThemeToggle from './ThemeToggle.jsx'
 
 const linkClass = ({ isActive }) =>
@@ -22,7 +23,10 @@ function NavGroup({ label, children }) {
 }
 
 export default function AppHeader({ title, onRefresh, loading, compact = false }) {
-  const { logout } = useAuth()
+  const { logout, sections } = useAuth()
+  const allowed = new Set(sections)
+  const salesLinks = SECTIONS.filter((section) => section.group === 'sales' && allowed.has(section.key))
+  const taskLinks = SECTIONS.filter((section) => section.group === 'tasks' && allowed.has(section.key))
 
   return (
     // Sticky from sm up only: on a phone the header wraps to three rows and
@@ -48,26 +52,25 @@ export default function AppHeader({ title, onRefresh, loading, compact = false }
               (see ENABLE_FISHBOWL in core/config.py). Re-add this NavGroup once
               Fishbowl is reachable from wherever the backend runs. */}
 
-          <NavGroup label="Sales">
-            <NavLink to="/sales-overview" className={linkClass}>
-              Overview
-            </NavLink>
-            <NavLink to="/deals" className={linkClass}>
-              Deals
-            </NavLink>
-            <NavLink to="/team-performance" className={linkClass}>
-              Team
-            </NavLink>
-            <NavLink to="/quarterly" className={linkClass}>
-              Sales Pipeline
-            </NavLink>
-          </NavGroup>
+          {salesLinks.length > 0 && (
+            <NavGroup label="Sales">
+              {salesLinks.map((section) => (
+                <NavLink key={section.key} to={section.to} className={linkClass}>
+                  {section.label}
+                </NavLink>
+              ))}
+            </NavGroup>
+          )}
 
-          <nav className="flex items-center gap-0.5 rounded-lg border border-surface-border bg-surface-raised p-1">
-            <NavLink to="/tasks" className={linkClass}>
-              Tasks
-            </NavLink>
-          </nav>
+          {taskLinks.length > 0 && (
+            <nav className="flex items-center gap-0.5 rounded-lg border border-surface-border bg-surface-raised p-1">
+              {taskLinks.map((section) => (
+                <NavLink key={section.key} to={section.to} className={linkClass}>
+                  {section.label}
+                </NavLink>
+              ))}
+            </nav>
+          )}
         </div>
 
         <div className="flex items-center gap-2 pb-1.5">

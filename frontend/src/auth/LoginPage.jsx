@@ -91,14 +91,15 @@ export default function LoginPage() {
 
           <div className="space-y-4">
             <label className="block" htmlFor="username">
-              <span className="mb-1.5 block text-sm font-medium text-ink-muted">Username</span>
+              <span className="mb-1.5 block text-sm font-medium text-ink-muted">Email</span>
               <div className="relative">
                 <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-ink-subtle">
                   <PersonIcon />
                 </span>
                 <input
                   id="username"
-                  type="text"
+                  type="email"
+                  inputMode="email"
                   value={username}
                   onChange={(event) => setUsername(event.target.value)}
                   className={inputClass}

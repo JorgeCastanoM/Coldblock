@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import { AuthProvider, useAuth } from './auth/AuthContext.jsx'
+import { homePath } from './auth/sections.js'
 import LoginPage from './auth/LoginPage.jsx'
 import { DashboardDataProvider } from './context/DashboardDataContext.jsx'
 import { TasksDataProvider } from './context/TasksDataContext.jsx'
@@ -24,25 +25,34 @@ function TasksSection() {
 // away for now — this build is deployed publicly and the backend has no
 // Tailscale route to Fishbowl there (see ENABLE_FISHBOWL in core/config.py).
 // Their routes/components are untouched; only reachability is disabled.
+function Allow({ section, children }) {
+  const { sections } = useAuth()
+  if (!sections.includes(section)) {
+    return <Navigate to={homePath(sections)} replace />
+  }
+  return children
+}
+
 function Shell() {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, sections } = useAuth()
   if (!isAuthenticated) {
     return <LoginPage />
   }
+  const home = homePath(sections)
 
   return (
     <DashboardDataProvider>
       <Routes>
-        <Route path="/" element={<Navigate to="/sales-overview" replace />} />
-        <Route path="/deals" element={<DealsPage />} />
-        <Route path="/sales-overview" element={<SalesOverviewPage />} />
-        <Route path="/team-performance" element={<TeamPerformancePage />} />
-        <Route path="/quarterly" element={<QuarterlyReviewPage />} />
+        <Route path="/" element={<Navigate to={home} replace />} />
+        <Route path="/deals" element={<Allow section="deals"><DealsPage /></Allow>} />
+        <Route path="/sales-overview" element={<Allow section="overview"><SalesOverviewPage /></Allow>} />
+        <Route path="/team-performance" element={<Allow section="team"><TeamPerformancePage /></Allow>} />
+        <Route path="/quarterly" element={<Allow section="pipeline"><QuarterlyReviewPage /></Allow>} />
         <Route element={<TasksSection />}>
-          <Route path="/tasks" element={<TasksPage />} />
-          <Route path="/tasks/report" element={<TaskReportPage />} />
+          <Route path="/tasks" element={<Allow section="tasks"><TasksPage /></Allow>} />
+          <Route path="/tasks/report" element={<Allow section="tasks"><TaskReportPage /></Allow>} />
         </Route>
-        <Route path="*" element={<Navigate to="/sales-overview" replace />} />
+        <Route path="*" element={<Navigate to={home} replace />} />
       </Routes>
     </DashboardDataProvider>
   )

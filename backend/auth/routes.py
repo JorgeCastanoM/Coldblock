@@ -21,13 +21,18 @@ class LoginResponse(BaseModel):
 
 @router.post("/login", response_model=LoginResponse)
 def login(payload: LoginRequest) -> LoginResponse:
+    wanted = payload.username.strip().lower()
     match = next(
-        (user for user in settings.dashboard_users if user.username == payload.username),
+        (user for user in settings.dashboard_users if user.username.lower() == wanted),
         None,
     )
     if match is None or match.password != payload.password:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password")
 
     expires_at = datetime.now(timezone.utc) + timedelta(minutes=settings.jwt_expire_minutes)
-    token = jwt.encode({"sub": payload.username, "exp": expires_at}, settings.jwt_secret, algorithm="HS256")
+    token = jwt.encode(
+        {"sub": match.username, "sections": match.sections, "exp": expires_at},
+        settings.jwt_secret,
+        algorithm="HS256",
+    )
     return LoginResponse(access_token=token)

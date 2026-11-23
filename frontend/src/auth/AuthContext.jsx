@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
+import { sectionsFromToken } from './sections.js'
 import { STORAGE_KEY, login as loginRequest, setUnauthorizedHandler } from '../services/api.js'
 
 const AuthContext = createContext(null)
@@ -23,7 +24,9 @@ export function AuthProvider({ children }) {
   }, [logout])
 
   return (
-    <AuthContext.Provider value={{ token, isAuthenticated: Boolean(token), login, logout }}>
+    <AuthContext.Provider
+      value={{ token, isAuthenticated: Boolean(token), sections: sectionsFromToken(token), login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   )
